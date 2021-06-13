@@ -55,8 +55,9 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
         for task in tasks:
 
-            date = task['datetime'].strftime('%H:%M')
-            line = '- {0}     {1}\n'.format(date, task['title'])
+            #date = task['datetime'].strftime('%H:%M')
+            #line = '- {0}     {1}\n'.format(date, task['title'])
+            line = '- {0}\n'.format(task['title'])
 
             handle.write(line)
 
@@ -90,27 +91,29 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
             tasks = tasks_reader.get_tasks_from_file(paths['planned_tasks_filepath'], current_date)
             
-            for task in tasks:
+            for group in tasks:
 
-                substrings          = task['title'].split(';')
-                substrings_counter  = len(substrings)
+                for task in group['tasks']:
 
-                is_pattern  = substrings_counter >= 2
-                is_time     = substrings_counter > 2
+                    substrings          = task['title'].split(';')
+                    substrings_counter  = len(substrings)
 
-                if is_pattern:
+                    is_pattern  = substrings_counter >= 2
+                    is_time     = substrings_counter > 2
+
+                    if is_pattern:
                         
-                    task['title']         = substrings[0].strip()
-                    task['recurrence']    = substrings[1].strip().lower()
+                        task['title']         = substrings[0].strip()
+                        task['recurrence']    = substrings[1].strip().lower()
 
-                    if is_time:
+                        if is_time:
 
-                        time_substrings = substrings[2].strip().split(':')
+                            time_substrings = substrings[2].strip().split(':')
 
-                        hour   = int(time_substrings[0])
-                        minute = int(time_substrings[1])
+                            hour   = int(time_substrings[0])
+                            minute = int(time_substrings[1])
 
-                        task['datetime'] = task['datetime'].replace(hour = hour, minute = minute, second = 0, microsecond = 0)
+                            task['datetime'] = task['datetime'].replace(hour = hour, minute = minute, second = 0, microsecond = 0)
 
             return tasks
 
@@ -506,51 +509,53 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
         tasks_for_date = []
 
-        for task in planned_tasks:
+        for group in planned_tasks:
 
-            if check_pattern_every_day(task, tasks_for_date):
-                continue
+            for task in group['tasks']:
 
-            if check_pattern_every_n_week(task, tasks_for_date):
-                continue            
+                if check_pattern_every_day(task, tasks_for_date):
+                    continue
 
-            if check_pattern_every_weekday(task, tasks_for_date):
-                continue
+                if check_pattern_every_n_week(task, tasks_for_date):
+                    continue            
 
-            if check_pattern_every_month(task, tasks_for_date):
-                continue
+                if check_pattern_every_weekday(task, tasks_for_date):
+                    continue
 
-            if check_pattern_every_monday(task, tasks_for_date):
-                continue
+                if check_pattern_every_month(task, tasks_for_date):
+                    continue
 
-            if check_pattern_every_tuesday(task, tasks_for_date):
-                continue
+                if check_pattern_every_monday(task, tasks_for_date):
+                    continue
 
-            if check_pattern_every_wednesday(task, tasks_for_date):
-                continue
+                if check_pattern_every_tuesday(task, tasks_for_date):
+                    continue
 
-            if check_pattern_every_thursday(task, tasks_for_date):
-                continue
+                if check_pattern_every_wednesday(task, tasks_for_date):
+                    continue
 
-            if check_pattern_every_friday(task, tasks_for_date):
-                continue
+                if check_pattern_every_thursday(task, tasks_for_date):
+                    continue
 
-            if check_pattern_every_saturday(task, tasks_for_date):
-                continue
+                if check_pattern_every_friday(task, tasks_for_date):
+                    continue
 
-            if check_pattern_every_sunday(task, tasks_for_date):
-                continue
+                if check_pattern_every_saturday(task, tasks_for_date):
+                    continue
 
-            if check_pattern_certain_date(task, tasks_for_date):
-                continue
+                if check_pattern_every_sunday(task, tasks_for_date):
+                    continue
 
-            if check_pattern_every_year(task, tasks_for_date):
-                continue
+                if check_pattern_certain_date(task, tasks_for_date):
+                    continue
 
-            for _ in range(3):
-                winsound.Beep(400, 800)
+                if check_pattern_every_year(task, tasks_for_date):
+                    continue
 
-            print("Неизвестный шаблон повторения:", task['title'])
+                for _ in range(3):
+                    winsound.Beep(400, 800)
+
+                print("Неизвестный шаблон повторения:", task['title'])
 
         if len(tasks_for_date) > 0:            
 
@@ -569,20 +574,23 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                 write_empty_line()
 
-                write_title('Без указанного времени', '##')
-
                 write_tasks(tasks_without_time)
 
     def write_uncompleted_tasks():
 
-        uncompleted_tasks = list((task for task in current_tasks if not task['completed']))
+        for group in current_tasks:
 
-        if len(uncompleted_tasks) > 0:
+            uncompleted_tasks = list((task for task in group['tasks'] if not task['completed']))
 
-            write_empty_line()
+            if len(uncompleted_tasks) > 0:
 
-            write_title('Не завершенное вчера', '##')
-            write_tasks(uncompleted_tasks)
+                write_empty_line()
+
+                handle.write(group['title'] + "\n")
+
+                write_empty_line()
+
+                write_tasks(uncompleted_tasks)
 
     if postfix == '':
         tasks_filepath = paths['current_tasks_filepath']
