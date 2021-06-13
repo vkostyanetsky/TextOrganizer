@@ -14,15 +14,17 @@ tasks = tasks_reader.get_tasks_from_file(paths['current_tasks_filepath'], curren
 time = datetime.datetime.now()
 ring = False
 
-for task in tasks:
+for group in tasks:
 
-   is_time      = task['datetime'] <= time
-   is_task_done = task['completed'] == False
-   need_to_ring = task['title'].lower().find('#напоминать') != -1
+   for task in group['tasks']:
 
-   if is_time and is_task_done and need_to_ring:
-      ring = True
-      break
+      is_time      = task['datetime'] <= time
+      is_task_done = task['completed'] == False
+      need_to_ring = task['title'].lower().find('#напоминать') != -1
+
+      if is_time and is_task_done and need_to_ring:
+         ring = True
+         break
 
 if ring:
    winsound.Beep(300, 1200)
