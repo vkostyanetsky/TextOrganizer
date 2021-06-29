@@ -20,9 +20,9 @@ for group in tasks:
 
       is_time      = task['datetime'] <= time
       is_task_done = task['completed'] == False
-      need_to_ring = task['title'].lower().find('#напоминать') != -1
+      is_ring_need = tasks_reader.is_task_with_tag(task, 'напоминать')
 
-      if is_time and is_task_done and need_to_ring:
+      if is_time and is_task_done and is_ring_need:
          ring = True
          break
 

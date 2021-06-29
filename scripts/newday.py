@@ -86,6 +86,8 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
         #   каждое воскресенье
         #
         #   (вместо полных названий дней недели можно использовать сокращения — ПН, ВТ и так далее)
+        #
+        # Теги: #напоминать, #пропускать
 
         def get_planned_tasks():
 
@@ -512,6 +514,9 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
         for group in planned_tasks:
 
             for task in group['tasks']:
+
+                if tasks_reader.is_task_with_tag(task, 'пропускать'):
+                    continue
 
                 if check_pattern_every_day(task, tasks_for_date):
                     continue

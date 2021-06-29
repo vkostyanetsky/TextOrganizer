@@ -1,5 +1,11 @@
 import re
 
+def is_task_with_tag(task, tag):
+
+    marked_tag = '#{}'.format(tag)
+
+    return task['title'].lower().find(marked_tag) != -1
+
 def get_tasks_from_file(path, current_date):
 
     def get_new_task(title = ''):
