@@ -11,11 +11,16 @@ def get_tasks_from_file(path, current_date):
     def get_new_task(title = ''):
 
         return {
-            'title':        title,
+
+            'title':            title,
+            'original_title':   title,
+
             'notes':        [],
             'datetime':     current_date,
+            'outdated':     False,
             'completed':    False,
-            'recurrence':   '',            
+            'recurrence':   '',
+
         }
 
     def get_new_group(title = ''):
@@ -76,8 +81,11 @@ def get_tasks_from_file(path, current_date):
 
                 task = get_new_task()
 
-                task['title']       = line_without_mark
+                task['title']           = line_without_mark
+                task['original_title']  = line_without_mark
+                
                 task['datetime']    = current_date.replace(hour = hour, minute = minute)
+                task['outdated']    = False
                 task['completed']   = line.startswith('+')
 
             elif line.startswith('#'):

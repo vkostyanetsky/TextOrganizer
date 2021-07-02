@@ -5,6 +5,7 @@ import winsound
 
 import modules.yaml_wrapper as yaml_wrapper
 import modules.tasks_reader as tasks_reader
+import modules.tasks_writer as tasks_writer
 import modules.common_logic as common_logic
 
 def copy_current_tasks_file_to_history():
@@ -29,44 +30,12 @@ def copy_current_tasks_file_to_history():
 
 def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
-    def write_empty_line():
-
-        handle.write('\n')
-
-    def write_title(title, marker):
-        
-        handle.write(marker + " " + title + "\n")
-
-        write_empty_line()
-
     def write_tasks(tasks):
-
-        def is_notes():
-            
-            result = False
-
-            for note in task['notes']:
-
-                if note.strip() != '':
-                    result = True
-                    break
-            
-            return result
 
         for task in tasks:
 
-            #date = task['datetime'].strftime('%H:%M')
-            #line = '- {0}     {1}\n'.format(date, task['title'])
-            line = '- {0}\n'.format(task['title'])
-
-            handle.write(line)
-
-            if is_notes():
-
-                notes = '\n'.join(task['notes'])
-                handle.write(notes)
-
-                write_empty_line()
+            tasks_writer.write_title(handle, task['title'], '-')
+            tasks_writer.write_notes(handle, task)
 
     def write_planned_tasks():
 
@@ -104,9 +73,9 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                     is_time     = substrings_counter > 2
 
                     if is_pattern:
-                        
-                        task['title']         = substrings[0].strip()
-                        task['recurrence']    = substrings[1].strip().lower()
+
+                        task['title']           = substrings[0].strip()
+                        task['recurrence']      = substrings[1].strip().lower()
 
                         if is_time:
 
@@ -306,7 +275,13 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                 month   = int(parts[1])
                 year    = int(parts[2])
 
-                return current_date.day == day and current_date.month == month and current_date.year == year
+                task_date = task['datetime'].replace(year = year, month = month, day = day, hour = 0, minute = 0, second = 0, microsecond = 0)
+
+                if task_date < current_date:
+                    task['outdated'] = True
+
+                #return current_date.day == day and current_date.month == month and current_date.year == year
+                return current_date == task_date
 
             result = False
 
@@ -507,6 +482,32 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                 else:
                     tasks_without_time.append(task)
 
+        def write_actual_tasks():
+
+            with open(paths['planned_tasks_filepath'], 'w+', encoding = 'utf-8-sig') as planned_tasks_file_handle:
+
+                are_there_tasks_before = False
+
+                for group in planned_tasks:
+
+                    if are_there_tasks_before:
+                        tasks_writer.write_empty_line(planned_tasks_file_handle)
+
+                    tasks_writer.write_title(planned_tasks_file_handle, group['title'])
+                    tasks_writer.write_empty_line(planned_tasks_file_handle)
+
+                    are_there_tasks_before = False;
+
+                    for task in group['tasks']:
+
+                        if task['outdated']:
+                            continue
+
+                        tasks_writer.write_title(planned_tasks_file_handle, task['original_title'], '-')
+                        tasks_writer.write_notes(planned_tasks_file_handle, task)
+                        
+                        are_there_tasks_before = True
+
         planned_tasks = get_planned_tasks()
 
         tasks_for_date = []
@@ -577,9 +578,11 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
             if len(tasks_without_time) > 0:
 
-                write_empty_line()
+                tasks_writer.write_empty_line(handle)
 
                 write_tasks(tasks_without_time)
+
+        write_actual_tasks()
 
     def write_uncompleted_tasks():
 
@@ -589,11 +592,9 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
             if len(uncompleted_tasks) > 0:
 
-                write_empty_line()
-
-                handle.write(group['title'] + "\n")
-
-                write_empty_line()
+                tasks_writer.write_empty_line(handle)
+                tasks_writer.write_title(handle, group['title'])
+                tasks_writer.write_empty_line(handle)
 
                 write_tasks(uncompleted_tasks)
 
@@ -606,7 +607,8 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
         title = current_date.strftime('%Y-%m-%d')
 
-        write_title(title, '#')
+        tasks_writer.write_title(handle, title, '#')        
+        tasks_writer.write_empty_line(handle)
 
         write_planned_tasks()
 
