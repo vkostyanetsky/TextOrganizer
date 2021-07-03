@@ -1,5 +1,4 @@
 import os
-import shutil
 import datetime
 import winsound
 
@@ -7,26 +6,6 @@ import modules.yaml_wrapper as yaml_wrapper
 import modules.tasks_reader as tasks_reader
 import modules.tasks_writer as tasks_writer
 import modules.common_logic as common_logic
-
-def copy_current_tasks_file_to_history():
-
-    def get_history_filename():
-        
-        result = get_date_string(parameters['last_date'])
-        
-        return "{}.md".format(result)
-    
-    history_filename = get_history_filename()
-    history_filepath = os.path.join(paths['history_tasks_dirpath'], history_filename)
-
-    if os.path.exists(history_filepath):
-
-        print("Текущий день уже сохранен в истории!")
-        return False
-
-    shutil.copyfile(paths['current_tasks_filepath'], history_filepath)
-
-    return True
 
 def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
@@ -655,10 +634,8 @@ if parameters['last_date'] != None:
 
 current_tasks = tasks_reader.get_tasks_from_file(paths['current_tasks_filepath'], current_date)
 
-if copy_current_tasks_file_to_history():
+refill_current_tasks_file()
 
-    refill_current_tasks_file()
+parameters['last_date'] = current_date
 
-    parameters['last_date'] = current_date
-
-    yaml_wrapper.put_data_to_file(paths['parameters_filepath'], parameters)
+yaml_wrapper.put_data_to_file(paths['parameters_filepath'], parameters)
