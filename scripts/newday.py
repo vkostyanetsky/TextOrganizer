@@ -561,7 +561,8 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                 write_tasks(tasks_without_time)
 
-        write_actual_tasks()
+        if postfix == '':
+            write_actual_tasks()
 
     def write_uncompleted_tasks():
 
@@ -598,6 +599,36 @@ def get_date_string(date):
 
     return date.strftime('%Y-%m-%d')
 
+def update_git(comment):
+
+    def git_add():
+
+        command = 'git -C "{}" add :/'.format(paths['tasks_dirpath'])    
+        print(command)
+
+        os.system(command)
+
+    def git_commit():
+
+        comment_date = current_date.strftime('%Y-%m-%d')
+        full_comment = '{0}, {1}'.format(comment_date, comment)
+
+        command = 'git -C "{}" commit -a -m "{}"'.format(paths['tasks_dirpath'], full_comment)
+        print(command)
+
+        os.system(command)
+
+    def git_status():
+
+        command = 'git -C "{}" status'.format(paths['tasks_dirpath'])
+        print(command)
+
+        os.system(command)
+
+    git_status()
+    git_add()
+    git_commit()
+
 script_dirpath  = os.path.abspath(os.path.dirname(__file__))
 paths           = common_logic.get_paths(script_dirpath)
 
@@ -610,6 +641,8 @@ if parameters['last_date'] != None:
     
         print("Задачи на сегодня уже распланированы!")
         exit()
+
+    update_git('last day')
 
     date_today = current_date
     
@@ -639,3 +672,5 @@ refill_current_tasks_file()
 parameters['last_date'] = current_date
 
 yaml_wrapper.put_data_to_file(paths['parameters_filepath'], parameters)
+
+update_git('this day')
