@@ -30,4 +30,4 @@ def write_notes(handle, task):
         notes = '\n'.join(task['notes'])
         handle.write(notes)
 
-        # write_empty_line()
+        write_empty_line(handle)
