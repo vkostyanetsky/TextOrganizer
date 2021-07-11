@@ -1,106 +1,70 @@
-# каждые X недели по Y
-# каждая X неделя по Y
-#
-# Пример: каждая 2 неделя по Сб
+# каждые 2 недели по Пн, начиная с 01.01.2021
+# каждая 3 неделя по Сб, начиная с 29.19.1983
 
+import re
 import datetime
+
+def get_regexp():
+
+    return '(каждый|каждые) ([0-9]+) (недели|неделя) по ([А-Яа-я]+)(, начиная с| с) ([0-9]{1,2}.[0-9]{1,2}.[0-9]{4})'
 
 def is_type(task):
 
-    parts = task['recurrence'].split(' ')
+    regexp = get_regexp()
+    string = task['recurrence']
+    groups = re.match(regexp, string)
 
-    return (parts[0] == 'каждые' or parts[0] == 'каждая') and (parts[2] == 'недели' or parts[2] == 'неделя') and parts[3] == 'по'
+    return groups != None
 
 def is_relevant_for_date(task, date):
 
-    def is_day_of_week(date, weekday_abbreviation):
+    def get_day_of_week(name):
 
-        weekday_abbreviation_for_date = date.strftime('%a')
+        if name == 'пн' or name == 'понедельникам':
+            return 'Mon'
+        elif name == 'вт' or name == 'вторникам':
+            return 'Tue'
+        elif name == 'ср' or name == 'средам':
+            return 'Wed'
+        elif name == 'чт' or name == 'четвергам':
+            return 'Thu'
+        elif name == 'пт' or name == 'пятницам':
+            return 'Fri'                
+        elif name == 'сб' or name == 'субботам':
+            return 'Sat'
+        elif name == 'вс' or name == 'воскресеньям':
+            return 'Sun'
+        else:
+            return ''
 
-        return weekday_abbreviation_for_date == weekday_abbreviation
+    def get_event_start_date(day_of_week_string, start_date_string):
 
-    def occurs_when():
+        event_day_of_week = get_day_of_week(day_of_week_string)
 
-        def week_number():
+        event_start_date                = datetime.datetime.strptime(start_date_string, "%d.%m.%Y")
+        event_start_date_day_of_week    = event_start_date.strftime('%a')
 
-            return int(when[1])
+        while event_day_of_week != event_start_date_day_of_week:
 
-        def week_day():
+            event_start_date               += datetime.timedelta(days = 1)
+            event_start_date_day_of_week    = event_start_date.strftime('%a')
 
-            if when[4] == 'пн' or when[4] == 'понедельникам':
-                return 'Mon'
-            elif when[4] == 'вт' or when[4] == 'вторникам':
-                return 'Tue'
-            elif when[4] == 'ср' or when[4] == 'средам':
-                return 'Wed'
-            elif when[4] == 'чт' or when[4] == 'четвергам':
-                return 'Thu'
-            elif when[4] == 'пт' or when[4] == 'пятницам':
-                return 'Fri'                
-            elif when[4] == 'сб' or when[4] == 'субботам':
-                return 'Sat'
-            elif when[4] == 'вс' or when[4] == 'воскресеньям':
-                return 'Sun'
-            else:
-                return ''
+        return event_start_date
 
-        when = occurs[0].strip().split(' ')
+    regexp = get_regexp()
+    string = task['recurrence']
+    groups = re.match(regexp, string)
 
-        return {
-            'week_number':  week_number(),
-            'week_day':     week_day()
-        }
+    event_week_number   = int(groups[2])    
+    event_start_date    = get_event_start_date(groups[4], groups[6])
 
-    def occurs_from():
+    if date >= event_start_date:
 
-        date_string = occurs[1].split(' ')
-        date_string = date_string[len(date_string) - 1]
-        date_string = date_string.strip().split('.')
+        weeks   = abs(date - event_start_date).days / 7
+        result  = weeks % event_week_number == 0
 
-        day     = int(date_string[0])
-        month   = int(date_string[1])
-        year    = int(date_string[2])
-
-        return datetime.datetime(year, month, day)
-
-    def is_match():
-                
-        return is_day_of_week(occurs_from, occurs_when['week_day'])
-
-    def is_equal():
-
-        if date < occurs_from:
-            return False
-        elif date == occurs_from:
-            return True
-
-        date_to_occur   = occurs_from
-        week_number     = 1
-
-        while date_to_occur <= date:
-                    
-            if is_day_of_week(date_to_occur, occurs_when['week_day']) and week_number == occurs_when['week_number']:
-
-                if date_to_occur == date:
-                    return True
-                else:
-                    week_number = 0
-
-            date_to_occur   += datetime.timedelta(days = 7)
-            week_number     += 1
-
-        return False
-
-    result = False
-
-    occurs = task['recurrence'].split(',')
-
-    occurs_when = occurs_when()
-    occurs_from = occurs_from()
-
-    if is_match():                            
-        result = is_equal()
     else:
+
         result = False
 
     return result
