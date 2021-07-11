@@ -1,12 +1,12 @@
 # каждый 3 день, начиная с 16.01.2021
-# каждые 2 дня, начиная с 29.12.1983
+# каждые 2 дня с 29.12.1983
 
 import re
 import datetime
 
 def get_regexp():
 
-    return '(каждый|каждые) ([0-9]+) (день|дня), начиная с ([0-9]{1,2}.[0-9]{1,2}.[0-9]{4})'
+    return '(каждый|каждые) ([0-9]+) (день|дня)(, начиная с| с) ([0-9]{1,2}.[0-9]{1,2}.[0-9]{4})'
 
 def is_type(task):
 
@@ -23,7 +23,7 @@ def is_relevant_for_date(task, date):
     groups = re.match(regexp, string)
 
     event_day_number = int(groups[2])
-    event_start_date = datetime.datetime.strptime(groups[4], "%d.%m.%Y")
+    event_start_date = datetime.datetime.strptime(groups[5], "%d.%m.%Y")
 
     if date >= event_start_date:
 
