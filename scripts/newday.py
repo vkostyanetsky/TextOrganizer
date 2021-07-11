@@ -10,6 +10,7 @@ import modules.common_logic as common_logic
 import modules.task_plan_types.every_year       as task_plan_type_every_year
 import modules.task_plan_types.every_month      as task_plan_type_every_month
 import modules.task_plan_types.every_n_week     as task_plan_type_every_n_week
+import modules.task_plan_types.every_n_day      as task_plan_type_every_n_day
 import modules.task_plan_types.every_day        as task_plan_type_every_day
 import modules.task_plan_types.every_weekday    as task_plan_type_every_weekday
 import modules.task_plan_types.every_monday     as task_plan_type_every_monday
@@ -130,6 +131,13 @@ def refill_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                         tasks_for_date.append(task)
 
                     continue
+
+                if task_plan_type_every_n_day.is_type(task):
+
+                    if task_plan_type_every_n_day.is_relevant_for_date(task, current_date):
+                        tasks_for_date.append(task)
+
+                    continue                
 
                 if task_plan_type_every_day.is_type(task):
 
