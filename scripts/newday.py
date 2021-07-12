@@ -33,6 +33,15 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
     def write_planned_tasks_in_current_tasks_file():
 
+        def add_current_task():
+
+            is_task_with_time = task['datetime'].hour > 0 or task['datetime'].minute > 0
+
+            if is_task_with_time:
+                current_tasks_with_time.append(task)
+            else:
+                current_tasks_without_time.append(task)
+
         def get_planned_tasks():
 
             tasks = tasks_reader.get_tasks_from_file(paths['planned_tasks_filepath'], current_date)
@@ -51,17 +60,6 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
             return tasks
                 
-        def split_tasks_for_date():
-
-            for task in current_tasks:
-
-                is_task_with_time = task['datetime'].hour > 0 or task['datetime'].minute > 0
-
-                if is_task_with_time:
-                    tasks_with_time.append(task)
-                else:
-                    tasks_without_time.append(task)
-
         def write_planned_tasks_file():
 
             with open(paths['planned_tasks_filepath'], 'w+', encoding = 'utf-8-sig') as planned_tasks_file_handle:
@@ -89,7 +87,9 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                         are_there_tasks_before = True
 
         planned_tasks = get_planned_tasks()
-        current_tasks = []
+        
+        current_tasks_with_time     = []
+        current_tasks_without_time  = []
 
         for group in planned_tasks:
 
@@ -101,98 +101,98 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                 if task_plan_type_every_year.is_type(task):
 
                     if task_plan_type_every_year.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_every_month.is_type(task):
 
                     if task_plan_type_every_month.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_every_n_week.is_type(task):
 
                     if task_plan_type_every_n_week.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_every_n_day.is_type(task):
 
                     if task_plan_type_every_n_day.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue                
 
                 if task_plan_type_every_day.is_type(task):
 
                     if task_plan_type_every_day.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_every_weekday.is_type(task):
 
                     if task_plan_type_every_weekday.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_every_monday.is_type(task):
 
                     if task_plan_type_every_monday.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_every_tuesday.is_type(task):
 
                     if task_plan_type_every_tuesday.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_every_wednesday.is_type(task):
 
                     if task_plan_type_every_wednesday.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_every_thursday.is_type(task):
 
                     if task_plan_type_every_thursday.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_every_friday.is_type(task):
 
                     if task_plan_type_every_friday.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_every_saturday.is_type(task):
 
                     if task_plan_type_every_saturday.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_every_sunday.is_type(task):
 
                     if task_plan_type_every_sunday.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
                 if task_plan_type_date.is_type(task):
 
                     if task_plan_type_date.is_relevant_for_date(task, current_date):
-                        current_tasks.append(task)
+                        add_current_task(task)
 
                     continue
 
@@ -201,24 +201,17 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                 print("Неизвестный шаблон повторения:", task['title'])
 
-        if len(current_tasks) > 0:            
+        if len(current_tasks_with_time) > 0:
 
-            tasks_with_time     = []
-            tasks_without_time  = []
+            tasks_with_time = sorted(current_tasks_with_time, key = lambda task: task['datetime'])
 
-            split_tasks_for_date()
+            write_tasks(tasks_with_time)
 
-            if len(tasks_with_time) > 0:
+        if len(current_tasks_without_time) > 0:
 
-                tasks_with_time = sorted(tasks_with_time, key = lambda task: task['datetime'])
+            tasks_writer.write_empty_line(handle)
 
-                write_tasks(tasks_with_time)
-
-            if len(tasks_without_time) > 0:
-
-                tasks_writer.write_empty_line(handle)
-
-                write_tasks(tasks_without_time)
+            write_tasks(current_tasks_without_time)
 
         if postfix == '':
             write_planned_tasks_file()
