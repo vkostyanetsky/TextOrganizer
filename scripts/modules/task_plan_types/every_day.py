@@ -1,9 +1,10 @@
 # каждый день
 
-def is_type(task):
+def is_task_current(task, date):
 
-    return task['recurrence'] == 'каждый день'
+    result = None
+    
+    if task['recurrence'] == 'каждый день':
+        result = True
 
-def is_relevant_for_date(task, date):
-
-    return True
+    return result

@@ -86,6 +86,34 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                         
                         are_there_tasks_before = True
 
+        def does_task_belong_to_plan_type_date():
+
+            result          = False
+            task_is_current = task_plan_type_date.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task(task)
+
+                result = True
+
+            return result
+
+        def does_task_belong_to_plan_type_every_day():
+
+            result          = False
+            task_is_current = task_plan_type_every_day.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task(task)
+
+                result = True
+
+            return result
+
         planned_tasks = get_planned_tasks()
         
         current_tasks_with_time     = []
@@ -126,11 +154,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                     continue                
 
-                if task_plan_type_every_day.is_type(task):
-
-                    if task_plan_type_every_day.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
-
+                if does_task_belong_to_plan_type_every_day():
                     continue
 
                 if task_plan_type_every_weekday.is_type(task):
@@ -189,11 +213,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                     continue
 
-                if task_plan_type_date.is_type(task):
-
-                    if task_plan_type_date.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
-
+                if does_task_belong_to_plan_type_date():
                     continue
 
                 for _ in range(3):

@@ -1,20 +1,22 @@
 # DD.MM.YYYY (DD — номер дня, MM — номер месяца, YYYY — номер года)
 
-def is_type(task):
+import re
+import datetime
 
-    return task['recurrence'].count('.') == 2
+def is_task_current(task, date):
+   
+    result = None
+    groups = re.match('([0-9]{1,2}).([0-9]{1,2}).([0-9]{4})', task['recurrence'])
+    
+    if groups != None:
+        
+        task_date_year  = int(groups[3])
+        task_date_month = int(groups[2])
+        task_date_day   = int(groups[1])
+        task_date       = datetime.datetime(task_date_year, task_date_month, task_date_day)
 
-def is_relevant_for_date(task, date):
+        task['outdated'] = task_date < date
 
-    parts = task['recurrence'].split('.')
-
-    day     = int(parts[0])
-    month   = int(parts[1])
-    year    = int(parts[2])
-
-    task_date = task['datetime'].replace(year = year, month = month, day = day, hour = 0, minute = 0, second = 0, microsecond = 0)
-
-    if task_date < date:
-        task['outdated'] = True
-
-    return date == task_date
+        result = date == task_date
+    
+    return result
