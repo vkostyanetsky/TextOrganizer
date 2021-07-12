@@ -44,22 +44,10 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                     substrings          = task['title'].split(';')
                     substrings_counter  = len(substrings)
 
-                    is_pattern  = substrings_counter >= 2
-                    is_time     = substrings_counter > 2
-
-                    if is_pattern:
+                    if substrings_counter >= 2:
 
                         task['title']           = substrings[0].strip()
                         task['recurrence']      = substrings[1].strip().lower()
-
-                        if is_time:
-
-                            time_substrings = substrings[2].strip().split(':')
-
-                            hour   = int(time_substrings[0])
-                            minute = int(time_substrings[1])
-
-                            task['datetime'] = task['datetime'].replace(hour = hour, minute = minute, second = 0, microsecond = 0)
 
             return tasks
                 
