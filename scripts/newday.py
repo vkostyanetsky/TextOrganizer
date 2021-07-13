@@ -94,7 +94,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
             if task_is_current != None:
 
                 if task_is_current:
-                    add_current_task(task)
+                    add_current_task()
 
                 result = True
 
@@ -108,7 +108,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
             if task_is_current != None:
 
                 if task_is_current:
-                    add_current_task(task)
+                    add_current_task()
 
                 result = True
 
@@ -129,28 +129,28 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                 if task_plan_type_every_year.is_type(task):
 
                     if task_plan_type_every_year.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue
 
                 if task_plan_type_every_month.is_type(task):
 
                     if task_plan_type_every_month.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue
 
                 if task_plan_type_every_n_week.is_type(task):
 
                     if task_plan_type_every_n_week.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue
 
                 if task_plan_type_every_n_day.is_type(task):
 
                     if task_plan_type_every_n_day.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue                
 
@@ -160,56 +160,56 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                 if task_plan_type_every_weekday.is_type(task):
 
                     if task_plan_type_every_weekday.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue
 
                 if task_plan_type_every_monday.is_type(task):
 
                     if task_plan_type_every_monday.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue
 
                 if task_plan_type_every_tuesday.is_type(task):
 
                     if task_plan_type_every_tuesday.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue
 
                 if task_plan_type_every_wednesday.is_type(task):
 
                     if task_plan_type_every_wednesday.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue
 
                 if task_plan_type_every_thursday.is_type(task):
 
                     if task_plan_type_every_thursday.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue
 
                 if task_plan_type_every_friday.is_type(task):
 
                     if task_plan_type_every_friday.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue
 
                 if task_plan_type_every_saturday.is_type(task):
 
                     if task_plan_type_every_saturday.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue
 
                 if task_plan_type_every_sunday.is_type(task):
 
                     if task_plan_type_every_sunday.is_relevant_for_date(task, current_date):
-                        add_current_task(task)
+                        add_current_task()
 
                     continue
 
