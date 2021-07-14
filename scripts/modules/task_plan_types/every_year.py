@@ -1,8 +1,6 @@
-def is_type(task):
+# каждый год, 16 декабря
 
-    return task['recurrence'].startswith('каждый год')
-
-def is_relevant_for_date(task, date):
+def is_task_current(task, date):
 
     def year_day():
 
@@ -29,15 +27,22 @@ def is_relevant_for_date(task, date):
         elif task_date[1] == 'сентябрь':
             return 9
         elif task_date[1] == 'октябрь':
-            return 10                                                                                                                                                                                                
+            return 10
         elif task_date[1] == 'ноябрь':
             return 11
         elif task_date[1] == 'декабрь':
-            return 12                        
+            return 12
 
-    parts = task['recurrence'].split(',')
+    result          = None
+    type_is_correct = task['recurrence'].startswith('каждый год')
+    
+    if type_is_correct:
+    
+        parts = task['recurrence'].split(',')
 
-    task_date = parts[1].strip()
-    task_date = task_date.split(' ')
-                
-    return date.day == year_day() and date.month == year_month()
+        task_date = parts[1].strip()
+        task_date = task_date.split(' ')
+                    
+        result = date.day == year_day() and date.month == year_month()
+    
+    return result

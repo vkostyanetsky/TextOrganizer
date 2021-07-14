@@ -4,34 +4,26 @@
 import re
 import datetime
 
-def get_regexp():
+def is_task_current(task, date):
+   
+    result = None
+    regexp = '(каждый|каждые) ([0-9]+) (день|дня)(, начиная с| с) ([0-9]{1,2}.[0-9]{1,2}.[0-9]{4})'    
+    groups = re.match(regexp, task['recurrence'])
 
-    return '(каждый|каждые) ([0-9]+) (день|дня)(, начиная с| с) ([0-9]{1,2}.[0-9]{1,2}.[0-9]{4})'
+    type_is_correct = groups != None
+    
+    if type_is_correct:
 
-def is_type(task):
+        event_day_number = int(groups[2])
+        event_start_date = datetime.datetime.strptime(groups[5], "%d.%m.%Y")
 
-    regexp = get_regexp()
-    string = task['recurrence']
-    groups = re.match(regexp, string)
+        if date >= event_start_date:
 
-    return groups != None
+            days    = abs(date - event_start_date).days
+            result  = days % event_day_number == 0
 
-def is_relevant_for_date(task, date):
+        else:
 
-    regexp = get_regexp()
-    string = task['recurrence']
-    groups = re.match(regexp, string)
-
-    event_day_number = int(groups[2])
-    event_start_date = datetime.datetime.strptime(groups[5], "%d.%m.%Y")
-
-    if date >= event_start_date:
-
-        days    = abs(date - event_start_date).days
-        result  = days % event_day_number == 0
-
-    else:
-
-        result = False
-
+            result = False
+    
     return result

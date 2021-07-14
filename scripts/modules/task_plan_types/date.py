@@ -7,8 +7,10 @@ def is_task_current(task, date):
    
     result = None
     groups = re.match('([0-9]{1,2}).([0-9]{1,2}).([0-9]{4})', task['recurrence'])
+
+    type_is_correct = groups != None
     
-    if groups != None:
+    if type_is_correct:
         
         task_date_year  = int(groups[3])
         task_date_month = int(groups[2])

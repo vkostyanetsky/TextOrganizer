@@ -1,13 +1,10 @@
 # каждый месяц, X день (где X — номер дня в месяце)
+# каждый месяц, последний день
 
 import datetime
 
-def is_type(task):
-
-    return task['recurrence'].startswith('каждый месяц, ')
-
-def is_relevant_for_date(task, date):
-
+def is_task_current(task, date):
+   
     def day_number():
 
         def last_day_of_month():
@@ -30,4 +27,11 @@ def is_relevant_for_date(task, date):
 
         return int(day_number)
 
-    return day_number() == current_day_number()
+    result = None
+
+    type_is_correct = task['recurrence'].startswith('каждый месяц, ')
+    
+    if type_is_correct:
+        result = day_number() == current_day_number()
+    
+    return result

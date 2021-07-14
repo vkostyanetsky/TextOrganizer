@@ -1,10 +1,12 @@
 # каждый понедельник
 # каждый пн
 
-def is_type(task):
-
-    return task['recurrence'] == 'каждый понедельник' or task['recurrence'] == 'каждый пн'
-
-def is_relevant_for_date(task, date):
-
-    return date.strftime('%a') == "Mon"
+def is_task_current(task, date):
+   
+    result          = None
+    type_is_correct = task['recurrence'] == 'каждый понедельник' or task['recurrence'] == 'каждый пн'
+    
+    if type_is_correct:
+        result = date.strftime('%a') == "Mon"
+    
+    return result

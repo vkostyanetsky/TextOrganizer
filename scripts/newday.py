@@ -86,6 +86,174 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                         
                         are_there_tasks_before = True
 
+        def does_task_belong_to_plan_type_every_year():
+
+            result          = False
+            task_is_current = task_plan_type_every_year.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result
+
+        def does_task_belong_to_plan_type_every_month():
+
+            result          = False
+            task_is_current = task_plan_type_every_month.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result
+
+        def does_task_belong_to_plan_type_every_n_week():
+
+            result          = False
+            task_is_current = task_plan_type_every_n_week.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result
+
+        def does_task_belong_to_plan_type_every_n_day():
+
+            result          = False
+            task_is_current = task_plan_type_every_n_day.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result
+
+        def does_task_belong_to_plan_type_every_weekday():
+
+            result          = False
+            task_is_current = task_plan_type_every_weekday.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result
+
+        def does_task_belong_to_plan_type_every_monday():
+
+            result          = False
+            task_is_current = task_plan_type_every_monday.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result
+
+        def does_task_belong_to_plan_type_every_tuesday():
+
+            result          = False
+            task_is_current = task_plan_type_every_tuesday.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result            
+
+        def does_task_belong_to_plan_type_every_wednesday():
+
+            result          = False
+            task_is_current = task_plan_type_every_wednesday.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result             
+
+        def does_task_belong_to_plan_type_every_thursday():
+
+            result          = False
+            task_is_current = task_plan_type_every_thursday.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result            
+
+        def does_task_belong_to_plan_type_every_friday():
+
+            result          = False
+            task_is_current = task_plan_type_every_friday.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result              
+
+        def does_task_belong_to_plan_type_every_saturday():
+
+            result          = False
+            task_is_current = task_plan_type_every_saturday.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result             
+
+        def does_task_belong_to_plan_type_every_sunday():
+
+            result          = False
+            task_is_current = task_plan_type_every_sunday.is_task_current(task, current_date)
+
+            if task_is_current != None:
+
+                if task_is_current:
+                    add_current_task()
+
+                result = True
+
+            return result 
+
         def does_task_belong_to_plan_type_date():
 
             result          = False
@@ -126,91 +294,46 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                 if tasks_reader.is_task_with_tag(task, 'пропускать'):
                     continue
 
-                if task_plan_type_every_year.is_type(task):
-
-                    if task_plan_type_every_year.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
+                if does_task_belong_to_plan_type_every_year():
                     continue
 
-                if task_plan_type_every_month.is_type(task):
-
-                    if task_plan_type_every_month.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
+                if does_task_belong_to_plan_type_every_month():
                     continue
 
-                if task_plan_type_every_n_week.is_type(task):
-
-                    if task_plan_type_every_n_week.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
+                if does_task_belong_to_plan_type_every_n_week():
+                    continue
+    
+                if does_task_belong_to_plan_type_every_n_day():
                     continue
 
-                if task_plan_type_every_n_day.is_type(task):
-
-                    if task_plan_type_every_n_day.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
-                    continue                
+                if does_task_belong_to_plan_type_every_n_day():
+                    continue
 
                 if does_task_belong_to_plan_type_every_day():
                     continue
 
-                if task_plan_type_every_weekday.is_type(task):
-
-                    if task_plan_type_every_weekday.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
+                if does_task_belong_to_plan_type_every_weekday():
                     continue
 
-                if task_plan_type_every_monday.is_type(task):
-
-                    if task_plan_type_every_monday.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
+                if does_task_belong_to_plan_type_every_monday():
                     continue
 
-                if task_plan_type_every_tuesday.is_type(task):
-
-                    if task_plan_type_every_tuesday.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
+                if does_task_belong_to_plan_type_every_tuesday():
                     continue
 
-                if task_plan_type_every_wednesday.is_type(task):
-
-                    if task_plan_type_every_wednesday.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
+                if does_task_belong_to_plan_type_every_wednesday():
                     continue
 
-                if task_plan_type_every_thursday.is_type(task):
-
-                    if task_plan_type_every_thursday.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
+                if does_task_belong_to_plan_type_every_thursday():
                     continue
 
-                if task_plan_type_every_friday.is_type(task):
-
-                    if task_plan_type_every_friday.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
+                if does_task_belong_to_plan_type_every_friday():
                     continue
 
-                if task_plan_type_every_saturday.is_type(task):
-
-                    if task_plan_type_every_saturday.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
+                if does_task_belong_to_plan_type_every_saturday():
                     continue
 
-                if task_plan_type_every_sunday.is_type(task):
-
-                    if task_plan_type_every_sunday.is_relevant_for_date(task, current_date):
-                        add_current_task()
-
+                if does_task_belong_to_plan_type_every_sunday():
                     continue
 
                 if does_task_belong_to_plan_type_date():

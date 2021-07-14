@@ -4,20 +4,8 @@
 import re
 import datetime
 
-def get_regexp():
-
-    return '(каждый|каждые) ([0-9]+) (недели|неделя) по ([А-Яа-я]+)(, начиная с| с) ([0-9]{1,2}.[0-9]{1,2}.[0-9]{4})'
-
-def is_type(task):
-
-    regexp = get_regexp()
-    string = task['recurrence']
-    groups = re.match(regexp, string)
-
-    return groups != None
-
-def is_relevant_for_date(task, date):
-
+def is_task_current(task, date):
+   
     def get_day_of_week(name):
 
         if name == 'пн' or name == 'понедельникам':
@@ -51,20 +39,24 @@ def is_relevant_for_date(task, date):
 
         return event_start_date
 
-    regexp = get_regexp()
-    string = task['recurrence']
-    groups = re.match(regexp, string)
+    result = None
+    regexp = '(каждый|каждые) ([0-9]+) (недели|неделя) по ([А-Яа-я]+)(, начиная с| с) ([0-9]{1,2}.[0-9]{1,2}.[0-9]{4})'
+    groups = re.match(regexp, task['recurrence'])
 
-    event_week_number   = int(groups[2])    
-    event_start_date    = get_event_start_date(groups[4], groups[6])
+    type_is_correct = groups != None
+    
+    if type_is_correct:
 
-    if date >= event_start_date:
+        event_week_number   = int(groups[2])    
+        event_start_date    = get_event_start_date(groups[4], groups[6])
 
-        weeks   = abs(date - event_start_date).days / 7
-        result  = weeks % event_week_number == 0
+        if date >= event_start_date:
 
-    else:
+            weeks   = abs(date - event_start_date).days / 7
+            result  = weeks % event_week_number == 0
 
-        result = False
+        else:
 
+            result = False
+    
     return result
