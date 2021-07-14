@@ -291,9 +291,6 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
             for task in group['tasks']:
 
-                if tasks_reader.is_task_with_tag(task, 'пропускать'):
-                    continue
-
                 if does_task_belong_to_plan_type_every_year():
                     continue
 
