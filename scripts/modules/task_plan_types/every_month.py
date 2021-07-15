@@ -1,10 +1,18 @@
-# каждый месяц, X день (где X — номер дня в месяце)
+# каждый месяц, 5 день
 # каждый месяц, последний день
+#
+# каждый месяц, 5 день, начиная с 29.12.1983
+# каждый месяц, 5 день с 29.12.1983
 
 import datetime
+import modules.conditions as conditions
 
 def is_task_current(task, date):
-   
+
+    def is_type_correct():
+
+        return task['recurrence'].startswith('каждый месяц, ')
+
     def day_number():
 
         def last_day_of_month():
@@ -28,10 +36,10 @@ def is_task_current(task, date):
         return int(day_number)
 
     result = None
-
-    type_is_correct = task['recurrence'].startswith('каждый месяц, ')
     
-    if type_is_correct:
-        result = day_number() == current_day_number()
+    if is_type_correct():
+
+        is_day = day_number() == current_day_number()
+        result = is_day and conditions.is_task_started(task, date)
     
     return result

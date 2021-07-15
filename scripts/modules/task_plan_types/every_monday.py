@@ -1,12 +1,30 @@
 # каждый понедельник
 # каждый пн
+#
+# каждый понедельник, начиная с 29.12.1983
+# каждый понедельник с 29.12.1983
+
+import re
+import modules.conditions as conditions
 
 def is_task_current(task, date):
    
-    result          = None
-    type_is_correct = task['recurrence'] == 'каждый понедельник' or task['recurrence'] == 'каждый пн'
+    def is_type_correct():
+
+        pattern = '(каждый понедельник|каждый пн).*'
+        match   = re.match(pattern, task['recurrence'])
+
+        return match != None
+
+    def is_date_correct():
+
+        is_monday = date.strftime('%a') == 'Mon'
+
+        return is_monday and conditions.is_task_started(task, date)
+
+    result = None
     
-    if type_is_correct:
-        result = date.strftime('%a') == "Mon"
+    if is_type_correct():
+        result = is_date_correct()
     
     return result
