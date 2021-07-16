@@ -5,6 +5,20 @@ import winsound
 import modules.tasks_reader as tasks_reader
 import modules.common_logic as common_logic
 
+def is_task_now():
+
+   return task['datetime'] <= time
+
+def is_task_open():
+
+   return task['completed'] == False
+
+def is_task_with_tag(tag):
+
+    marked_tag = '#{}'.format(tag)
+
+    return task['title'].lower().find(marked_tag) != -1
+
 script_dirpath    = os.path.abspath(os.path.dirname(__file__))
 current_date      = common_logic.get_current_date()
 
@@ -18,11 +32,7 @@ for group in tasks:
 
    for task in group['tasks']:
 
-      is_time      = task['datetime'] <= time
-      is_task_done = task['completed'] == False
-      is_ring_need = tasks_reader.is_task_with_tag(task, 'напоминать')
-
-      if is_time and is_task_done and is_ring_need:
+      if is_task_now() and is_task_open() and is_task_with_tag(task, 'напоминать'):
          ring = True
          break
 
