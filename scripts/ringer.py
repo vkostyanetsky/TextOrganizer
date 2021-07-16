@@ -32,7 +32,7 @@ for group in tasks:
 
    for task in group['tasks']:
 
-      if is_task_now() and is_task_open() and is_task_with_tag(task, 'напоминать'):
+      if is_task_now() and is_task_open() and is_task_with_tag('напоминать'):
          ring = True
          break
 
