@@ -84,7 +84,6 @@ for group in tasks:
       notifications = get_notifications()
 
       if len(notifications) > 0:
-         pprint(notifications)
          ring = True
          break
 
