@@ -1,9 +1,7 @@
 import os
+import re
 import datetime
 import winsound
-
-import re
-from pprint import pprint
 
 import modules.tasks_reader as tasks_reader
 import modules.common_logic as common_logic
@@ -25,10 +23,10 @@ def get_notifications():
 
       def get_number(string):
 
-         result = 0
-
          if string != '':
-            result = int(string)            
+            result = int(string)
+         else:
+            result = 0
 
          return result
 
