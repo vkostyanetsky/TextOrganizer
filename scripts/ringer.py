@@ -2,22 +2,69 @@ import os
 import datetime
 import winsound
 
+import re
+from pprint import pprint
+
 import modules.tasks_reader as tasks_reader
 import modules.common_logic as common_logic
 
-def is_task_now():
+def get_notifications():
 
-   return task['datetime'] <= time
+   def get_content():
 
-def is_task_open():
+      result = []
 
-   return task['completed'] == False
+      result.append(task['title'])
 
-def is_task_with_tag(tag):
+      for note in task['notes']:
+         result.append(note)
 
-    marked_tag = '#{}'.format(tag)
+      return "/n".join(result)
 
-    return task['title'].lower().find(marked_tag) != -1
+   def find_notifications_before_start(content):
+
+      def get_number(string):
+
+         result = 0
+
+         if string != '':
+            result = int(string)            
+
+         return result
+
+      groups = re.findall('(напоминать за( ([0-9]+) (часов|часа|час))?( ([0-9]+) (минуты|минуту|минут))? до начала)', content)
+
+      for group in groups:
+         
+         hours    = get_number(group[2])
+         minutes  = get_number(group[5])
+
+         timedelta = datetime.timedelta(seconds = hours * 3600 + minutes * 60)
+         task_date = task['datetime'] - timedelta
+
+         if now >= task_date:
+            notifications.append(group[0])
+
+   def find_notifications_after_start(content):
+
+      groups = re.findall('(напоминать)(?!за)', content)
+
+      for group in groups:
+         
+         if now >= task['datetime']:
+
+            if type(group) is str:
+               notifications.append(group)
+            else:
+               notifications.append(group[0])
+
+   notifications  = []
+   content        = get_content()
+  
+   find_notifications_before_start(content)
+   find_notifications_after_start(content)
+
+   return notifications
 
 script_dirpath    = os.path.abspath(os.path.dirname(__file__))
 current_date      = common_logic.get_current_date()
@@ -25,14 +72,21 @@ current_date      = common_logic.get_current_date()
 paths = common_logic.get_paths(script_dirpath)
 tasks = tasks_reader.get_tasks_from_file(paths['current_tasks_filepath'], current_date)
 
-time = datetime.datetime.now()
+now = datetime.datetime.now()
+
 ring = False
 
 for group in tasks:
 
    for task in group['tasks']:
 
-      if is_task_now() and is_task_open() and is_task_with_tag('напоминать'):
+      if task['completed'] == True:
+         continue
+
+      notifications = get_notifications()
+
+      if len(notifications) > 0:
+         pprint(notifications)
          ring = True
          break
 
