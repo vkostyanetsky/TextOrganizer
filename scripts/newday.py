@@ -74,7 +74,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                     tasks_writer.write_title(planned_tasks_file_handle, group['title'])
                     tasks_writer.write_empty_line(planned_tasks_file_handle)
 
-                    are_there_tasks_before = False;
+                    are_there_tasks_before = False
 
                     for task in group['tasks']:
 
