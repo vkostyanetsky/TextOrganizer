@@ -6,7 +6,7 @@ import datetime
 def is_task_current(task, date):
    
     result = None
-    groups = re.match('([0-9]{1,2}).([0-9]{1,2}).([0-9]{4})', task['recurrence'])
+    groups = re.match('([0-9]{1,2}).([0-9]{1,2}).([0-9]{4})', task['condition'])
 
     type_is_correct = groups != None
     

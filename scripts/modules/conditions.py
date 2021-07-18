@@ -6,7 +6,7 @@ def is_task_started(task, date):
     result = True
 
     regexp = '.*(, начиная с| с) ([0-9]{1,2}.[0-9]{1,2}.[0-9]{4})$'
-    groups = re.match(regexp, task['recurrence'])
+    groups = re.match(regexp, task['condition'])
 
     if groups != None:
 

@@ -8,7 +8,7 @@ def is_task_current(task, date):
 
     def is_type_correct():
 
-        return task['recurrence'].startswith('каждый день')
+        return task['condition'].startswith('каждый день')
 
     def is_date_correct():
 

@@ -13,7 +13,7 @@ def get_tasks_from_file(path, current_date):
             'datetime':     current_date,
             'outdated':     False,
             'completed':    False,
-            'recurrence':   '',
+            'condition':   '',
 
         }
 

@@ -12,7 +12,7 @@ def is_task_current(task, date):
     def is_type_correct():
 
         pattern = '(каждый вторник|каждый вт).*'
-        match   = re.match(pattern, task['recurrence'])
+        match   = re.match(pattern, task['condition'])
 
         return match != None
 

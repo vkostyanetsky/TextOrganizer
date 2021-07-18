@@ -41,7 +41,7 @@ def is_task_current(task, date):
 
     result = None
     regexp = '(каждый|каждые) ([0-9]+) (недели|неделя) по ([А-Яа-я]+)(, начиная с| с) ([0-9]{1,2}.[0-9]{1,2}.[0-9]{4})'
-    groups = re.match(regexp, task['recurrence'])
+    groups = re.match(regexp, task['condition'])
 
     type_is_correct = groups != None
     

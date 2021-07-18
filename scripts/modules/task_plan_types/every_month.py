@@ -11,7 +11,7 @@ def is_task_current(task, date):
 
     def is_type_correct():
 
-        return task['recurrence'].startswith('каждый месяц, ')
+        return task['condition'].startswith('каждый месяц, ')
 
     def day_number():
 
@@ -21,8 +21,8 @@ def is_task_current(task, date):
 
             return next_month - datetime.timedelta(days = next_month.day)
 
-        recurrence = task['recurrence'].split(' ')
-        day_number = recurrence[2]
+        conditions = task['condition'].split(' ')
+        day_number = conditions[2]
 
         if day_number == 'последний':
             day_number = last_day_of_month().day

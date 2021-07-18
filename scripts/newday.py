@@ -55,8 +55,8 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                     if substrings_counter >= 2:
 
-                        task['title']           = substrings[0].strip()
-                        task['recurrence']      = substrings[1].strip().lower()
+                        task['title']       = substrings[0].strip()
+                        task['condition']   = substrings[1].strip().lower()
 
             return tasks
                 

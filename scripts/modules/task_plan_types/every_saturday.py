@@ -14,7 +14,7 @@ def is_task_current(task, date):
     def is_type_correct():
 
         pattern = '(каждая суббота|каждая сб|каждую субботу|каждую сб).*'
-        match   = re.match(pattern, task['recurrence'])
+        match   = re.match(pattern, task['condition'])
 
         return match != None
 

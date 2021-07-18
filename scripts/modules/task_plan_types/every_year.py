@@ -9,7 +9,7 @@ def is_task_current(task, date):
 
     def is_type_correct():
 
-        return task['recurrence'].startswith('каждый год, ')
+        return task['condition'].startswith('каждый год, ')
 
     def is_day():
 
@@ -44,7 +44,7 @@ def is_task_current(task, date):
             elif task_date[1] == 'декабрь':
                 return 12
 
-        parts = task['recurrence'].split(',')
+        parts = task['condition'].split(',')
 
         task_date = parts[1].strip()
         task_date = task_date.split(' ')
