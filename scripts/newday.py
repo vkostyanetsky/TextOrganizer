@@ -420,12 +420,12 @@ def update_git(comment):
 script_dirpath  = os.path.abspath(os.path.dirname(__file__))
 paths           = common_logic.get_paths(script_dirpath)
 
-parameters      = yaml_wrapper.get_data_from_file(paths['parameters_filepath'])
+cache           = yaml_wrapper.get_data_from_file(paths['cache_filepath'])
 current_date    = common_logic.get_current_date()
 
-if parameters['last_date'] != None:
+if cache['last_date'] != None:
 
-    if current_date == parameters['last_date']:
+    if current_date == cache['last_date']:
     
         print("Задачи на сегодня уже распланированы!")
         exit()
@@ -434,12 +434,12 @@ if parameters['last_date'] != None:
 
     date_today = current_date
     
-    date_delta = (date_today - parameters['last_date']).days
+    date_delta = (date_today - cache['last_date']).days
     date_delta = abs(date_delta)
 
     if date_delta > 1:
 
-        current_date = parameters['last_date']
+        current_date = cache['last_date']
 
         while current_date != date_today:
             
@@ -457,8 +457,8 @@ current_tasks = tasks_reader.get_tasks_from_file(paths['current_tasks_filepath']
 
 write_current_tasks_file()
 
-parameters['last_date'] = current_date
+cache['last_date'] = current_date
 
-yaml_wrapper.put_data_to_file(paths['parameters_filepath'], parameters)
+yaml_wrapper.put_data_to_file(paths['cache_filepath'], cache)
 
 update_git('this day')
