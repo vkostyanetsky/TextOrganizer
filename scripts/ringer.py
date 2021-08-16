@@ -18,7 +18,7 @@ def get_notifications():
       for note in task['notes']:
          result.append(note)
 
-      return "/n".join(result)
+      return '/n'.join(result)
 
    def find_notifications_before_start(content):
 
@@ -105,5 +105,7 @@ for group in tasks:
       if len(notifications) > 0:
          titles.append(task['title'])
 
-titles = '\n'.join(titles)
-send_to_telegram(titles)
+if len(titles) > 0:
+
+   titles = '\n'.join(titles)
+   send_to_telegram(titles)
