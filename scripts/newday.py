@@ -1,4 +1,6 @@
 import os
+import errno
+import zipfile
 import datetime
 import winsound
 
@@ -387,35 +389,37 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
         if include_uncompleted_tasks:
             write_uncompleted_tasks_in_current_tasks_file()
 
-def update_git(comment):
+def make_tasks_archive(comment):
 
-    def git_add():
+    def make_sure_path_exists(path):
+        
+        try:
 
-        command = 'git -C "{}" add :/'.format(paths['tasks_dirpath'])    
-        print(command)
+            os.makedirs(path)
 
-        os.system(command)
+        except OSError as exception:
 
-    def git_commit():
+            if exception.errno != errno.EEXIST:
+                raise
 
-        comment_date = current_date.strftime('%Y-%m-%d')
-        full_comment = '{0}, {1}'.format(comment_date, comment)
+    make_sure_path_exists(paths['history_dirpath'])
 
-        command = 'git -C "{}" commit -a -m "{}"'.format(paths['tasks_dirpath'], full_comment)
-        print(command)
+    archive_filedate = current_date.strftime('%Y-%m-%d')
+    archive_filename = '{0}, {1}.zip'.format(archive_filedate, comment)
+    archive_filepath = os.path.join(paths['history_dirpath'], archive_filename)
 
-        os.system(command)
+    zf = zipfile.ZipFile(archive_filepath, 'w')
 
-    def git_status():
+    files = os.listdir(paths['tasks_dirpath']) 
 
-        command = 'git -C "{}" status'.format(paths['tasks_dirpath'])
-        print(command)
+    for file in files:
 
-        os.system(command)
+        filepath = os.path.join(paths['tasks_dirpath'], file)
 
-    git_status()
-    git_add()
-    git_commit()
+        if os.path.isfile(filepath) and filepath != paths['settings_filepath'] and filepath != paths['cache_filepath']:
+            zf.write(filepath, file)
+        
+    zf.close()    
 
 script_dirpath  = os.path.abspath(os.path.dirname(__file__))
 paths           = common_logic.get_paths(script_dirpath)
@@ -430,7 +434,7 @@ if cache['last_date'] != None:
         print("Задачи на сегодня уже распланированы!")
         exit()
 
-    update_git('last day')
+    make_tasks_archive('last day')
 
     date_today = current_date
     
@@ -461,4 +465,4 @@ cache['last_date'] = current_date
 
 yaml_wrapper.put_data_to_file(paths['cache_filepath'], cache)
 
-update_git('this day')
+make_tasks_archive('this day')
