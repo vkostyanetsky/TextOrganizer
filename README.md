@@ -1,6 +1,7 @@
 # Organizer
 
-```
-pip install requests
-pip install pyyaml
-```
+## Вопросы
+
+### Какие модули Python нужно установить?
+
+Требования к модулям и их версиям приведены в файле [requirements.txt](requirements.txt).
