@@ -389,7 +389,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
         if include_uncompleted_tasks:
             write_uncompleted_tasks_in_current_tasks_file()
 
-def make_tasks_archive(comment):
+def make_tasks_archive(comment: str):
 
     def make_sure_path_exists(path):
         
