@@ -9,27 +9,26 @@ import modules.tasks_reader as tasks_reader
 import modules.tasks_writer as tasks_writer
 import modules.common_logic as common_logic
 
-import modules.task_plan_types.every_year       as task_plan_type_every_year
-import modules.task_plan_types.every_month      as task_plan_type_every_month
-import modules.task_plan_types.every_n_week     as task_plan_type_every_n_week
-import modules.task_plan_types.every_n_day      as task_plan_type_every_n_day
-import modules.task_plan_types.every_day        as task_plan_type_every_day
-import modules.task_plan_types.every_weekday    as task_plan_type_every_weekday
-import modules.task_plan_types.every_monday     as task_plan_type_every_monday
-import modules.task_plan_types.every_tuesday    as task_plan_type_every_tuesday
-import modules.task_plan_types.every_wednesday  as task_plan_type_every_wednesday
-import modules.task_plan_types.every_thursday   as task_plan_type_every_thursday
-import modules.task_plan_types.every_friday     as task_plan_type_every_friday
-import modules.task_plan_types.every_saturday   as task_plan_type_every_saturday
-import modules.task_plan_types.every_sunday     as task_plan_type_every_sunday
-import modules.task_plan_types.date             as task_plan_type_date
+import modules.task_plan_types.every_year as task_plan_type_every_year
+import modules.task_plan_types.every_month as task_plan_type_every_month
+import modules.task_plan_types.every_n_week as task_plan_type_every_n_week
+import modules.task_plan_types.every_n_day as task_plan_type_every_n_day
+import modules.task_plan_types.every_day as task_plan_type_every_day
+import modules.task_plan_types.every_weekday as task_plan_type_every_weekday
+import modules.task_plan_types.every_monday as task_plan_type_every_monday
+import modules.task_plan_types.every_tuesday as task_plan_type_every_tuesday
+import modules.task_plan_types.every_wednesday as task_plan_type_every_wednesday
+import modules.task_plan_types.every_thursday as task_plan_type_every_thursday
+import modules.task_plan_types.every_friday as task_plan_type_every_friday
+import modules.task_plan_types.every_saturday as task_plan_type_every_saturday
+import modules.task_plan_types.every_sunday as task_plan_type_every_sunday
+import modules.task_plan_types.date as task_plan_type_date
 
-def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
+def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
     def write_tasks(tasks):
 
         for task in tasks:
-
             tasks_writer.write_title(handle, task['title'], '-')
             tasks_writer.write_notes(handle, task)
 
@@ -47,24 +46,23 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
         def get_planned_tasks():
 
             tasks = tasks_reader.get_tasks_from_file(paths['planned_tasks_filepath'], current_date)
-            
+
             for group in tasks:
 
                 for task in group['tasks']:
 
-                    substrings          = task['title'].split(';')
-                    substrings_counter  = len(substrings)
+                    substrings = task['title'].split(';')
+                    substrings_counter = len(substrings)
 
                     if substrings_counter >= 2:
-
-                        task['title']       = substrings[0].strip()
-                        task['condition']   = substrings[1].strip().lower()
+                        task['title'] = substrings[0].strip()
+                        task['condition'] = substrings[1].strip().lower()
 
             return tasks
-                
+
         def write_planned_tasks_file():
 
-            with open(paths['planned_tasks_filepath'], 'w+', encoding = 'utf-8-sig') as planned_tasks_file_handle:
+            with open(paths['planned_tasks_filepath'], 'w+', encoding='utf-8-sig') as planned_tasks_file_handle:
 
                 are_there_tasks_before = False
 
@@ -85,12 +83,12 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                         tasks_writer.write_title(planned_tasks_file_handle, task['original_title'], '-')
                         tasks_writer.write_notes(planned_tasks_file_handle, task)
-                        
+
                         are_there_tasks_before = True
 
         def does_task_belong_to_plan_type_every_year():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_year.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -104,7 +102,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
         def does_task_belong_to_plan_type_every_month():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_month.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -118,7 +116,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
         def does_task_belong_to_plan_type_every_n_week():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_n_week.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -132,7 +130,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
         def does_task_belong_to_plan_type_every_n_day():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_n_day.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -146,7 +144,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
         def does_task_belong_to_plan_type_every_weekday():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_weekday.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -160,7 +158,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
         def does_task_belong_to_plan_type_every_monday():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_monday.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -174,7 +172,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
         def does_task_belong_to_plan_type_every_tuesday():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_tuesday.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -184,11 +182,11 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                 result = True
 
-            return result            
+            return result
 
         def does_task_belong_to_plan_type_every_wednesday():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_wednesday.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -198,11 +196,11 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                 result = True
 
-            return result             
+            return result
 
         def does_task_belong_to_plan_type_every_thursday():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_thursday.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -212,11 +210,11 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                 result = True
 
-            return result            
+            return result
 
         def does_task_belong_to_plan_type_every_friday():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_friday.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -226,11 +224,11 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                 result = True
 
-            return result              
+            return result
 
         def does_task_belong_to_plan_type_every_saturday():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_saturday.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -240,11 +238,11 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                 result = True
 
-            return result             
+            return result
 
         def does_task_belong_to_plan_type_every_sunday():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_sunday.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -254,11 +252,11 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                 result = True
 
-            return result 
+            return result
 
         def does_task_belong_to_plan_type_date():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_date.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -272,7 +270,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
         def does_task_belong_to_plan_type_every_day():
 
-            result          = False
+            result = False
             task_is_current = task_plan_type_every_day.is_task_current(task, current_date)
 
             if task_is_current != None:
@@ -285,9 +283,9 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
             return result
 
         planned_tasks = get_planned_tasks()
-        
-        current_tasks_with_time     = []
-        current_tasks_without_time  = []
+
+        current_tasks_with_time = []
+        current_tasks_without_time = []
 
         for group in planned_tasks:
 
@@ -301,7 +299,7 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
 
                 if does_task_belong_to_plan_type_every_n_week():
                     continue
-    
+
                 if does_task_belong_to_plan_type_every_n_day():
                     continue
 
@@ -344,13 +342,11 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
                 print("Неизвестный шаблон повторения:", task['title'])
 
         if len(current_tasks_with_time) > 0:
-
-            tasks_with_time = sorted(current_tasks_with_time, key = lambda task: task['datetime'])
+            tasks_with_time = sorted(current_tasks_with_time, key=lambda task: task['datetime'])
 
             write_tasks(tasks_with_time)
 
         if len(current_tasks_without_time) > 0:
-
             tasks_writer.write_empty_line(handle)
 
             write_tasks(current_tasks_without_time)
@@ -365,7 +361,6 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
             uncompleted_tasks = list((task for task in group['tasks'] if not task['completed']))
 
             if len(uncompleted_tasks) > 0:
-
                 tasks_writer.write_empty_line(handle)
                 tasks_writer.write_title(handle, group['title'])
                 tasks_writer.write_empty_line(handle)
@@ -377,11 +372,11 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
     else:
         tasks_filepath = os.path.join(paths['tasks_dirpath'], 'today {}.md'.format(postfix))
 
-    with open(tasks_filepath, 'w+', encoding = 'utf-8-sig') as handle:
+    with open(tasks_filepath, 'w+', encoding='utf-8-sig') as handle:
 
         title = current_date.strftime('%Y-%m-%d')
 
-        tasks_writer.write_title(handle, title, '#')        
+        tasks_writer.write_title(handle, title, '#')
         tasks_writer.write_empty_line(handle)
 
         write_planned_tasks_in_current_tasks_file()
@@ -389,10 +384,10 @@ def write_current_tasks_file(postfix = '', include_uncompleted_tasks = True):
         if include_uncompleted_tasks:
             write_uncompleted_tasks_in_current_tasks_file()
 
-def make_tasks_archive(comment: str):
 
+def make_tasks_archive(comment: str):
     def make_sure_path_exists(path):
-        
+
         try:
 
             os.makedirs(path)
@@ -410,7 +405,7 @@ def make_tasks_archive(comment: str):
 
     zf = zipfile.ZipFile(archive_filepath, 'w')
 
-    files = os.listdir(paths['tasks_dirpath']) 
+    files = os.listdir(paths['tasks_dirpath'])
 
     for file in files:
 
@@ -418,26 +413,26 @@ def make_tasks_archive(comment: str):
 
         if os.path.isfile(filepath) and filepath != paths['settings_filepath'] and filepath != paths['cache_filepath']:
             zf.write(filepath, file)
-        
-    zf.close()    
 
-script_dirpath  = os.path.abspath(os.path.dirname(__file__))
-paths           = common_logic.get_paths(script_dirpath)
+    zf.close()
 
-cache           = yaml_wrapper.get_data_from_file(paths['cache_filepath'])
-current_date    = common_logic.get_current_date()
+
+script_dirpath = os.path.abspath(os.path.dirname(__file__))
+paths = common_logic.get_paths(script_dirpath)
+
+cache = yaml_wrapper.get_data_from_file(paths['cache_filepath'])
+current_date = common_logic.get_current_date()
 
 if cache['last_date'] != None:
 
     if current_date == cache['last_date']:
-    
         print("Задачи на сегодня уже распланированы!")
         exit()
 
     make_tasks_archive('last day')
 
     date_today = current_date
-    
+
     date_delta = (date_today - cache['last_date']).days
     date_delta = abs(date_delta)
 
@@ -446,9 +441,9 @@ if cache['last_date'] != None:
         current_date = cache['last_date']
 
         while current_date != date_today:
-            
-            current_date += datetime.timedelta(days = 1)
-            
+
+            current_date += datetime.timedelta(days=1)
+
             if current_date == date_today:
                 break
 
