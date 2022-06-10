@@ -91,7 +91,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_year.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -105,7 +105,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_month.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -119,7 +119,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_n_week.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -133,7 +133,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_n_day.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -147,7 +147,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_weekday.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -161,7 +161,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_monday.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -175,7 +175,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_tuesday.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -189,7 +189,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_wednesday.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -203,7 +203,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_thursday.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -217,7 +217,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_friday.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -231,7 +231,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_saturday.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -245,7 +245,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_sunday.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -259,7 +259,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_date.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -273,7 +273,7 @@ def write_current_tasks_file(postfix='', include_uncompleted_tasks=True):
             result = False
             task_is_current = task_plan_type_every_day.is_task_current(task, current_date)
 
-            if task_is_current != None:
+            if task_is_current is not None:
 
                 if task_is_current:
                     add_current_task()
@@ -423,7 +423,7 @@ paths = common_logic.get_paths(script_dirpath)
 cache = yaml_wrapper.get_data_from_file(paths['cache_filepath'])
 current_date = common_logic.get_current_date()
 
-if cache['last_date'] != None:
+if cache['last_date'] is not None:
 
     if current_date == cache['last_date']:
         print("Задачи на сегодня уже распланированы!")
