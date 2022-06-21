@@ -1,13 +1,7 @@
 from format import *
 
-import os
-
 from consolemenu import *
 from consolemenu.items import *
-
-
-def get_current_directory() -> str:
-    return os.path.abspath(os.path.dirname(__file__))
 
 
 def get_items_from_file(tasks_file_path: str) -> list:
@@ -57,10 +51,7 @@ def update_tasks(prompt_utils):
     before the user runs the procedure.
     """
 
-    current_directory = get_current_directory()
-
-    tasks_file_name = get_tasks_file_name()
-    tasks_file_path = os.path.join(current_directory, tasks_file_name)
+    tasks_file_path = get_tasks_file_path()
 
     for item in get_items_from_file(tasks_file_path):
         print(item)
