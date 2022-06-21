@@ -2,6 +2,7 @@ from config import *
 
 
 class TasksFileItem:
+    date: None
     lines: list
 
     def __init__(self, line: str):

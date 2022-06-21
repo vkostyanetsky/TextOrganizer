@@ -9,6 +9,8 @@ def get_items_from_file(tasks_file_path: str) -> list:
     tasks_file = open(tasks_file_path, "r", encoding="utf-8-sig")
     file_items = []
 
+    current_date = None
+
     with tasks_file:
         while True:
             line = tasks_file.readline()
@@ -23,9 +25,13 @@ def get_items_from_file(tasks_file_path: str) -> list:
                 file_item = Date(line)
                 file_items.append(file_item)
 
+                current_date = file_item
+
             elif Task.match(line):
 
                 file_item = Task(line)
+                file_item.date = current_date
+
                 file_items.append(file_item)
 
             else:
@@ -36,6 +42,8 @@ def get_items_from_file(tasks_file_path: str) -> list:
                     file_items[-1].lines.append(line)
                 else:
                     file_item = Text(line)
+                    file_item.date = current_date
+
                     file_items.append(file_item)
 
     return file_items
