@@ -11,18 +11,11 @@ class TasksFileItem:
         return "\n".join(self.lines)
 
 
-class Separator(TasksFileItem):
+class Date(TasksFileItem):
 
     @staticmethod
     def match(line: str):
-        return line.startswith("---")
-
-
-class Header(TasksFileItem):
-
-    @staticmethod
-    def match(line: str):
-        return line.startswith("# ")
+        return is_date(line)
 
 
 class Task(TasksFileItem):
@@ -36,4 +29,4 @@ class Text(TasksFileItem):
 
     @staticmethod
     def match(line: str):
-        return not (Separator.match(line) or Header.match(line) or Task.match(line))
+        return not Date.match(line) and not Task.match(line)

@@ -1,4 +1,3 @@
-from config import *
 from format import *
 
 import os
@@ -26,14 +25,9 @@ def get_items_from_file(tasks_file_path: str) -> list:
 
             line = line.strip()
 
-            if Separator.match(line):
+            if Date.match(line):
 
-                file_item = Separator(line)
-                file_items.append(file_item)
-
-            elif Header.match(line):
-
-                file_item = Header(line)
+                file_item = Date(line)
                 file_items.append(file_item)
 
             elif Task.match(line):

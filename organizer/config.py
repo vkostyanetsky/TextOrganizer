@@ -6,6 +6,10 @@ def get_plans_file_name() -> str:
     return "plans.md"
 
 
+def is_date(line: str) -> bool:
+    return line.startswith("# ")
+
+
 def is_task_in_progress(line: str) -> bool:
     return line.startswith("* ")
 
