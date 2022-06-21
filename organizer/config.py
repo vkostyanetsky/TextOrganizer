@@ -15,6 +15,16 @@ def get_plans_file_path() -> str:
     return join(directory, file_name)
 
 
+def get_date_format() -> str:
+    """
+    Have a look: https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes
+
+    :return: the desired date format (see the link above if you need help)
+    """
+
+    return "%Y-%m-%d"
+
+
 def is_date(line: str) -> bool:
     return line.startswith("# ")
 
