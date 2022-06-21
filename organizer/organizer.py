@@ -5,13 +5,12 @@ from consolemenu.items import *
 
 
 def get_items_from_file(tasks_file_path: str) -> list:
+
     tasks_file = open(tasks_file_path, "r", encoding="utf-8-sig")
     file_items = []
 
     with tasks_file:
-
         while True:
-
             line = tasks_file.readline()
 
             if not line:
