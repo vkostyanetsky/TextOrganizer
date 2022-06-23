@@ -3,12 +3,11 @@ import re
 
 
 class TasksFileItem:
-    owner: None
     lines: list
 
-    def __init__(self, line: str, owner=None):
-        self.owner = owner
+    def __init__(self, line: str):
         self.lines = [line]
+        self.items = []
 
     def __str__(self):
         return "\n".join(self.lines)
@@ -17,6 +16,7 @@ class TasksFileItem:
 class Date(TasksFileItem):
     date_format: str = "%Y-%m-%d"
     date_mark: str = "# "
+    items: list
 
     @staticmethod
     def match(line: str):
