@@ -22,12 +22,12 @@ def get_plans_file_path() -> str:
 
 
 def get_dates_in_progress(file_items: list) -> list:
-    current_date = datetime.date.today()
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
     incomplete_days = []
 
     for file_item in file_items:
 
-        if type(file_item) == Date and file_item.date <= current_date:
+        if type(file_item) == Date and file_item.date <= yesterday:
 
             scheduled_tasks = file_item.get_scheduled_tasks()
 
