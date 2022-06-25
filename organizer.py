@@ -22,7 +22,7 @@ def get_plans_file_path() -> str:
     return path.join(directory, file_name)
 
 
-def get_incomplete_days(file_items: list) -> list:
+def get_dates_in_progress(file_items: list) -> list:
     current_date = datetime.date.today()
     incomplete_days = []
 
@@ -54,14 +54,14 @@ def update_tasks() -> None:
 
     file_items = Parser(tasks_file_path).parse()
 
-    incomplete_days = get_incomplete_days(file_items)
+    dates_in_progress = get_dates_in_progress(file_items)
 
-    if len(incomplete_days) > 0:
+    if len(dates_in_progress) > 0:
 
-        print("Unable to perform, since there is at least one incomplete task:\n")
+        print("Unable to perform, since there is at least one task in progress:\n")
 
-        for incomplete_day in incomplete_days:
-            print(incomplete_day)
+        for date_in_progress in dates_in_progress:
+            print(date_in_progress)
             print()
 
         print("You have to rearrange it or mark it as completed or cancelled.")
