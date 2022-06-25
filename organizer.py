@@ -1,11 +1,10 @@
 import datetime
+import os.path as path
 
-from consolemenu import *
-from consolemenu.items import *
+from consolemenu import ConsoleMenu, PromptUtils, Screen
+from consolemenu.items import FunctionItem
 
 from tasks_file import Date, Parser
-
-import os.path as path
 
 
 def get_tasks_file_path() -> str:
@@ -86,7 +85,7 @@ def display_menu() -> None:
     main_menu = ConsoleMenu("ORGANIZER", the_quote)
 
     main_menu.append_item(
-        FunctionItem("Update tasks", trigger_menu_item_update_tasks, [prompt_utils])
+        FunctionItem("Update Tasks", trigger_menu_item_update_tasks, [prompt_utils])
     )
 
     main_menu.show()
