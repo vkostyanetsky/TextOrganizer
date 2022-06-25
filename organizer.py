@@ -3,7 +3,7 @@ import datetime
 from consolemenu import *
 from consolemenu.items import *
 
-from tasks_file import *
+from tasks_file import Date, Parser
 
 import os.path as path
 
@@ -20,10 +20,6 @@ def get_plans_file_path() -> str:
     file_name = "plans.md"
 
     return path.join(directory, file_name)
-
-
-def tasks_in_progress(file_items: list) -> list:
-    return []
 
 
 def get_incomplete_days(file_items: list) -> list:
@@ -68,7 +64,8 @@ def update_tasks() -> None:
             print(incomplete_day)
             print()
 
-        print("You have to rearrange it or mark it as complete or cancelled.")
+        print("You have to rearrange it or mark it as completed or cancelled.")
+        print()
 
 
 def trigger_menu_item_update_tasks(prompt_utils: PromptUtils):
@@ -89,12 +86,11 @@ def display_menu() -> None:
     main_menu = ConsoleMenu("ORGANIZER", the_quote)
 
     main_menu.append_item(
-        FunctionItem("Update tasks", update_tasks, [prompt_utils])
+        FunctionItem("Update tasks", trigger_menu_item_update_tasks, [prompt_utils])
     )
 
     main_menu.show()
 
 
 if __name__ == '__main__':
-    #display_menu()
-    update_tasks()
+    display_menu()
