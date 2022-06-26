@@ -23,11 +23,7 @@ class Date(Item):
 
     def __str__(self) -> str:
         lines = super().__str__()
-        items = "\n".join(
-            list(
-                map(lambda item: str(item), self.items)
-            )
-        )
+        items = "\n".join(list(map(lambda item: str(item), self.items)))
 
         return f"{lines}\n{items}"
 
@@ -59,7 +55,7 @@ class Date(Item):
         result = None
 
         if len(self.lines[0]) > 0:
-            match_object = re.match(r'# ([0-9]{4}-[0-9]{2}-[0-9]{2})', self.lines[0])
+            match_object = re.match(r"# ([0-9]{4}-[0-9]{2}-[0-9]{2})", self.lines[0])
 
             if match_object is not None:
                 string = match_object.group(1)
@@ -103,11 +99,14 @@ class Task(Item):
 
     @staticmethod
     def match(line: str):
-        return Task.is_scheduled_task(line) or Task.is_completed_task(line) or Task.is_cancelled_task(line)
+        return (
+            Task.is_scheduled_task(line)
+            or Task.is_completed_task(line)
+            or Task.is_cancelled_task(line)
+        )
 
 
 class Text(Item):
-
     @staticmethod
     def match(line: str):
         return not Date.match(line) and not Task.match(line)
@@ -215,7 +214,9 @@ class Parser:
         return previous_task
 
     def __add_empty_lines_to_last_date(self) -> None:
-        self.__add_empty_lines(self.__file_items if self.__last_date is None else self.__last_date.items)
+        self.__add_empty_lines(
+            self.__file_items if self.__last_date is None else self.__last_date.items
+        )
 
     def __add_empty_lines(self, collection) -> None:
         for empty_line in self.__empty_lines:
