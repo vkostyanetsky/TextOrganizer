@@ -3,18 +3,11 @@
 import datetime
 import os.path as path
 
-# Console Menu
-
 from consolemenu import ConsoleMenu, PromptUtils, Screen
 from consolemenu.items import FunctionItem
-
-# YAML Parser
-
-from yaml import safe_load as parse_yaml
 from yaml import safe_dump as write_yaml
+from yaml import safe_load as parse_yaml
 from yaml.parser import ParserError as YamlParserError
-
-# Self-Made Modules
 
 from tasks_file import Date, Parser
 
