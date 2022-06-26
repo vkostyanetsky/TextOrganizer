@@ -90,11 +90,13 @@ def check_for_dates_in_progress(file_items: list) -> bool:
 
 def update_tasks() -> None:
     """
-    Creates tasks for the current day (and days before, in case the script wasn't called for them previously),
-    according to the tasks file (tasks.md by default) & the plans file (plans.md by default).
+    Creates tasks for the current day (and days before, in case the script
+    wasn't called for them previously), according to the tasks file
+    (tasks.md by default) & the plans file (plans.md by default).
 
-    All tasks in progress must be marked as completed, cancelled or rearranged to other upcoming date
-    before the user runs the procedure.
+    All tasks in progress must be marked as completed, cancelled
+    or rearranged to other upcoming date before the user
+    runs the procedure.
     """
 
     tasks_file_path = get_tasks_file_path()
@@ -121,7 +123,11 @@ def display_menu() -> None:
 
     prompt_utils = PromptUtils(Screen())
 
-    the_quote = "Life is like riding a bicycle.\nTo keep your balance you must keep moving.\n— Albert Einstein"
+    the_quote = """
+    Life is like riding a bicycle.
+    To keep your balance you must keep moving.
+    — Albert Einstein
+    """
     main_menu = ConsoleMenu("ORGANIZER", the_quote)
 
     main_menu.append_item(
