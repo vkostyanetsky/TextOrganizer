@@ -45,7 +45,7 @@ def get_yaml_file_data(file_path: str) -> dict:
 
     try:
 
-        with open(file_path, encoding='utf-8-sig') as yaml_file:
+        with open(file_path, encoding="utf-8-sig") as yaml_file:
             result = parse_yaml(yaml_file)
 
     except FileNotFoundError:
@@ -118,7 +118,6 @@ def update_tasks() -> None:
 
 
 def trigger_menu_item_update_tasks(prompt_utils: PromptUtils):
-
     update_tasks()
 
     prompt_utils.enter_to_continue()
@@ -141,5 +140,5 @@ def display_menu() -> None:
     main_menu.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     display_menu()
