@@ -89,10 +89,13 @@ def update_tasks() -> None:
         history = HistoryFile(history_file_path)
 
         for day in list(filter(lambda file_item: type(file_item) == Date, file_items)):
-            if day.date not in history.planned_dates:
+            if day.date not in history.dates:
                 print(day.date)
 
     # TODO Need to find dates without a "done" mark and fill them.
+    # TODO Read existing tasks, add planned, sort all of them, then write.
+    # TODO Logging to text files
+    # TODO Output tasks & plans healthcheck before main menu showing in case something is wrong
 
 
 def trigger_menu_item_update_tasks(prompt_utils: PromptUtils):
