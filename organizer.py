@@ -116,7 +116,7 @@ def display_menu() -> None:
     main_menu = ConsoleMenu("ORGANIZER", the_quote)
 
     main_menu.append_item(
-        FunctionItem("Update Tasks", trigger_menu_item_update_tasks, [prompt_utils])
+        FunctionItem("Create Tasks for Today", trigger_menu_item_update_tasks, [prompt_utils])
     )
 
     main_menu.show()
