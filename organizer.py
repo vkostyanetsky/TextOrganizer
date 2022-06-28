@@ -3,11 +3,9 @@ import os.path as path
 
 from consolemenu import ConsoleMenu, PromptUtils, Screen
 from consolemenu.items import FunctionItem
-from yaml import safe_dump as write_yaml
-from yaml import safe_load as parse_yaml
-from yaml.parser import ParserError as YamlParserError
 
 from tasks_file import Date, Parser
+from history_file import HistoryFile
 
 
 def get_tasks_file_path() -> str:
@@ -29,23 +27,6 @@ def get_history_file_path() -> str:
     file_name = "history.yaml"
 
     return path.join(directory, file_name)
-
-
-def get_yaml_file_data(file_path: str) -> dict:
-    result = {}
-
-    try:
-
-        with open(file_path, encoding="utf-8-sig") as yaml_file:
-            result = parse_yaml(yaml_file)
-
-    except FileNotFoundError:
-        print(f"{file_path} is not found!")
-
-    except YamlParserError:
-        print(f"Unable to parse {file_path}!")
-
-    return result
 
 
 def get_dates_in_progress(file_items: list) -> list:
@@ -105,7 +86,11 @@ def update_tasks() -> None:
     file_items = Parser(tasks_file_path).parse()
 
     if check_for_dates_in_progress(file_items):
-        history = get_yaml_file_data(history_file_path)
+        history = HistoryFile(history_file_path)
+
+        for day in list(filter(lambda file_item: type(file_item) == Date, file_items)):
+            if day.date not in history.planned_dates:
+                print(day.date)
 
     # TODO Need to find dates without a "done" mark and fill them.
 
