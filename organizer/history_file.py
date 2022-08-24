@@ -1,6 +1,8 @@
 from yaml import safe_dump as write_yaml
 from yaml import safe_load as parse_yaml
-from yaml.parser import ParserError as YamlParserError
+
+import yaml
+from yaml.parser import ParserError
 
 
 class HistoryFile:
@@ -16,15 +18,15 @@ class HistoryFile:
         try:
 
             with open(self.__file_path, encoding="utf-8-sig") as yaml_file:
-                content = parse_yaml(yaml_file)
+                content = yaml.safe_load(yaml_file)
 
             self.dates = content["dates"]
 
         except FileNotFoundError:
             print(f"{self.__file_path} is not found!")
 
-        except YamlParserError:
+        except ParserError:
             print(f"Unable to parse {self.__file_path}!")
 
     def save(self) -> None:
-        write_yaml({"dates": self.dates})
+        yaml.safe_dump({"dates": self.dates})

@@ -1,32 +1,31 @@
 import datetime
-import os.path as path
+import os.path
 
-from consolemenu import ConsoleMenu, PromptUtils, Screen
-from consolemenu.items import FunctionItem
-
-from tasks_file import Date, Parser
 from history_file import HistoryFile
+from tasks_file import Date, Parser
+
+from organizer.menu import OrganizerMenu
 
 
 def get_tasks_file_path() -> str:
-    directory = path.dirname(__file__)
+    directory = os.path.dirname(__file__)
     file_name = "tasks.md"
 
-    return path.join(directory, file_name)
+    return os.path.join(directory, file_name)
 
 
 def get_plans_file_path() -> str:
-    directory = path.dirname(__file__)
+    directory = os.path.dirname(__file__)
     file_name = "plans.md"
 
-    return path.join(directory, file_name)
+    return os.path.join(directory, file_name)
 
 
 def get_history_file_path() -> str:
-    directory = path.dirname(__file__)
+    directory = os.path.dirname(__file__)
     file_name = "history.yaml"
 
-    return path.join(directory, file_name)
+    return os.path.join(directory, file_name)
 
 
 def get_dates_in_progress(file_items: list) -> list:
@@ -98,32 +97,26 @@ def update_tasks() -> None:
     # TODO Output tasks & plans healthcheck before main menu showing in case something is wrong
 
 
-def trigger_menu_item_update_tasks(prompt_utils: PromptUtils):
+def create_tasks_for_today():
+
     update_tasks()
 
-    prompt_utils.enter_to_continue()
 
-
-def display_menu() -> None:
+def main_menu() -> None:
     """
     Builds and then displays the main menu of the application.
     """
 
-    prompt_utils = PromptUtils(Screen())
+    menu = OrganizerMenu()
 
-    the_quote = """
-    Life is like riding a bicycle.
-    To keep your balance you must keep moving.
-    — Albert Einstein
+    menu.add_item("Create Tasks for Today", create_tasks_for_today)
+
+    menu.choose()
+
+
+def main():
     """
-    main_menu = ConsoleMenu("ORGANIZER", the_quote)
+    Main entry point of the application. Displays the main menu by default.
+    """
 
-    main_menu.append_item(
-        FunctionItem("Create Tasks for Today", trigger_menu_item_update_tasks, [prompt_utils])
-    )
-
-    main_menu.show()
-
-
-if __name__ == "__main__":
-    display_menu()
+    main_menu()
