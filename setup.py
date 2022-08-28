@@ -12,7 +12,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/vkostyanetsky/Todozer",
     license="MIT",
-    python_requires=">=3.7",
+    python_requires=">=3.9",
     packages=["todozer"],
     install_requires=[
         "PyYAML~=6.0",
@@ -28,8 +28,6 @@ setup(
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: MIT License",
         "Operating System :: POSIX",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Topic :: Utilities",
