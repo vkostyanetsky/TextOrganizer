@@ -4,7 +4,8 @@ import os.path
 from history_file import HistoryFile
 from tasks_file import Date, Parser
 
-from organizer.menu import OrganizerMenu
+from todozer.menu import TodozerMenu
+import sys
 
 
 def get_tasks_file_path() -> str:
@@ -68,28 +69,22 @@ def check_for_dates_in_progress(file_items: list) -> bool:
     return passed
 
 
-def update_tasks() -> None:
+def create_planned_tasks():
     """
-    Creates tasks for the current day (and days before, in case the script
-    wasn't called for them previously), according to the tasks file
-    (tasks.md by default) & the plans file (plans.md by default).
+    Creates tasks for the today (and days before, in case it was not done yet).
 
-    All tasks in progress must be marked as completed, cancelled
-    or rearranged to other upcoming date before the user
-    runs the procedure.
+    All tasks in progress must be marked as completed, cancelled or rearranged
+    to other upcoming date before the user runs the procedure.
     """
 
-    tasks_file_path = get_tasks_file_path()
-    history_file_path = get_history_file_path()
+    file_items = Parser("tasks.md").parse()
 
-    file_items = Parser(tasks_file_path).parse()
-
-    if check_for_dates_in_progress(file_items):
-        history = HistoryFile(history_file_path)
-
-        for day in list(filter(lambda file_item: type(file_item) == Date, file_items)):
-            if day.date not in history.dates:
-                print(day.date)
+    # if check_for_dates_in_progress(file_items):
+    #     history = HistoryFile("history.yaml")
+    #
+    #     for day in list(filter(lambda file_item: type(file_item) == Date, file_items)):
+    #         if day.date not in history.dates:
+    #             print(day.date)
 
     # TODO Need to find dates without a "done" mark and fill them.
     # TODO Read existing tasks, add planned, sort all of them, then write.
@@ -97,26 +92,22 @@ def update_tasks() -> None:
     # TODO Output tasks & plans healthcheck before main menu showing in case something is wrong
 
 
-def create_tasks_for_today():
-
-    update_tasks()
-
-
 def main_menu() -> None:
     """
     Builds and then displays the main menu of the application.
     """
 
-    menu = OrganizerMenu()
+    menu = TodozerMenu()
 
-    menu.add_item("Create Tasks for Today", create_tasks_for_today)
+    menu.add_item("Create Planned Tasks", create_planned_tasks)
+    menu.add_item("Exit", sys.exit)
 
     menu.choose()
 
 
 def main():
     """
-    Main entry point of the application. Displays the main menu by default.
+    Main entry point; displays the main menu by default.
     """
 
     main_menu()

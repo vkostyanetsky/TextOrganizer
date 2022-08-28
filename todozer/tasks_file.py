@@ -122,6 +122,7 @@ class Parser:
         self.__file_path = file_path
         self.__last_date = None
         self.__file_items = []
+        self.__empty_lines = []
 
     def parse(self) -> list:
 
