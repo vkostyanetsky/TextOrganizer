@@ -9,8 +9,8 @@ from vkostyanetsky import cliutils
 
 class TodozerMenu(cliutils.Menu):
     """
-    Implementation of the application' main menu. Intended to show
-    app's title and a list of choices to pick.
+    Class of the main menu. Intended to show app's title
+    and a list of choices to pick.
     """
 
     def _print_title(self) -> None:
