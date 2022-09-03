@@ -90,6 +90,20 @@ class Date(Item):
         return line.startswith(Date.date_mark)
 
 
+class Plan(Item):
+
+    def get_pattern(self):
+        result = ""
+        source = self.lines[0]
+
+        index = source.rfind(';')
+
+        if index != -1:
+            result = source[index + 1:].strip()
+
+        return result
+
+
 class Task(Item):
     scheduled_task_mark: str = "* "
     completed_task_mark: str = "+ "
