@@ -57,6 +57,7 @@ def simplify(text: str) -> str:
         ("будний день", "weekday"),
         ("день", "day"),
         ("месяц", "month"),
+        ("год", "year"),
         ("дня|дней", "days"),
         ("последний", "last"),
         ("каждый|каждая|каждое", "every"),
@@ -290,8 +291,8 @@ def pattern_every_year(text: str, date: datetime.date) -> bool:
     day_regexp = get_regexp_for_day_number()
     month_regexp = get_regexp_for_month_name()
 
-    regexp_1 = f".*;.*every year, (?P<d>{day_regexp}) (?P<m>{month_regexp}).*"
-    regexp_2 = f".*;.*every year, (?P<m>{month_regexp}) (?P<d>{day_regexp}).*"
+    regexp_1 = f".*every year, (?P<d>{day_regexp}) (?P<m>{month_regexp}).*"
+    regexp_2 = f".*every year, (?P<m>{month_regexp}) (?P<d>{day_regexp}).*"
 
     groups = re.match(regexp_1, text)
 
@@ -390,6 +391,3 @@ def get_regexp_for_month_name() -> str:
 
 def get_regexp_for_day_number() -> str:
     return "[0-9]{1,2}"
-
-
-print(match('* Bob, do something!; every day from 2022-09-05', datetime.date.today()))

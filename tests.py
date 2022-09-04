@@ -2,6 +2,7 @@ import datetime
 
 from todozer import scheduler
 from todozer import utils
+import locale
 
 
 def match(task_text: str) -> bool:
@@ -15,7 +16,7 @@ def get_task_text(pattern: str) -> str:
 
 
 def get_yesterday_date() -> datetime.date:
-    return datetime.date.today() - datetime.timedelta(days=1)
+    return get_today_date() - datetime.timedelta(days=1)
 
 
 def get_today_date() -> datetime.date:
@@ -23,7 +24,7 @@ def get_today_date() -> datetime.date:
 
 
 def get_tomorrow_date() -> datetime.date:
-    return datetime.date.today() + datetime.timedelta(days=1)
+    return get_today_date() + datetime.timedelta(days=1)
 
 
 def get_task_text_with_start_date_in_russian(pattern: str, start_date: datetime.date) -> str:
@@ -114,3 +115,56 @@ def test_every_day_en_with_start_date_tomorrow():
 
     assert match(task_text) is False
 
+
+def test_every_year_ru_yesterday():
+    locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
+
+    task_date = get_yesterday_date().strftime('%d %B')
+    task_text = get_task_text(f'каждый год, {task_date}')
+
+    assert match(task_text) is False
+
+
+def test_every_year_ru_today():
+    locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
+
+    task_date = get_today_date().strftime('%d %B')
+    task_text = get_task_text(f'каждый год, {task_date}')
+
+    assert match(task_text) is True
+
+
+def test_every_year_ru_tomorrow():
+    locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
+
+    task_date = get_tomorrow_date().strftime('%d %B')
+    task_text = get_task_text(f'каждый год, {task_date}')
+
+    assert match(task_text) is False
+
+
+def test_every_year_en_yesterday():
+    locale.setlocale(locale.LC_ALL, 'en_EN.UTF-8')
+
+    task_date = get_yesterday_date().strftime('%d %B')
+    task_text = get_task_text(f'every year, {task_date}')
+
+    assert match(task_text) is False
+
+
+def test_every_year_en_today():
+    locale.setlocale(locale.LC_ALL, 'en_EN.UTF-8')
+
+    task_date = get_today_date().strftime('%d %B')
+    task_text = get_task_text(f'every year, {task_date}')
+
+    assert match(task_text) is True
+
+
+def test_every_year_en_tomorrow():
+    locale.setlocale(locale.LC_ALL, 'en_EN.UTF-8')
+
+    task_date = get_tomorrow_date().strftime('%d %B')
+    task_text = get_task_text(f'every year, {task_date}')
+
+    assert match(task_text) is False
