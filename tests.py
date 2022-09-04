@@ -166,7 +166,7 @@ def test_every_year_ru_not_today_and_not_started():
 
 def match_every_year_en(task_date: datetime.date, start_date: datetime.date = None):
 
-    locale.setlocale(locale.LC_ALL, 'en_EN.UTF-8')
+    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
     task_date = task_date.strftime('%B %d')
     task_text = get_task_text_with_start_date_in_russian(f'every year, {task_date}', start_date)
