@@ -85,7 +85,7 @@ def test_every_day_ru_with_start_date_tomorrow():
     task_date = get_tomorrow_date()
     task_text = get_task_text_with_start_date_in_russian('каждый день', task_date)
 
-    assert match(task_text) is True
+    assert match(task_text) is False
 
 
 def test_every_day_en():
@@ -113,3 +113,4 @@ def test_every_day_en_with_start_date_tomorrow():
     task_text = get_task_text_with_start_date_in_english('every day', task_date)
 
     assert match(task_text) is False
+

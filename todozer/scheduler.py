@@ -52,6 +52,7 @@ def get_pattern(text: str) -> str | None:
 def simplify(text: str) -> str:
 
     rules = [
+        (" с ", " from "),
         ("по будням|по будним дням", "every weekday"),
         ("будний день", "weekday"),
         ("день", "day"),
@@ -365,13 +366,13 @@ def match_pattern_title(title: str, samples: list) -> bool:
 def get_start_date(text: str) -> datetime.date:
 
     date_regexp = get_regexp_for_date()
-    full_regexp = f".*;.*(начиная с|с|from) ({date_regexp}).*"
+    full_regexp = f".* from ({date_regexp}).*"
 
     groups = re.match(full_regexp, text)
     result = None
 
     if groups is not None:
-        result = utils.get_date_from_string(groups[2])
+        result = utils.get_date_from_string(groups[1])
 
     return result
 
@@ -390,3 +391,5 @@ def get_regexp_for_month_name() -> str:
 def get_regexp_for_day_number() -> str:
     return "[0-9]{1,2}"
 
+
+print(match('* Bob, do something!; every day from 2022-09-05', datetime.date.today()))
