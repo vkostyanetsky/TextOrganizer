@@ -1,3 +1,3 @@
 # 🗂️ ⏲️ 📅 Todozer
 
-[![flake8](https://github.com/vkostyanetsky/Todozer/actions/workflows/flake8.yml/badge.svg)](https://github.com/vkostyanetsky/Todozer/actions/workflows/flake8.yml) [![pytest](https://github.com/vkostyanetsky/Todozer/actions/workflows/pytest.yaml/badge.svg)](https://github.com/vkostyanetsky/Todozer/actions/workflows/pytest.yaml)
+[![flake8](https://github.com/vkostyanetsky/Todozer/actions/workflows/flake8.yml/badge.svg)](https://github.com/vkostyanetsky/Todozer/actions/workflows/flake8.yml) [![pytest](https://github.com/vkostyanetsky/Todozer/actions/workflows/pytest.yaml/badge.svg)](https://github.com/vkostyanetsky/Todozer/actions/workflows/pytest.yaml) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
