@@ -301,25 +301,29 @@ def pattern_every_year(text: str, date: datetime.date) -> bool:
 
     if groups is not None:
 
-        months = {
-            "jan": 1,
-            "feb": 2,
-            "mar": 3,
-            "apr": 4,
-            "may": 5,
-            "jun": 6,
-            "jul": 7,
-            "aug": 8,
-            "sep": 9,
-            "oct": 10,
-            "nov": 11,
-            "dec": 12,
-        }
+        if match_pattern_start_date(text, date):
 
-        day_number = int(groups["d"])
-        month_number = months.get(groups["m"])
+            months = {
+                "jan": 1,
+                "feb": 2,
+                "mar": 3,
+                "apr": 4,
+                "may": 5,
+                "jun": 6,
+                "jul": 7,
+                "aug": 8,
+                "sep": 9,
+                "oct": 10,
+                "nov": 11,
+                "dec": 12,
+            }
 
-        result = date.day == day_number and date.month == month_number
+            day_number = int(groups["d"])
+            month_number = months.get(groups["m"])
+
+            match_pattern_start_date(text, date)
+
+            result = date.day == day_number and date.month == month_number
 
     return result
 

@@ -27,18 +27,26 @@ def get_tomorrow_date() -> datetime.date:
     return get_today_date() + datetime.timedelta(days=1)
 
 
-def get_task_text_with_start_date_in_russian(pattern: str, start_date: datetime.date) -> str:
+def get_task_text_with_start_date_in_russian(pattern: str, start_date: datetime.date = None) -> str:
     text = get_task_text(pattern)
-    date = utils.get_string_from_date(start_date)
 
-    return f'{text} с {date}'
+    if start_date is not None:
+        postfix = f' с {utils.get_string_from_date(start_date)}'
+    else:
+        postfix = ''
+
+    return f'{text}{postfix}'
 
 
-def get_task_text_with_start_date_in_english(pattern: str, start_date: datetime.date) -> str:
+def get_task_text_with_start_date_in_english(pattern: str, start_date: datetime.date = None) -> str:
     text = get_task_text(pattern)
-    date = utils.get_string_from_date(start_date)
 
-    return f'{text} from {date}'
+    if start_date is not None:
+        postfix = f' from {utils.get_string_from_date(start_date)}'
+    else:
+        postfix = ''
+
+    return f'{text}{postfix}'
 
 
 def test_exact_date_yesterday():
@@ -116,55 +124,81 @@ def test_every_day_en_with_start_date_tomorrow():
     assert match(task_text) is False
 
 
-def test_every_year_ru_yesterday():
+def match_every_year_ru(task_date: datetime.date, start_date: datetime.date = None):
+
     locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
 
-    task_date = get_yesterday_date().strftime('%d %B')
-    task_text = get_task_text(f'каждый год, {task_date}')
+    task_date = task_date.strftime('%d %B')
+    task_text = get_task_text_with_start_date_in_russian(f'каждый год, {task_date}', start_date)
 
-    assert match(task_text) is False
+    return match(task_text)
 
 
 def test_every_year_ru_today():
-    locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
 
-    task_date = get_today_date().strftime('%d %B')
-    task_text = get_task_text(f'каждый год, {task_date}')
-
-    assert match(task_text) is True
+    assert match_every_year_ru(get_today_date()) is True
 
 
-def test_every_year_ru_tomorrow():
-    locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
+def test_every_year_ru_today_and_started():
 
-    task_date = get_tomorrow_date().strftime('%d %B')
-    task_text = get_task_text(f'каждый год, {task_date}')
-
-    assert match(task_text) is False
+    assert match_every_year_ru(get_today_date(), get_yesterday_date()) is True
 
 
-def test_every_year_en_yesterday():
+def test_every_year_ru_today_and_not_started():
+
+    assert match_every_year_ru(get_today_date(), get_tomorrow_date()) is False
+
+
+def test_every_year_ru_not_today():
+
+    assert match_every_year_ru(get_tomorrow_date()) is False
+
+
+def test_every_year_ru_not_today_and_started():
+
+    assert match_every_year_ru(get_tomorrow_date(), get_yesterday_date()) is False
+
+
+def test_every_year_ru_not_today_and_not_started():
+
+    assert match_every_year_ru(get_tomorrow_date(), get_tomorrow_date()) is False
+
+
+def match_every_year_en(task_date: datetime.date, start_date: datetime.date = None):
+
     locale.setlocale(locale.LC_ALL, 'en_EN.UTF-8')
 
-    task_date = get_yesterday_date().strftime('%d %B')
-    task_text = get_task_text(f'every year, {task_date}')
+    task_date = task_date.strftime('%B %d')
+    task_text = get_task_text_with_start_date_in_russian(f'every year, {task_date}', start_date)
 
-    assert match(task_text) is False
-
-
-def test_every_year_en_today():
-    locale.setlocale(locale.LC_ALL, 'en_EN.UTF-8')
-
-    task_date = get_today_date().strftime('%d %B')
-    task_text = get_task_text(f'every year, {task_date}')
-
-    assert match(task_text) is True
+    return match(task_text)
 
 
-def test_every_year_en_tomorrow():
-    locale.setlocale(locale.LC_ALL, 'en_EN.UTF-8')
+def match_every_year_en_today():
 
-    task_date = get_tomorrow_date().strftime('%d %B')
-    task_text = get_task_text(f'every year, {task_date}')
+    assert match_every_year_en(get_today_date()) is True
 
-    assert match(task_text) is False
+
+def test_every_year_en_today_and_started():
+
+    assert match_every_year_en(get_today_date(), get_yesterday_date()) is True
+
+
+def test_every_year_en_today_and_not_started():
+
+    assert match_every_year_en(get_today_date(), get_tomorrow_date()) is False
+
+
+def test_every_year_en_not_today():
+
+    assert match_every_year_en(get_tomorrow_date()) is False
+
+
+def test_every_year_en_not_today_and_started():
+
+    assert match_every_year_en(get_tomorrow_date(), get_yesterday_date()) is False
+
+
+def test_every_year_en_not_today_and_not_started():
+
+    assert match_every_year_en(get_tomorrow_date(), get_tomorrow_date()) is False
