@@ -7,10 +7,14 @@ from todozer import utils
 def match(text: str, date: datetime.date) -> bool:
     """
     каждый второй четверг?..
-    precompile? on english
     """
 
     matched = False
+
+    text = get_pattern(text)
+
+    if text is None:
+        return False
 
     text = simplify(text)
 
@@ -36,6 +40,13 @@ def match(text: str, date: datetime.date) -> bool:
             break
 
     return matched
+
+
+def get_pattern(text: str) -> str | None:
+
+    index = text.find(';')
+
+    return text[index + 1:].strip() if index != -1 else None
 
 
 def simplify(text: str) -> str:
@@ -71,7 +82,7 @@ def simplify(text: str) -> str:
 
     for rule in rules:
 
-        source_regexp = rf"(.*;.*)({rule[0]})(.*)"
+        source_regexp = rf"(.*)({rule[0]})(.*)"
         result_regexp = rf"\1{rule[1]}\3"
 
         text = re.sub(source_regexp, result_regexp, text, flags=re.IGNORECASE)
@@ -86,13 +97,27 @@ def pattern_exact_date(text: str, date: datetime.date) -> bool:
     """
 
     date_regexp = get_regexp_for_date()
-    full_regexp = f".*;.*({date_regexp}).*"
+    full_regexp = f".*({date_regexp}).*"
 
     result = False
     groups = re.match(full_regexp, text)
 
     if groups is not None:
         result = date == utils.get_date_from_string(groups[1])
+
+    return result
+
+
+def pattern_every_day(text: str, date: datetime.date) -> bool:
+    """
+    Samples:
+    - каждый день
+    - every day
+    """
+    result = False
+
+    if match_pattern_title(text, ["every day"]):
+        result = match_pattern_start_date(text, date)
 
     return result
 
@@ -119,20 +144,6 @@ def pattern_every_n_day(text: str, date: datetime.date) -> bool:
 
         if start_date is not None and date >= start_date:
             result = abs(date - start_date).days % day_number == 0
-
-    return result
-
-
-def pattern_every_day(text: str, date: datetime.date) -> bool:
-    """
-    Samples:
-    - каждый день
-    - every day
-    """
-    result = False
-
-    if match_pattern_title(text, ["every day"]):
-        result = match_pattern_start_date(text, date)
 
     return result
 
@@ -369,7 +380,7 @@ def get_regexp_for_date() -> str:
     """
     Returns regular expression for a standard date (YYYY-MM-DD).
     """
-    return "[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}"
+    return "[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}"
 
 
 def get_regexp_for_month_name() -> str:
@@ -379,7 +390,3 @@ def get_regexp_for_month_name() -> str:
 def get_regexp_for_day_number() -> str:
     return "[0-9]{1,2}"
 
-
-print(match_pattern_title("- Сделать бочку; every day", ["every day"]))
-
-#print(match("- Сделать бочку; каждый день", datetime.datetime.today()))

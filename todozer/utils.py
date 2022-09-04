@@ -30,3 +30,8 @@ def load_yaml(file_name: str) -> dict:
 def get_date_from_string(source: str) -> datetime.date:
 
     return datetime.datetime.strptime(source, '%Y-%m-%d').date()
+
+
+def get_string_from_date(source: datetime.date) -> str:
+
+    return source.strftime('%Y-%m-%d')
