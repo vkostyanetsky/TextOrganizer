@@ -2,7 +2,7 @@ import tests.helpers
 import todozer.scheduler
 
 
-def run_test_every_day(pattern: str, task_text_function):
+def run_test(pattern: str, task_text_function):
 
     today = tests.helpers.get_today_date()
 
@@ -36,5 +36,5 @@ def run_test_every_day(pattern: str, task_text_function):
 
 def test_every_day():
 
-    run_test_every_day("каждый день", tests.helpers.get_task_text_ru)
-    run_test_every_day("every day", tests.helpers.get_task_text_en)
+    run_test("каждый день", tests.helpers.get_task_text_ru)
+    run_test("every day", tests.helpers.get_task_text_en)
