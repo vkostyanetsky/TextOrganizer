@@ -1,6 +1,6 @@
 import tests.helpers
-import todozer.utils
 import todozer.scheduler
+import todozer.utils
 
 
 def test_exact_date():
