@@ -60,7 +60,7 @@ def simplify(text: str) -> str:
         ("год", "year"),
         ("дня|дней", "days"),
         ("последний", "last"),
-        ("каждый|каждая|каждое", "every"),
+        ("каждый|каждая|каждое|каждую", "every"),
         ("январь|января|january", "jan"),
         ("февраль|февраля|february", "feb"),
         ("март|марта|march", "mar"),
@@ -77,8 +77,8 @@ def simplify(text: str) -> str:
         ("вторник|вт|tuesday", "tue"),
         ("среда|ср|wednesday", "wed"),
         ("четверг|чт|thursday", "thu"),
-        ("пятница|пт|friday", "fri"),
-        ("суббота|сб|saturday", "sat"),
+        ("пятница|пятницу|пт|friday", "fri"),
+        ("суббота|субботу|сб|saturday", "sat"),
         ("воскресенье|вс|sunday", "sun"),
     ]
 
@@ -89,7 +89,7 @@ def simplify(text: str) -> str:
 
         text = re.sub(source_regexp, result_regexp, text, flags=re.IGNORECASE)
 
-    return text
+    return text.strip()
 
 
 def pattern_exact_date(text: str, date: datetime.date) -> bool:
@@ -99,7 +99,7 @@ def pattern_exact_date(text: str, date: datetime.date) -> bool:
     """
 
     date_regexp = get_regexp_for_date()
-    full_regexp = f".*({date_regexp}).*"
+    full_regexp = f"({date_regexp}).*"
 
     result = False
     groups = re.match(full_regexp, text)
@@ -195,7 +195,7 @@ def pattern_every_thursday(text: str, date: datetime.date) -> bool:
     - every thu
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, ["every tue"], "Thu")
+    return match_pattern_title_and_day_name_for_date(text, date, ["every thu"], "Thu")
 
 
 def pattern_every_friday(text: str, date: datetime.date) -> bool:
@@ -333,7 +333,7 @@ def match_pattern_title_and_day_name_for_date(
 ) -> bool:
     result = False
 
-    if match_pattern_title(text, samples) and date.strftime("%a") == day:
+    if match_pattern_title(text, samples) and date.strftime('%a') == day:
         result = match_pattern_start_date(text, date)
 
     return result
