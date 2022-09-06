@@ -60,7 +60,7 @@ def simplify(text: str) -> str:
         ("год", "year"),
         ("дня|дней", "days"),
         ("последний", "last"),
-        ("каждый|каждая|каждое|каждую", "every"),
+        ("каждый|каждая|каждое|каждую|каждые", "every"),
         ("январь|января|january", "jan"),
         ("февраль|февраля|february", "feb"),
         ("март|марта|march", "mar"),
@@ -136,12 +136,12 @@ def pattern_every_n_day(text: str, date: datetime.date) -> bool:
 
     result = False
 
-    regexp = ".*;.*every ([0-9]+) (day|days).*"
+    regexp = ".*every ([0-9]+) (day|days).*"
     groups = re.match(regexp, text)
 
     if groups is not None:
 
-        day_number = int(groups[2])
+        day_number = int(groups[1])
         start_date = get_start_date(text)
 
         if start_date is not None and date >= start_date:
