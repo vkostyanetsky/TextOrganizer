@@ -21,7 +21,7 @@ def test_every_n_day():
 
     # en
 
-    task_text = tests.helpers.get_task_text_ru("every 3 days", today)
+    task_text = tests.helpers.get_task_text_en("every 3 days", today)
 
     assert todozer.scheduler.match(task_text, today) is True
     assert todozer.scheduler.match(task_text, three_days_after) is True
