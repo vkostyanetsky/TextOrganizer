@@ -1,7 +1,7 @@
 import datetime
 import locale
 
-import tests
+import tests.helpers
 import todozer.scheduler
 
 
@@ -12,9 +12,11 @@ def run_test_ru(
     locale.setlocale(locale.LC_ALL, "ru_RU.UTF-8")
 
     task_date = task_date.strftime("%d %B")
-    task_text = tests.get_task_text_ru(f"каждый год, {task_date}", start_date)
+    task_text = tests.helpers.get_task_text_ru(f"каждый год, {task_date}", start_date)
 
-    assert todozer.scheduler.match(task_text, tests.get_today_date()) is result
+    today = tests.helpers.get_today_date()
+
+    assert todozer.scheduler.match(task_text, today) is result
 
 
 def run_test_en(
@@ -24,16 +26,18 @@ def run_test_en(
     locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
     task_date = task_date.strftime("%B %d")
-    task_text = tests.get_task_text_ru(f"every year, {task_date}", start_date)
+    task_text = tests.helpers.get_task_text_ru(f"every year, {task_date}", start_date)
 
-    assert todozer.scheduler.match(task_text, tests.get_today_date()) is result
+    today = tests.helpers.get_today_date()
+
+    assert todozer.scheduler.match(task_text, today) is result
 
 
 def test_every_year():
 
-    yesterday = tests.get_yesterday_date()
-    tomorrow = tests.get_tomorrow_date()
-    today = tests.get_today_date()
+    yesterday = tests.helpers.get_yesterday_date()
+    tomorrow = tests.helpers.get_tomorrow_date()
+    today = tests.helpers.get_today_date()
 
     # ru
 

@@ -1,6 +1,6 @@
 import datetime
 
-import helpers
+import tests.helpers
 import todozer.scheduler
 
 
@@ -16,8 +16,8 @@ def get_date(day: int) -> datetime.date:
 def run_test(day_index: int, pattern: str, task_text_function):
 
     date_of_day = get_date(day_index)
-    date_of_day_after = helpers.get_tomorrow_date(date_of_day)
-    date_of_day_before = helpers.get_yesterday_date(date_of_day)
+    date_of_day_after = tests.helpers.get_tomorrow_date(date_of_day)
+    date_of_day_before = tests.helpers.get_yesterday_date(date_of_day)
 
     # If day of week is today:
 
@@ -68,13 +68,13 @@ def test_every_monday():
 
     # ru
 
-    run_test(day_index, "каждый понедельник", helpers.get_task_text_ru)
-    run_test(day_index, "каждый Пн", helpers.get_task_text_ru)
+    run_test(day_index, "каждый понедельник", tests.helpers.get_task_text_ru)
+    run_test(day_index, "каждый Пн", tests.helpers.get_task_text_ru)
 
     # en
 
-    run_test(day_index, "every monday", helpers.get_task_text_en)
-    run_test(day_index, "every Mon", helpers.get_task_text_en)
+    run_test(day_index, "every monday", tests.helpers.get_task_text_en)
+    run_test(day_index, "every Mon", tests.helpers.get_task_text_en)
 
 
 def test_every_tuesday():
@@ -83,13 +83,13 @@ def test_every_tuesday():
 
     # ru
 
-    run_test(day_index, "каждый вторник", tests.get_task_text_ru)
-    run_test(day_index, "каждый Вт", tests.get_task_text_ru)
+    run_test(day_index, "каждый вторник", tests.helpers.get_task_text_ru)
+    run_test(day_index, "каждый Вт", tests.helpers.get_task_text_ru)
 
     # en
 
-    run_test(day_index, "every tuesday", tests.get_task_text_en)
-    run_test(day_index, "every Tue", tests.get_task_text_en)
+    run_test(day_index, "every tuesday", tests.helpers.get_task_text_en)
+    run_test(day_index, "every Tue", tests.helpers.get_task_text_en)
 
 
 def test_every_wednesday():
@@ -98,13 +98,13 @@ def test_every_wednesday():
 
     # ru
 
-    run_test(day_index, "каждую среду", tests.get_task_text_ru)
-    run_test(day_index, "каждую Ср", tests.get_task_text_ru)
+    run_test(day_index, "каждую среду", tests.helpers.get_task_text_ru)
+    run_test(day_index, "каждую Ср", tests.helpers.get_task_text_ru)
 
     # en
 
-    run_test(day_index, "every wednesday", tests.get_task_text_en)
-    run_test(day_index, "every Wed", tests.get_task_text_en)
+    run_test(day_index, "every wednesday", tests.helpers.get_task_text_en)
+    run_test(day_index, "every Wed", tests.helpers.get_task_text_en)
 
 
 def test_every_thursday():
@@ -113,13 +113,13 @@ def test_every_thursday():
 
     # ru
 
-    run_test(day_index, "каждый четверг", tests.get_task_text_ru)
-    run_test(day_index, "каждый Чт", tests.get_task_text_ru)
+    run_test(day_index, "каждый четверг", tests.helpers.get_task_text_ru)
+    run_test(day_index, "каждый Чт", tests.helpers.get_task_text_ru)
 
     # en
 
-    run_test(day_index, "every thursday", tests.get_task_text_en)
-    run_test(day_index, "every Thu", tests.get_task_text_en)
+    run_test(day_index, "every thursday", tests.helpers.get_task_text_en)
+    run_test(day_index, "every Thu", tests.helpers.get_task_text_en)
 
 
 def test_every_friday():
@@ -128,13 +128,13 @@ def test_every_friday():
 
     # ru
 
-    run_test(day_index, "каждую пятницу", tests.get_task_text_ru)
-    run_test(day_index, "каждую Пт", tests.get_task_text_ru)
+    run_test(day_index, "каждую пятницу", tests.helpers.get_task_text_ru)
+    run_test(day_index, "каждую Пт", tests.helpers.get_task_text_ru)
 
     # en
 
-    run_test(day_index, "every friday", tests.get_task_text_en)
-    run_test(day_index, "every Fri", tests.get_task_text_en)
+    run_test(day_index, "every friday", tests.helpers.get_task_text_en)
+    run_test(day_index, "every Fri", tests.helpers.get_task_text_en)
 
 
 def test_every_saturday():
@@ -143,13 +143,13 @@ def test_every_saturday():
 
     # ru
 
-    run_test(day_index, "каждую субботу", tests.get_task_text_ru)
-    run_test(day_index, "каждую Сб", tests.get_task_text_ru)
+    run_test(day_index, "каждую субботу", tests.helpers.get_task_text_ru)
+    run_test(day_index, "каждую Сб", tests.helpers.get_task_text_ru)
 
     # en
 
-    run_test(day_index, "every saturday", tests.get_task_text_en)
-    run_test(day_index, "every Sat", tests.get_task_text_en)
+    run_test(day_index, "every saturday", tests.helpers.get_task_text_en)
+    run_test(day_index, "every Sat", tests.helpers.get_task_text_en)
 
 
 def test_every_sunday():
@@ -158,10 +158,10 @@ def test_every_sunday():
 
     # ru
 
-    run_test(day_index, "каждое воскресенье", tests.get_task_text_ru)
-    run_test(day_index, "каждое Вс", tests.get_task_text_ru)
+    run_test(day_index, "каждое воскресенье", tests.helpers.get_task_text_ru)
+    run_test(day_index, "каждое Вс", tests.helpers.get_task_text_ru)
 
     # en
 
-    run_test(day_index, "every sunday", tests.get_task_text_en)
-    run_test(day_index, "every Sun", tests.get_task_text_en)
+    run_test(day_index, "every sunday", tests.helpers.get_task_text_en)
+    run_test(day_index, "every Sun", tests.helpers.get_task_text_en)
