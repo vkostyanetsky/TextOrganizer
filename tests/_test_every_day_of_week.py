@@ -1,6 +1,6 @@
 import datetime
 
-import tests
+import helpers
 import todozer.scheduler
 
 
@@ -16,8 +16,8 @@ def get_date(day: int) -> datetime.date:
 def run_test(day_index: int, pattern: str, task_text_function):
 
     date_of_day = get_date(day_index)
-    date_of_day_after = tests.get_tomorrow_date(date_of_day)
-    date_of_day_before = tests.get_yesterday_date(date_of_day)
+    date_of_day_after = helpers.get_tomorrow_date(date_of_day)
+    date_of_day_before = helpers.get_yesterday_date(date_of_day)
 
     # If day of week is today:
 
@@ -68,13 +68,13 @@ def test_every_monday():
 
     # ru
 
-    run_test(day_index, "каждый понедельник", tests.get_task_text_ru)
-    run_test(day_index, "каждый Пн", tests.get_task_text_ru)
+    run_test(day_index, "каждый понедельник", helpers.get_task_text_ru)
+    run_test(day_index, "каждый Пн", helpers.get_task_text_ru)
 
     # en
 
-    run_test(day_index, "every monday", tests.get_task_text_en)
-    run_test(day_index, "every Mon", tests.get_task_text_en)
+    run_test(day_index, "every monday", helpers.get_task_text_en)
+    run_test(day_index, "every Mon", helpers.get_task_text_en)
 
 
 def test_every_tuesday():
