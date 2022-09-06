@@ -1,6 +1,6 @@
 import datetime
 
-from todozer import utils
+import todozer.utils
 
 
 def get_yesterday_date(today: datetime.date = None) -> datetime.date:
@@ -27,7 +27,7 @@ def get_task_text_ru(pattern: str, start_date: datetime.date = None) -> str:
     text = f"* Боб, не стой столбом!; {pattern}"
 
     if start_date is not None:
-        postfix = f" с {utils.get_string_from_date(start_date)}"
+        postfix = f" с {todozer.utils.get_string_from_date(start_date)}"
     else:
         postfix = ""
 
@@ -38,7 +38,7 @@ def get_task_text_en(pattern: str, start_date: datetime.date = None) -> str:
     text = f"* Bob, do something!; {pattern}"
 
     if start_date is not None:
-        postfix = f" from {utils.get_string_from_date(start_date)}"
+        postfix = f" from {todozer.utils.get_string_from_date(start_date)}"
     else:
         postfix = ""
 

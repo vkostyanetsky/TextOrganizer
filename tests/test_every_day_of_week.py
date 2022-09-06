@@ -1,7 +1,7 @@
 import datetime
 
 import tests
-from todozer import scheduler
+import todozer.scheduler
 
 
 def get_date(day: int) -> datetime.date:
@@ -22,44 +22,44 @@ def run_test(day_index: int, pattern: str, task_text_function):
     # If day of week is today:
 
     task_text = task_text_function(pattern)
-    assert scheduler.match(task_text, date_of_day) is True
+    assert todozer.scheduler.match(task_text, date_of_day) is True
 
     task_text = task_text_function(pattern, date_of_day_before)
-    assert scheduler.match(task_text, date_of_day) is True
+    assert todozer.scheduler.match(task_text, date_of_day) is True
 
     task_text = task_text_function(pattern, date_of_day)
-    assert scheduler.match(task_text, date_of_day) is True
+    assert todozer.scheduler.match(task_text, date_of_day) is True
 
     task_text = task_text_function(pattern, date_of_day_after)
-    assert scheduler.match(task_text, date_of_day) is False
+    assert todozer.scheduler.match(task_text, date_of_day) is False
 
     # If day of week is yesterday:
 
     task_text = task_text_function(pattern)
-    assert scheduler.match(task_text, date_of_day_before) is False
+    assert todozer.scheduler.match(task_text, date_of_day_before) is False
 
     task_text = task_text_function(pattern, date_of_day_before)
-    assert scheduler.match(task_text, date_of_day_before) is False
+    assert todozer.scheduler.match(task_text, date_of_day_before) is False
 
     task_text = task_text_function(pattern, date_of_day)
-    assert scheduler.match(task_text, date_of_day_before) is False
+    assert todozer.scheduler.match(task_text, date_of_day_before) is False
 
     task_text = task_text_function(pattern, date_of_day_after)
-    assert scheduler.match(task_text, date_of_day_before) is False
+    assert todozer.scheduler.match(task_text, date_of_day_before) is False
 
     # If day of week is tomorrow:
 
     task_text = task_text_function(pattern)
-    assert scheduler.match(task_text, date_of_day_after) is False
+    assert todozer.scheduler.match(task_text, date_of_day_after) is False
 
     task_text = task_text_function(pattern, date_of_day_before)
-    assert scheduler.match(task_text, date_of_day_after) is False
+    assert todozer.scheduler.match(task_text, date_of_day_after) is False
 
     task_text = task_text_function(pattern, date_of_day)
-    assert scheduler.match(task_text, date_of_day_after) is False
+    assert todozer.scheduler.match(task_text, date_of_day_after) is False
 
     task_text = task_text_function(pattern, date_of_day_after)
-    assert scheduler.match(task_text, date_of_day_after) is False
+    assert todozer.scheduler.match(task_text, date_of_day_after) is False
 
 
 def test_every_monday():

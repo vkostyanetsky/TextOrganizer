@@ -2,7 +2,7 @@ import datetime
 import locale
 
 import tests
-from todozer import scheduler
+import todozer.scheduler
 
 
 def run_test_ru(
@@ -14,7 +14,7 @@ def run_test_ru(
     task_date = task_date.strftime("%d %B")
     task_text = tests.get_task_text_ru(f"каждый год, {task_date}", start_date)
 
-    assert scheduler.match(task_text, tests.get_today_date()) is result
+    assert todozer.scheduler.match(task_text, tests.get_today_date()) is result
 
 
 def run_test_en(
@@ -26,7 +26,7 @@ def run_test_en(
     task_date = task_date.strftime("%B %d")
     task_text = tests.get_task_text_ru(f"every year, {task_date}", start_date)
 
-    assert scheduler.match(task_text, tests.get_today_date()) is result
+    assert todozer.scheduler.match(task_text, tests.get_today_date()) is result
 
 
 def test_every_year():
