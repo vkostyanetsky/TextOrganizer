@@ -242,7 +242,7 @@ def pattern_every_weekday(text: str, date: datetime.date) -> bool:
 
     result = False
 
-    regexp = ".*;.*(weekdays|every weekday).*"
+    regexp = "(weekdays|every weekday).*"
     groups = re.match(regexp, text)
 
     if groups is not None and 0 <= date.weekday() <= 4:

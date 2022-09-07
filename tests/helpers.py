@@ -43,3 +43,12 @@ def get_task_text_en(pattern: str, start_date: datetime.date = None) -> str:
         postfix = ""
 
     return f"{text}{postfix}"
+
+
+def get_day_of_week(day: int) -> datetime.date:
+    from_date = datetime.date.today()
+    day_index = from_date.weekday()
+
+    different_days = day - day_index if day_index < day else 7 - day_index + day
+
+    return from_date + datetime.timedelta(days=different_days)

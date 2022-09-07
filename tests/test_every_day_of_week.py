@@ -1,21 +1,10 @@
-import datetime
-
 import tests.helpers
 import todozer.scheduler
 
 
-def get_date(day: int) -> datetime.date:
-    from_date = datetime.date.today()
-    day_index = from_date.weekday()
-
-    different_days = day - day_index if day_index < day else 7 - day_index + day
-
-    return from_date + datetime.timedelta(days=different_days)
-
-
 def run_test(day_index: int, pattern: str, task_text_function):
 
-    date_of_day = get_date(day_index)
+    date_of_day = tests.helpers.get_day_of_week(day_index)
     date_of_day_after = tests.helpers.get_tomorrow_date(date_of_day)
     date_of_day_before = tests.helpers.get_yesterday_date(date_of_day)
 
