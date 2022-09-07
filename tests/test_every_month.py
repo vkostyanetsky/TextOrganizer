@@ -5,87 +5,56 @@ import todozer.scheduler
 import todozer.utils
 
 
-def run_test(date: datetime.date):
+def text_ru(day: str | int, start_date: datetime.date | None = None):
+    return tests.helpers.get_task_text_ru(f"каждый месяц, {day} день", start_date)
 
-    day_before_date = date - datetime.timedelta(days=1)
-    day_after_date = date + datetime.timedelta(days=1)
 
-    # wrong day
+def text_en(day: str | int, start_date: datetime.date | None = None):
+    return tests.helpers.get_task_text_en(f"every month, {day} day", start_date)
 
-    task_text = tests.helpers.get_task_text_ru(f"каждый месяц, {date.day} день")
-    assert todozer.scheduler.match(task_text, day_before_date) is False
 
-    # right day
+def run_test(date: datetime.date, text_function):
 
-    task_text = tests.helpers.get_task_text_ru(f"каждый месяц, {date.day} день")
+    yesterday = date - datetime.timedelta(days=1)
+    tomorrow = date + datetime.timedelta(days=1)
+
+    # The task date is today, but we try to match it yesterday:
+
+    task_text = text_function(date.day)
+    assert todozer.scheduler.match(task_text, yesterday) is False
+
+    # The task date is today:
+
+    task_text = text_function(date.day)
     assert todozer.scheduler.match(task_text, date) is True
 
-    # this day, started today
+    # The task date is today, and it starts yesterday:
 
-    task_text = tests.helpers.get_task_text_ru(f"каждый месяц, {date.day} день", date)
+    task_text = text_function(date.day, yesterday)
     assert todozer.scheduler.match(task_text, date) is True
 
-    # this day, started yesterday
+    # The task date is today, and it starts today:
 
-    task_text = tests.helpers.get_task_text_ru(f"каждый месяц, {date.day} день", day_before_date)
+    task_text = text_function(date.day, date)
     assert todozer.scheduler.match(task_text, date) is True
 
-    # this day, stars tomorrow
+    # The task date is today, and it starts tomorrow:
 
-    task_text = tests.helpers.get_task_text_ru(f"каждый месяц, {date.day} день", day_after_date)
+    task_text = text_function(date.day, tomorrow)
     assert todozer.scheduler.match(task_text, date) is False
 
 
 def test_every_month():
 
-    today = tests.helpers.get_today_date()
-    run_test(today)
+    this_day = tests.helpers.get_today_date()
+    last_day = todozer.utils.get_month_last_day_date(this_day)
 
-    #
-    # tomorrow = tests.helpers.get_tomorrow_date(today)
-    # yesterday = tests.helpers.get_yesterday_date(today)
-    #
-    # not_today = (
-    #     tests.helpers.get_tomorrow_date(today)
-    #     if today.day == 1
-    #     else tests.helpers.get_yesterday_date(today)
-    # )
-    # final_day = todozer.utils.get_month_last_day_date(today)
+    # ru
 
-    # # not this day
-    #
-    # task_text = tests.helpers.get_task_text_ru(f"каждый месяц, {not_today.day} день")
-    # assert todozer.scheduler.match(task_text, today) is False
-    #
-    # # this day
-    #
-    # task_text = tests.helpers.get_task_text_ru(f"каждый месяц, {today.day} день")
-    # assert todozer.scheduler.match(task_text, today) is True
-    #
-    # # this day, started today
-    #
-    # task_text = tests.helpers.get_task_text_ru(f"каждый месяц, {today.day} день", today)
-    # assert todozer.scheduler.match(task_text, today) is True
-    #
-    # # this day, started yesterday
-    #
-    # task_text = tests.helpers.get_task_text_ru(f"каждый месяц, {today.day} день", yesterday)
-    # assert todozer.scheduler.match(task_text, today) is True
-    #
-    # # this day, stars tomorrow
-    #
-    # task_text = tests.helpers.get_task_text_ru(f"каждый месяц, {today.day} день", tomorrow)
-    # assert todozer.scheduler.match(task_text, today) is False
+    run_test(this_day, text_ru)
+    run_test(last_day, text_ru)
 
-    # # last day of month
-    #
-    # task_text = tests.helpers.get_task_text_ru("каждый месяц, последний день")
-    # assert todozer.scheduler.match(task_text, final_day) is True
-    #
-    # # last day of month (wrong day to check)
-    #
-    # task_text = tests.helpers.get_task_text_ru("каждый месяц, последний день")
-    # assert (
-    #     todozer.scheduler.match(task_text, final_day - datetime.timedelta(days=1))
-    #     is False
-    # )
+    # en
+
+    run_test(this_day, text_en)
+    run_test(last_day, text_en)
