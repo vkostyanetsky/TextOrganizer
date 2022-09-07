@@ -91,15 +91,15 @@ class Date(Item):
 
 
 class Plan(Item):
-
     def get_pattern(self):
         result = ""
         source = self.lines[0]
 
-        index = source.rfind(';')
+        index = source.rfind(";")
 
         if index != -1:
-            result = source[index + 1:].strip()
+            index += 1
+            result = source[index:].strip()
 
         return result
 

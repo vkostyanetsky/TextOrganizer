@@ -1,5 +1,6 @@
-import yaml
 import datetime
+
+import yaml
 from yaml.parser import ParserError
 
 
@@ -29,16 +30,15 @@ def load_yaml(file_name: str) -> dict:
 
 def get_date_from_string(source: str) -> datetime.date:
 
-    return datetime.datetime.strptime(source, '%Y-%m-%d').date()
+    return datetime.datetime.strptime(source, "%Y-%m-%d").date()
 
 
 def get_string_from_date(source: datetime.date) -> str:
 
-    return source.strftime('%Y-%m-%d')
+    return source.strftime("%Y-%m-%d")
 
 
 def get_month_last_day_date(date: datetime.date) -> datetime.date:
 
     next_month = date.replace(day=28) + datetime.timedelta(days=4)
     return next_month - datetime.timedelta(days=next_month.day)
-

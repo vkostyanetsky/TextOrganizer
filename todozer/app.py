@@ -35,7 +35,7 @@ def get_arguments() -> argparse.Namespace:
 
 
 def get_storage_file_name() -> str:
-    return 'todozer.yaml'
+    return "todozer.yaml"
 
 
 def load_storage() -> dict:
@@ -84,7 +84,10 @@ def check_for_uncompleted_dates(tasks_file_items: list) -> bool:
             print(date_in_progress)
             print()
 
-        print("You have to rearrange tasks in progress or mark them as completed or cancelled.")
+        print(
+            "You have to rearrange tasks in progress"
+            " or mark them as completed or cancelled."
+        )
         print()
 
     return passed
@@ -98,18 +101,18 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
     to other upcoming date before the user runs the procedure.
     """
 
-    options = menu_item_parameters.get('options')
-    storage = menu_item_parameters.get('storage')
+    options = menu_item_parameters.get("options")
+    storage = menu_item_parameters.get("storage")
 
-    tasks_file_name = options.get('tasks_file_name')
+    tasks_file_name = options.get("tasks_file_name")
     tasks_file_items = Parser(tasks_file_name).parse()
 
     if check_for_uncompleted_dates(tasks_file_items):
 
-        plans_file_name = options.get('plans_file_name')
+        plans_file_name = options.get("plans_file_name")
         plans_file_items = Parser(plans_file_name).parse()
 
-        last_date = storage.get('last_date')
+        last_date = storage.get("last_date")
 
         days = filter(lambda file_item: type(file_item) == Date, tasks_file_items)
 
@@ -140,10 +143,7 @@ def main_menu(options: dict, storage: dict) -> None:
 
     menu = TodozerMenu()
 
-    menu_item_parameters = {
-        'options': options,
-        'storage': storage
-    }
+    menu_item_parameters = {"options": options, "storage": storage}
 
     menu.add_item("Create Planned Tasks", create_planned_tasks, menu_item_parameters)
     menu.add_item("Statistics", statistics, menu_item_parameters)

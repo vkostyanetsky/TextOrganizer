@@ -1,5 +1,3 @@
-import datetime
-
 import tests.helpers
 import todozer.scheduler
 import todozer.utils
@@ -15,7 +13,13 @@ def test_every_month():
     before_sunday = tests.helpers.get_yesterday_date(sunday)
     after_sunday = tests.helpers.get_tomorrow_date(sunday)
 
-    variants = ['по будням', 'по будним дням', 'каждый будний день', 'weekdays', 'every weekday']
+    variants = [
+        "по будням",
+        "по будним дням",
+        "каждый будний день",
+        "weekdays",
+        "every weekday",
+    ]
 
     for variant in variants:
 
