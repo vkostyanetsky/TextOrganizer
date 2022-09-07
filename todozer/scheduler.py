@@ -1,20 +1,35 @@
 import datetime
+import logging
 import re
 
 from todozer import utils
 
 
 def match(text: str, date: datetime.date) -> bool:
+    """
+
+    :param text:
+    :param date:
+    :return:
+    """
+
+    logging.debug(f'Attempt to plan a task "%s" on %s', text, utils.get_string_from_date(date))
+
     matched = False
 
     text = get_pattern(text)
 
     if text is None:
+        logging.debug('Pattern to plan is not found.')
         return False
+
+    logging.debug('Pattern to plan: %s', text)
 
     text = simplify(text)
 
-    patterns = [
+    logging.debug('Compiled pattern: %s', text)
+
+    readers = [
         pattern_exact_date,
         pattern_every_day,
         pattern_every_n_day,
@@ -29,12 +44,17 @@ def match(text: str, date: datetime.date) -> bool:
         pattern_every_weekday,
         pattern_every_year,
     ]
-    print(text)
-    for pattern in patterns:
-        matched = pattern(text, date)
+
+    logging.debug('Finding a reader...')
+
+    for reader in readers:
+
+        logging.debug('Checking the "%s" reader...', reader.__name__)
+
+        matched = reader(text, date)
+
         if matched:
-            print(text)
-            print(pattern)
+            logging.debug('The reader is found!')
             break
 
     return matched
