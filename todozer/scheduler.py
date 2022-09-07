@@ -5,10 +5,6 @@ from todozer import utils
 
 
 def match(text: str, date: datetime.date) -> bool:
-    """
-    каждый второй четверг?..
-    """
-
     matched = False
 
     text = get_pattern(text)
