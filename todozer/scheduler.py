@@ -33,10 +33,12 @@ def match(text: str, date: datetime.date) -> bool:
         pattern_every_weekday,
         pattern_every_year,
     ]
-
+    print(text)
     for pattern in patterns:
         matched = pattern(text, date)
         if matched:
+            print(text)
+            print(pattern)
             break
 
     return matched
@@ -118,7 +120,7 @@ def pattern_every_day(text: str, date: datetime.date) -> bool:
     """
     result = False
 
-    if match_pattern_title(text, ["every day"]):
+    if match_pattern_title(text, "every day.*"):
         result = match_pattern_start_date(text, date)
 
     return result
@@ -159,7 +161,7 @@ def pattern_every_monday(text: str, date: datetime.date) -> bool:
     - every mon
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, ["every mon"], "Mon")
+    return match_pattern_title_and_day_name_for_date(text, date, f"^every mon", "Mon")
 
 
 def pattern_every_tuesday(text: str, date: datetime.date) -> bool:
@@ -171,7 +173,7 @@ def pattern_every_tuesday(text: str, date: datetime.date) -> bool:
     - every tue
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, ["every tue"], "Tue")
+    return match_pattern_title_and_day_name_for_date(text, date, f"^every tue", "Tue")
 
 
 def pattern_every_wednesday(text: str, date: datetime.date) -> bool:
@@ -183,7 +185,7 @@ def pattern_every_wednesday(text: str, date: datetime.date) -> bool:
     - every wed
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, ["every wed"], "Wed")
+    return match_pattern_title_and_day_name_for_date(text, date, f"^every wed", "Wed")
 
 
 def pattern_every_thursday(text: str, date: datetime.date) -> bool:
@@ -195,7 +197,7 @@ def pattern_every_thursday(text: str, date: datetime.date) -> bool:
     - every thu
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, ["every thu"], "Thu")
+    return match_pattern_title_and_day_name_for_date(text, date, f"^every thu", "Thu")
 
 
 def pattern_every_friday(text: str, date: datetime.date) -> bool:
@@ -207,7 +209,7 @@ def pattern_every_friday(text: str, date: datetime.date) -> bool:
     - every fri
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, ["every fri"], "Fri")
+    return match_pattern_title_and_day_name_for_date(text, date, f"^every fri", "Fri")
 
 
 def pattern_every_saturday(text: str, date: datetime.date) -> bool:
@@ -218,7 +220,7 @@ def pattern_every_saturday(text: str, date: datetime.date) -> bool:
     - every sat
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, ["every sat"], "Sat")
+    return match_pattern_title_and_day_name_for_date(text, date, f"^every sat", "Sat")
 
 
 def pattern_every_sunday(text: str, date: datetime.date) -> bool:
@@ -229,7 +231,7 @@ def pattern_every_sunday(text: str, date: datetime.date) -> bool:
     - every sun
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, ["every sun"], "Sun")
+    return match_pattern_title_and_day_name_for_date(text, date, f"^every sun", "Sun")
 
 
 def pattern_every_weekday(text: str, date: datetime.date) -> bool:
@@ -267,19 +269,18 @@ def pattern_every_month(text: str, date: datetime.date) -> bool:
     """
 
     result = False
-    regexp = ".*;.*every month, ([0-9]+|last) day.*"
+    regexp = "every month, ([0-9]+|last) day.*"
     groups = re.match(regexp, text)
 
     if groups is not None:
         date_day_number = int(date.strftime("%d"))
 
-        if groups[2] == "last":
-            next_month = date.replace(day=28) + datetime.timedelta(days=4)
-            task_day_number = (next_month - datetime.timedelta(days=next_month.day)).day
+        if groups[1] == "last":
+            task_day_number = utils.get_month_last_day_date(date).day
         else:
-            task_day_number = int(groups[2])
+            task_day_number = int(groups[1])
 
-        result = date_day_number == task_day_number
+        result = date_day_number == task_day_number and match_pattern_start_date(text, date)
 
     return result
 
@@ -329,11 +330,11 @@ def pattern_every_year(text: str, date: datetime.date) -> bool:
 
 
 def match_pattern_title_and_day_name_for_date(
-    text: str, date: datetime.date, samples: list, day: str
+    text: str, date: datetime.date, regexp: str, day: str
 ) -> bool:
     result = False
 
-    if match_pattern_title(text, samples) and date.strftime('%a') == day:
+    if match_pattern_title(text, regexp) and date.strftime('%a') == day:
         result = match_pattern_start_date(text, date)
 
     return result
@@ -351,21 +352,12 @@ def match_pattern_start_date(text: str, date: datetime.date) -> bool:
     return result
 
 
-def match_pattern_title(title: str, samples: list) -> bool:
+def match_pattern_title(title: str, regexp: str) -> bool:
     """
     Checks if a title starts with one of the sample strings.
     """
 
-    result = False
-
-    title = title.lower()
-
-    for sample in samples:
-        if title.startswith(sample.lower()):
-            result = True
-            break
-
-    return result
+    return re.match(regexp, title, flags=re.IGNORECASE) is not None
 
 
 def get_start_date(text: str) -> datetime.date:
@@ -395,3 +387,6 @@ def get_regexp_for_month_name() -> str:
 
 def get_regexp_for_day_number() -> str:
     return "[0-9]{1,2}"
+
+
+match('* Боб, не стой столбом!; каждую среду', datetime.date(2022, 9, 14))
