@@ -1,16 +1,15 @@
 import argparse
+import configparser
 import datetime
 import logging
 import os.path
 import sys
-from todozer import scheduler
-import configparser
 
 from vkostyanetsky import cliutils
 
-from todozer import datafile
+from todozer import datafile, scheduler
 from todozer.menu import TodozerMenu
-from todozer.parser import Task, Date, Parser
+from todozer.parser import Date, Parser, Task
 
 
 def get_arguments() -> argparse.Namespace:

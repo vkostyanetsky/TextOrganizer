@@ -1,7 +1,8 @@
 import datetime
-import chardet
 import logging
 import re
+
+import chardet
 
 from todozer import utils
 
@@ -14,21 +15,23 @@ def match(text: str, date: datetime.date) -> bool:
     :return:
     """
 
-    logging.debug(f'Attempt to plan a task "{text}" on {utils.get_string_from_date(date)}')
+    logging.debug(
+        f'Attempt to plan a task "{text}" on {utils.get_string_from_date(date)}'
+    )
 
     matched = False
 
     text = get_pattern(text)
 
     if text is None:
-        logging.debug('Pattern to plan is not found.')
+        logging.debug("Pattern to plan is not found.")
         return False
 
-    logging.debug('Pattern to plan: %s', text)
+    logging.debug("Pattern to plan: %s", text)
 
     text = simplify(text)
 
-    logging.debug('Compiled pattern: %s', text)
+    logging.debug("Compiled pattern: %s", text)
 
     readers = [
         pattern_exact_date,
@@ -46,7 +49,7 @@ def match(text: str, date: datetime.date) -> bool:
         pattern_every_year,
     ]
 
-    logging.debug('Recognizing the pattern...')
+    logging.debug("Recognizing the pattern...")
 
     for reader in readers:
 
@@ -55,7 +58,7 @@ def match(text: str, date: datetime.date) -> bool:
         matched = reader(text, date)
 
         if matched:
-            logging.debug('Success!')
+            logging.debug("Success!")
             break
 
     return matched

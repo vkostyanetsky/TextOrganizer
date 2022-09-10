@@ -13,7 +13,7 @@ class Item:
 
     @property
     def title(self) -> str:
-        return self.lines[0] if len(self.lines) > 0 else ''
+        return self.lines[0] if len(self.lines) > 0 else ""
 
 
 class Date(Item):

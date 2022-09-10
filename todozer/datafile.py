@@ -1,8 +1,9 @@
 import os
-from todozer import utils
 
 import yaml
 from yaml.parser import ParserError
+
+from todozer import utils
 
 
 def __save_yaml(file_name: str, file_data: dict) -> None:
@@ -45,7 +46,9 @@ def load() -> dict:
 
     file_name = __get_data_file_name()
 
-    return __load_yaml(file_name) if os.path.exists(file_name) else __get_data_by_default()
+    return (
+        __load_yaml(file_name) if os.path.exists(file_name) else __get_data_by_default()
+    )
 
 
 def save(data: dict):
