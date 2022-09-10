@@ -6,10 +6,10 @@ import os.path
 import sys
 
 from vkostyanetsky import cliutils
-from todozer import constants
-from todozer import datafile, scheduler
+
+from todozer import constants, datafile, scheduler
 from todozer.menu import TodozerMenu
-from todozer.parser import Parser, List, Task
+from todozer.parser import List, Parser, Task
 
 
 def get_arguments() -> argparse.Namespace:
@@ -91,8 +91,6 @@ def check_for_uncompleted_dates(tasks_file_items: list) -> bool:
             " or mark them as completed or cancelled."
         )
         print()
-
-
 
     return passed
 

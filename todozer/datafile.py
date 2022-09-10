@@ -39,9 +39,7 @@ def load() -> dict:
 
     file_name = __get_data_file_name()
 
-    return (
-        __load_yaml(file_name) if os.path.exists(file_name) else {}
-    )
+    return __load_yaml(file_name) if os.path.exists(file_name) else {}
 
 
 def save(data: dict):

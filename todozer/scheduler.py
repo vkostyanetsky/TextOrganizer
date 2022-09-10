@@ -6,7 +6,9 @@ from todozer import utils
 
 
 def match(task_title: str, date: datetime.date) -> bool:
-    logging.debug(f'Attempt to plan a task "{task_title}" on {utils.get_string_from_date(date)}')
+    logging.debug(
+        f'Attempt to plan a task "{task_title}" on {utils.get_string_from_date(date)}'
+    )
 
     matched = False
 
