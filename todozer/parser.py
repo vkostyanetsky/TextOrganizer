@@ -1,5 +1,6 @@
 import datetime
 import re
+from todozer import constants
 
 
 class Item:
@@ -16,7 +17,7 @@ class Item:
         return self.lines[0] if len(self.lines) > 0 else ""
 
 
-class Date(Item):
+class List(Item):
     date_format: str = "%Y-%m-%d"
     date_mark: str = "# "
     items: list
@@ -63,33 +64,25 @@ class Date(Item):
 
             if match_object is not None:
                 string = match_object.group(1)
-                result = datetime.datetime.strptime(string, Date.date_format).date()
+                result = datetime.datetime.strptime(string, List.date_format).date()
 
         return result
 
     @staticmethod
     def match(line: str):
-        return line.startswith(Date.date_mark)
-
-
-class Plan(Item):
-    def get_pattern(self):
-        result = ""
-        source = self.lines[0]
-
-        index = source.rfind(";")
-
-        if index != -1:
-            index += 1
-            result = source[index:].strip()
-
-        return result
+        return line.startswith(List.date_mark)
 
 
 class Task(Item):
     scheduled_task_mark: str = "* "
     completed_task_mark: str = "+ "
     cancelled_task_mark: str = "- "
+
+    @property
+    def title(self) -> str:
+        title = super().title
+
+        return title[1:].strip() if len(title) > 0 else title
 
     @property
     def is_scheduled(self) -> bool:
@@ -127,24 +120,24 @@ class Task(Item):
 class Text(Item):
     @staticmethod
     def match(line: str):
-        return not Date.match(line) and not Task.match(line)
+        return not List.match(line) and not Task.match(line)
 
 
 class Parser:
     __file_path: str = ""
-    __last_date: Date | None
+    __last_list: List | None
     __file_items: list = []
     __empty_lines: list = []
 
     def __init__(self, file_path: str):
         self.__file_path = file_path
-        self.__last_date = None
+        self.__last_list = None
         self.__file_items = []
         self.__empty_lines = []
 
     def parse(self) -> list:
 
-        tasks_file = open(self.__file_path, "r", encoding="utf-8-sig")
+        tasks_file = open(self.__file_path, "r", encoding=constants.encoding)
 
         with tasks_file:
 
@@ -157,7 +150,7 @@ class Parser:
 
                 line = line.rstrip("\n")
 
-                if Date.match(line):
+                if List.match(line):
                     self.__add_date(line)
                 elif Task.match(line):
                     self.__add_task(line)
@@ -169,18 +162,18 @@ class Parser:
     def __add_date(self, line: str):
         self.__add_empty_lines_to_last_date()
 
-        new_item = Date(line)
+        new_item = List(line)
 
         self.__file_items.append(new_item)
-        self.__last_date = new_item
+        self.__last_list = new_item
 
     def __add_task(self, line: str):
         self.__add_empty_lines_to_last_date()
 
-        if self.__last_date is None:
+        if self.__last_list is None:
             self.__file_items.append(Text(line))
         else:
-            self.__last_date.items.append(Task(line))
+            self.__last_list.items.append(Task(line))
 
     def __add_text(self, line: str):
         if line.strip() == "":
@@ -201,11 +194,11 @@ class Parser:
 
                 new_item = Text(line)
 
-                if self.__last_date is not None:
+                if self.__last_list is not None:
 
-                    self.__add_empty_lines(self.__last_date.items)
+                    self.__add_empty_lines(self.__last_list.items)
 
-                    self.__last_date.items.append(new_item)
+                    self.__last_list.items.append(new_item)
 
                 else:
 
@@ -220,7 +213,7 @@ class Parser:
 
             last_file_item = self.__file_items[-1]
 
-            if type(last_file_item) == Date:
+            if type(last_file_item) == List:
 
                 if len(last_file_item.items) > 0:
 
@@ -234,7 +227,7 @@ class Parser:
 
     def __add_empty_lines_to_last_date(self) -> None:
         self.__add_empty_lines(
-            self.__file_items if self.__last_date is None else self.__last_date.items
+            self.__file_items if self.__last_list is None else self.__last_list.items
         )
 
     def __add_empty_lines(self, collection) -> None:

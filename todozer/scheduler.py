@@ -2,36 +2,41 @@ import datetime
 import logging
 import re
 
-import chardet
-
 from todozer import utils
 
 
-def match(text: str, date: datetime.date) -> bool:
-    """
-
-    :param text:
-    :param date:
-    :return:
-    """
-
-    logging.debug(
-        f'Attempt to plan a task "{text}" on {utils.get_string_from_date(date)}'
-    )
+def match(task_title: str, date: datetime.date) -> bool:
+    logging.debug(f'Attempt to plan a task "{task_title}" on {utils.get_string_from_date(date)}')
 
     matched = False
 
-    text = get_pattern(text)
+    task_pattern = get_pattern(task_title)
 
-    if text is None:
+    if task_pattern is None:
         logging.debug("Pattern to plan is not found.")
-        return False
+    else:
+        logging.debug("Pattern to plan: %s", task_pattern)
 
-    logging.debug("Pattern to plan: %s", text)
+        matched = match_pattern(task_pattern, date)
 
-    text = simplify(text)
+    return matched
 
-    logging.debug("Compiled pattern: %s", text)
+
+def get_pattern(text: str) -> str | None:
+
+    index = text.rfind(";")
+    next_index = index + 1
+
+    return text[next_index:].strip() if index != -1 else None
+
+
+def match_pattern(pattern: str, date: datetime.date) -> bool:
+
+    matched = False
+
+    compiled_pattern = get_compiled_pattern(pattern)
+
+    logging.debug("Compiled pattern: %s", compiled_pattern)
 
     readers = [
         pattern_exact_date,
@@ -49,30 +54,24 @@ def match(text: str, date: datetime.date) -> bool:
         pattern_every_year,
     ]
 
-    logging.debug("Recognizing the pattern...")
+    logging.debug("Matching the pattern...")
 
     for reader in readers:
 
-        logging.debug('Checking "%s" function...', reader.__name__)
+        logging.debug('Checking a reader: "%s"...', reader.__name__)
 
-        matched = reader(text, date)
+        matched = reader(compiled_pattern, date)
 
         if matched:
-            logging.debug("Success!")
             break
+
+    if matched:
+        logging.debug("Success!")
 
     return matched
 
 
-def get_pattern(text: str) -> str | None:
-
-    index = text.find(";")
-    next_index = index + 1
-
-    return text[next_index:].strip() if index != -1 else None
-
-
-def simplify(text: str) -> str:
+def get_compiled_pattern(text: str) -> str:
 
     rules = [
         (" с ", " from "),
@@ -410,6 +409,3 @@ def get_regexp_for_month_name() -> str:
 
 def get_regexp_for_day_number() -> str:
     return "[0-9]{1,2}"
-
-
-match("* Боб, не стой столбом!; каждую среду", datetime.date(2022, 9, 14))

@@ -6,10 +6,10 @@ import os.path
 import sys
 
 from vkostyanetsky import cliutils
-
+from todozer import constants
 from todozer import datafile, scheduler
 from todozer.menu import TodozerMenu
-from todozer.parser import Date, Parser, Task
+from todozer.parser import Parser, List, Task
 
 
 def get_arguments() -> argparse.Namespace:
@@ -37,7 +37,7 @@ def get_config(filename: str) -> configparser.ConfigParser:
                 "tasks_file_name": "tasks.md",
                 "plans_file_name": "plans.md",
             },
-            "LOG": {"write_log": True, "file_name": "todozer.log", "file_mode": "w"},
+            "LOG": {"write_log": False, "file_name": "todozer.log", "file_mode": "w"},
         }
     )
 
@@ -56,12 +56,12 @@ def get_uncompleted_dates(file_items: list) -> list:
 
     for file_item in file_items:
 
-        if type(file_item) == Date and file_item.date <= yesterday:
+        if type(file_item) == List and file_item.date <= yesterday:
 
             scheduled_tasks = file_item.get_scheduled_tasks()
 
             if len(scheduled_tasks) > 0:
-                incomplete_day = Date(file_item.lines[0])
+                incomplete_day = List(file_item.lines[0])
                 incomplete_day.items = scheduled_tasks
 
                 dates_in_progress.append(incomplete_day)
@@ -92,7 +92,23 @@ def check_for_uncompleted_dates(tasks_file_items: list) -> bool:
         )
         print()
 
+
+
     return passed
+
+
+def get_tasks(config: configparser.ConfigParser):
+
+    tasks_file_name = config.get("TASKS", "tasks_file_name")
+
+    return Parser(tasks_file_name).parse()
+
+
+def get_plans(config: configparser.ConfigParser):
+
+    plans_file_name = config.get("TASKS", "plans_file_name")
+
+    return Parser(plans_file_name).parse()
 
 
 def create_planned_tasks(menu_item_parameters: dict) -> None:
@@ -106,32 +122,35 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
     config = menu_item_parameters.get("config")
     data = menu_item_parameters.get("data")
 
-    tasks_file_name = config.get("TASKS", "tasks_file_name")
-    tasks_file_items = Parser(tasks_file_name).parse()
+    tasks = get_tasks(config)
 
-    if check_for_uncompleted_dates(tasks_file_items):
+    if check_for_uncompleted_dates(tasks):
 
-        plans_file_name = config.get("TASKS", "plans_file_name")
-        plans_file_items = Parser(plans_file_name).parse()
-
+        plans = get_plans(config)
         last_date = data.get("last_date")
+        tasks_lists = filter(lambda file_item: type(file_item) == List, tasks)
 
-        days = filter(lambda file_item: type(file_item) == Date, tasks_file_items)
+        for tasks_list in list(tasks_lists):
 
-        for day in list(days):
+            is_date_to_plan = last_date is None or (
+                tasks_list.date is not None and tasks_list.date > last_date
+            )
 
-            if last_date is None or day.date > last_date:
+            if is_date_to_plan:
+                plan_date(tasks_list.date, plans)
 
-                plans = filter(
-                    lambda file_item: type(file_item) == Task, plans_file_items
-                )
+    # cliutils.ask_for_enter()
+    #
+    # main_menu(config, data)
 
-                for plan in plans:
-                    scheduler.match(plan.title, day.date)
 
-    cliutils.ask_for_enter()
+def plan_date(date: datetime.date, plans: list):
 
-    main_menu(config, data)
+    for plan in plans:
+        if isinstance(plan, List):
+            plan_date(date, plan.items)
+        elif isinstance(plan, Task):
+            scheduler.match(plan.title, date)
 
 
 def statistics(menu_item_parameters: dict) -> None:
@@ -166,7 +185,7 @@ def main():
         logging.basicConfig(
             filename=config.get("LOG", "file_name"),
             filemode=config.get("LOG", "file_mode"),
-            encoding="utf-8",
+            encoding=constants.encoding,
             format="%(asctime)s [%(levelname)s] %(message)s",
             level=logging.DEBUG,
             force=True,
@@ -176,4 +195,6 @@ def main():
 
     data = datafile.load()
 
-    main_menu(config, data)
+    create_planned_tasks({"config": config, "data": data})
+
+    # main_menu(config, data)
