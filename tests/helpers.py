@@ -3,26 +3,6 @@ import datetime
 import todozer.utils
 
 
-def get_yesterday_date(today: datetime.date = None) -> datetime.date:
-
-    if today is None:
-        today = get_today_date()
-
-    return today - datetime.timedelta(days=1)
-
-
-def get_today_date() -> datetime.date:
-    return datetime.date.today()
-
-
-def get_tomorrow_date(today: datetime.date = None) -> datetime.date:
-
-    if today is None:
-        today = get_today_date()
-
-    return today + datetime.timedelta(days=1)
-
-
 def get_task_text_ru(pattern: str, start_date: datetime.date = None) -> str:
     text = f"* Боб, не стой столбом!; {pattern}"
 

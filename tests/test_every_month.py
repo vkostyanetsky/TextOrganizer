@@ -3,7 +3,7 @@ import datetime
 import tests.helpers
 import todozer.scheduler
 import todozer.utils
-
+import todozer.utils
 
 def text_ru(day: str | int, start_date: datetime.date | None = None):
     return tests.helpers.get_task_text_ru(f"каждый месяц, {day} день", start_date)
@@ -46,7 +46,7 @@ def run_test(date: datetime.date, text_function):
 
 def test_every_month():
 
-    this_day = tests.helpers.get_today_date()
+    this_day = todozer.utils.get_date_of_today()
     last_day = todozer.utils.get_month_last_day_date(this_day)
 
     # ru

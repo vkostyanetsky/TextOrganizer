@@ -1,32 +1,5 @@
 import datetime
 
-import yaml
-from yaml.parser import ParserError
-
-
-def save_yaml(file_name: str, file_data: dict) -> None:
-
-    with open(file_name, encoding="utf-8-sig", mode="w") as yaml_file:
-        yaml.safe_dump(file_data, yaml_file)
-
-
-def load_yaml(file_name: str) -> dict:
-
-    result = None
-
-    try:
-
-        with open(file_name, encoding="utf-8-sig") as yaml_file:
-            result = yaml.safe_load(yaml_file)
-
-    except ParserError:
-        print(f"Unable to parse {file_name}!")
-
-    if result is None:
-        result = {}
-
-    return result
-
 
 def get_date_from_string(source: str) -> datetime.date:
 
@@ -42,3 +15,23 @@ def get_month_last_day_date(date: datetime.date) -> datetime.date:
 
     next_month = date.replace(day=28) + datetime.timedelta(days=4)
     return next_month - datetime.timedelta(days=next_month.day)
+
+
+def get_date_of_yesterday(today: datetime.date = None) -> datetime.date:
+
+    if today is None:
+        today = get_date_of_today()
+
+    return today - datetime.timedelta(days=1)
+
+
+def get_date_of_today() -> datetime.date:
+    return datetime.date.today()
+
+
+def get_date_of_tomorrow(today: datetime.date = None) -> datetime.date:
+
+    if today is None:
+        today = get_date_of_today()
+
+    return today + datetime.timedelta(days=1)

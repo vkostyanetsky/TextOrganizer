@@ -2,11 +2,12 @@ import datetime
 
 import tests.helpers
 import todozer.scheduler
+import todozer.utils
 
 
 def test_every_n_day():
 
-    today = tests.helpers.get_today_date()
+    today = todozer.utils.get_date_of_today()
 
     three_days_after = today + datetime.timedelta(days=3)
     seven_days_after = today + datetime.timedelta(days=7)

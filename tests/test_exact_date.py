@@ -5,9 +5,9 @@ import todozer.utils
 
 def test_exact_date():
 
-    yesterday = tests.helpers.get_yesterday_date()
-    today = tests.helpers.get_today_date()
-    tomorrow = tests.helpers.get_tomorrow_date()
+    yesterday = todozer.utils.get_date_of_yesterday()
+    today = todozer.utils.get_date_of_today()
+    tomorrow = todozer.utils.get_date_of_tomorrow()
 
     # If an exact date is yesterday:
 

@@ -6,12 +6,12 @@ import todozer.utils
 def test_every_month():
 
     monday = tests.helpers.get_day_of_week(0)
-    before_monday = tests.helpers.get_yesterday_date(monday)
-    after_monday = tests.helpers.get_tomorrow_date(monday)
+    before_monday = todozer.utils.get_date_of_yesterday(monday)
+    after_monday = todozer.utils.get_date_of_tomorrow(monday)
 
     sunday = tests.helpers.get_day_of_week(6)
-    before_sunday = tests.helpers.get_yesterday_date(sunday)
-    after_sunday = tests.helpers.get_tomorrow_date(sunday)
+    before_sunday = todozer.utils.get_date_of_yesterday(sunday)
+    after_sunday = todozer.utils.get_date_of_tomorrow(sunday)
 
     variants = [
         "по будням",

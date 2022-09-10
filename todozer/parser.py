@@ -1,27 +1,5 @@
 import datetime
 import re
-from enum import Enum
-
-
-class PlanKind(Enum):
-
-    EVERY_MON = 1
-    EVERY_TUE = 2
-    EVERY_WED = 3
-    EVERY_THU = 4
-    EVERY_FRI = 5
-    EVERY_SAT = 6
-    EVERY_SUN = 7
-
-    EVERY_WEEKDAY = 9
-    EVERY_DAY = 8
-    EVERY_MONTH = 11
-    EVERY_YEAR = 10
-
-    EVERY_N_DAY = 12
-    EVERY_N_WEEK = 13
-
-    DATE = 14
 
 
 class Item:
@@ -32,6 +10,10 @@ class Item:
 
     def __str__(self) -> str:
         return "\n".join(self.lines)
+
+    @property
+    def title(self) -> str:
+        return self.lines[0] if len(self.lines) > 0 else ''
 
 
 class Date(Item):

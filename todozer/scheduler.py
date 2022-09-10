@@ -1,4 +1,5 @@
 import datetime
+import chardet
 import logging
 import re
 
@@ -13,7 +14,7 @@ def match(text: str, date: datetime.date) -> bool:
     :return:
     """
 
-    logging.debug(f'Attempt to plan a task "%s" on %s', text, utils.get_string_from_date(date))
+    logging.debug(f'Attempt to plan a task "{text}" on {utils.get_string_from_date(date)}')
 
     matched = False
 
@@ -45,16 +46,16 @@ def match(text: str, date: datetime.date) -> bool:
         pattern_every_year,
     ]
 
-    logging.debug('Finding a reader...')
+    logging.debug('Recognizing the pattern...')
 
     for reader in readers:
 
-        logging.debug('Checking the "%s" reader...', reader.__name__)
+        logging.debug('Checking "%s" function...', reader.__name__)
 
         matched = reader(text, date)
 
         if matched:
-            logging.debug('The reader is found!')
+            logging.debug('Success!')
             break
 
     return matched

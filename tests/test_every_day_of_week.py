@@ -1,12 +1,13 @@
 import tests.helpers
 import todozer.scheduler
+import todozer.utils
 
 
 def run_test(day_index: int, pattern: str, task_text_function):
 
     date_of_day = tests.helpers.get_day_of_week(day_index)
-    date_of_day_after = tests.helpers.get_tomorrow_date(date_of_day)
-    date_of_day_before = tests.helpers.get_yesterday_date(date_of_day)
+    date_of_day_after = todozer.utils.get_date_of_tomorrow(date_of_day)
+    date_of_day_before = todozer.utils.get_date_of_yesterday(date_of_day)
 
     # If day of week is today:
 

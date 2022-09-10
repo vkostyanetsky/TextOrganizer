@@ -1,51 +1,54 @@
 import argparse
 import datetime
 import logging
-import os
+import os.path
 import sys
-from logging import config
+from todozer import scheduler
+import configparser
 
 from vkostyanetsky import cliutils
 
-from todozer import utils
+from todozer import datafile
 from todozer.menu import TodozerMenu
-from todozer.parser import Date, Parser
+from todozer.parser import Task, Date, Parser
 
 
 def get_arguments() -> argparse.Namespace:
 
-    args_parser = argparse.ArgumentParser(description="TODOZER")
+    args_parser = argparse.ArgumentParser(description="TODOZER KNOWS THE DRILL!")
 
     args_parser.add_argument(
-        "-o",
-        "--options",
+        "-c",
+        "--config",
         type=str,
-        default="options.yaml",
-        help="configuration file name (default: options.yaml)",
-    )
-
-    args_parser.add_argument(
-        "-l",
-        "--logging",
-        type=str,
-        help="logging configuration file name",
+        default="todozer.cfg",
+        help="configuration file name (default: todozer.cfg)",
     )
 
     return args_parser.parse_args()
 
 
-def get_storage_file_name() -> str:
-    return "todozer.yaml"
+def get_config(filename: str) -> configparser.ConfigParser:
 
+    config = configparser.ConfigParser()
 
-def load_storage() -> dict:
-    file_name = get_storage_file_name()
-    return utils.load_yaml(file_name)
+    config.read_dict(
+        {
+            "TASKS": {
+                "tasks_file_name": "tasks.md",
+                "plans_file_name": "plans.md",
+            },
+            "LOG": {"write_log": True, "file_name": "todozer.log", "file_mode": "w"},
+        }
+    )
 
+    if os.path.exists(filename):
+        config.read(filename)
+    else:
+        file = open(filename, "w")
+        config.write(file)
 
-def save_storage(file_data: dict) -> None:
-    file_name = get_storage_file_name()
-    utils.save_yaml(file_name, file_data)
+    return config
 
 
 def get_uncompleted_dates(file_items: list) -> list:
@@ -101,34 +104,35 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
     to other upcoming date before the user runs the procedure.
     """
 
-    options = menu_item_parameters.get("options")
-    storage = menu_item_parameters.get("storage")
+    config = menu_item_parameters.get("config")
+    data = menu_item_parameters.get("data")
 
-    tasks_file_name = options.get("tasks_file_name")
+    tasks_file_name = config.get("TASKS", "tasks_file_name")
     tasks_file_items = Parser(tasks_file_name).parse()
 
     if check_for_uncompleted_dates(tasks_file_items):
 
-        plans_file_name = options.get("plans_file_name")
+        plans_file_name = config.get("TASKS", "plans_file_name")
         plans_file_items = Parser(plans_file_name).parse()
 
-        last_date = storage.get("last_date")
+        last_date = data.get("last_date")
 
         days = filter(lambda file_item: type(file_item) == Date, tasks_file_items)
 
         for day in list(days):
 
             if last_date is None or day.date > last_date:
-                print(day.date)
+
+                plans = filter(
+                    lambda file_item: type(file_item) == Task, plans_file_items
+                )
+
+                for plan in plans:
+                    scheduler.match(plan.title, day.date)
 
     cliutils.ask_for_enter()
 
-    main_menu(options, storage)
-
-    # TODO Need to find dates without a "done" mark and fill them.
-    # TODO Read existing tasks, add planned, sort all of them, then write.
-    # TODO Logging to text files
-    # TODO Output tasks & plans healthcheck before main menu showing in case something is wrong
+    main_menu(config, data)
 
 
 def statistics(menu_item_parameters: dict) -> None:
@@ -136,14 +140,14 @@ def statistics(menu_item_parameters: dict) -> None:
     sys.exit(0)
 
 
-def main_menu(options: dict, storage: dict) -> None:
+def main_menu(config: configparser.ConfigParser, data: dict) -> None:
     """
     Builds and then displays the main menu of the application.
     """
 
     menu = TodozerMenu()
 
-    menu_item_parameters = {"options": options, "storage": storage}
+    menu_item_parameters = {"config": config, "data": data}
 
     menu.add_item("Create Planned Tasks", create_planned_tasks, menu_item_parameters)
     menu.add_item("Statistics", statistics, menu_item_parameters)
@@ -156,14 +160,21 @@ def main():
 
     arguments = get_arguments()
 
-    if arguments.logging is not None:
-        if os.path.exists(arguments.logging):
-            logging_config = utils.load_yaml(arguments.logging)
-            config.dictConfig(logging_config)
+    config = get_config(arguments.config)
 
-    options = utils.load_yaml(arguments.options)
-    storage = load_storage()
+    if config.getboolean("LOG", "write_log"):
 
-    logging.debug("Hi!")
+        logging.basicConfig(
+            filename=config.get("LOG", "file_name"),
+            filemode=config.get("LOG", "file_mode"),
+            encoding="utf-8",
+            format="%(asctime)s [%(levelname)s] %(message)s",
+            level=logging.DEBUG,
+            force=True,
+        )
 
-    main_menu(options, storage)
+    logging.debug("The app is started!")
+
+    data = datafile.load()
+
+    main_menu(config, data)
