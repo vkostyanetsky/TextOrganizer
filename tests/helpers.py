@@ -1,9 +1,10 @@
 import datetime
 
 import todozer.utils
+from todozer.parser import Plan
 
 
-def get_task_text_ru(pattern: str, start_date: datetime.date = None) -> str:
+def get_plan_ru(pattern: str, start_date: datetime.date = None) -> Plan:
     text = f"* Боб, не стой столбом!; {pattern}"
 
     if start_date is not None:
@@ -11,10 +12,10 @@ def get_task_text_ru(pattern: str, start_date: datetime.date = None) -> str:
     else:
         postfix = ""
 
-    return f"{text}{postfix}"
+    return Plan(f"{text}{postfix}")
 
 
-def get_task_text_en(pattern: str, start_date: datetime.date = None) -> str:
+def get_plan_en(pattern: str, start_date: datetime.date = None) -> Plan:
     text = f"* Bob, do something!; {pattern}"
 
     if start_date is not None:
@@ -22,7 +23,7 @@ def get_task_text_en(pattern: str, start_date: datetime.date = None) -> str:
     else:
         postfix = ""
 
-    return f"{text}{postfix}"
+    return Plan(f"{text}{postfix}")
 
 
 def get_day_of_week(day: int) -> datetime.date:

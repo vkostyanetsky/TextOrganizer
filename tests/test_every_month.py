@@ -5,43 +5,44 @@ import todozer.scheduler
 import todozer.utils
 import todozer.utils
 
-def text_ru(day: str | int, start_date: datetime.date | None = None):
-    return tests.helpers.get_task_text_ru(f"каждый месяц, {day} день", start_date)
+
+def plan_ru(day: str | int, start_date: datetime.date | None = None):
+    return tests.helpers.get_plan_ru(f"каждый месяц, {day} день", start_date)
 
 
-def text_en(day: str | int, start_date: datetime.date | None = None):
-    return tests.helpers.get_task_text_en(f"every month, {day} day", start_date)
+def plan_en(day: str | int, start_date: datetime.date | None = None):
+    return tests.helpers.get_plan_en(f"every month, {day} day", start_date)
 
 
-def run_test(date: datetime.date, text_function):
+def run_test(date: datetime.date, plan_function):
 
     yesterday = date - datetime.timedelta(days=1)
     tomorrow = date + datetime.timedelta(days=1)
 
     # The task date is today, but we try to match it yesterday:
 
-    task_text = text_function(date.day)
-    assert todozer.scheduler.match(task_text, yesterday) is False
+    plan = plan_function(date.day)
+    assert todozer.scheduler.match(plan, yesterday) is False
 
     # The task date is today:
 
-    task_text = text_function(date.day)
-    assert todozer.scheduler.match(task_text, date) is True
+    plan = plan_function(date.day)
+    assert todozer.scheduler.match(plan, date) is True
 
     # The task date is today, and it starts yesterday:
 
-    task_text = text_function(date.day, yesterday)
-    assert todozer.scheduler.match(task_text, date) is True
+    plan = plan_function(date.day, yesterday)
+    assert todozer.scheduler.match(plan, date) is True
 
     # The task date is today, and it starts today:
 
-    task_text = text_function(date.day, date)
-    assert todozer.scheduler.match(task_text, date) is True
+    plan = plan_function(date.day, date)
+    assert todozer.scheduler.match(plan, date) is True
 
     # The task date is today, and it starts tomorrow:
 
-    task_text = text_function(date.day, tomorrow)
-    assert todozer.scheduler.match(task_text, date) is False
+    plan = plan_function(date.day, tomorrow)
+    assert todozer.scheduler.match(plan, date) is False
 
 
 def test_every_month():
@@ -51,10 +52,10 @@ def test_every_month():
 
     # ru
 
-    run_test(this_day, text_ru)
-    run_test(last_day, text_ru)
+    run_test(this_day, plan_ru)
+    run_test(last_day, plan_ru)
 
     # en
 
-    run_test(this_day, text_en)
-    run_test(last_day, text_en)
+    run_test(this_day, plan_en)
+    run_test(last_day, plan_en)

@@ -2,34 +2,26 @@ import datetime
 import logging
 import re
 
+from todozer.parser import Plan
 from todozer import utils
 
 
-def match(task_title: str, date: datetime.date) -> bool:
+def match(plan: Plan, date: datetime.date) -> bool:
+
     logging.debug(
-        f'Attempt to plan a task "{task_title}" on {utils.get_string_from_date(date)}'
+        f'Attempt to plan "{str(plan)}" on {utils.get_string_from_date(date)}'
     )
 
     matched = False
 
-    task_pattern = get_pattern(task_title)
-
-    if task_pattern is None:
+    if plan.pattern == "":
         logging.debug("Pattern to plan is not found.")
     else:
-        logging.debug("Pattern to plan: %s", task_pattern)
+        logging.debug("Pattern to plan: %s", plan.pattern)
 
-        matched = match_pattern(task_pattern, date)
+        matched = match_pattern(plan.pattern, date)
 
     return matched
-
-
-def get_pattern(text: str) -> str | None:
-
-    index = text.rfind(";")
-    next_index = index + 1
-
-    return text[next_index:].strip() if index != -1 else None
 
 
 def match_pattern(pattern: str, date: datetime.date) -> bool:

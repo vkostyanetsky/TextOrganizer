@@ -11,21 +11,21 @@ def test_exact_date():
 
     # If an exact date is yesterday:
 
-    task_date = todozer.utils.get_string_from_date(yesterday)
-    task_text = tests.helpers.get_task_text_en(task_date)
+    plan_date = todozer.utils.get_string_from_date(yesterday)
+    plan = tests.helpers.get_plan_en(plan_date)
 
-    assert todozer.scheduler.match(task_text, today) is False
+    assert todozer.scheduler.match(plan, today) is False
 
     # If an exact date is today:
 
-    task_date = todozer.utils.get_string_from_date(today)
-    task_text = tests.helpers.get_task_text_en(task_date)
+    plan_date = todozer.utils.get_string_from_date(today)
+    plan = tests.helpers.get_plan_en(plan_date)
 
-    assert todozer.scheduler.match(task_text, today) is True
+    assert todozer.scheduler.match(plan, today) is True
 
     # If an exact date is tomorrow:
 
-    task_date = todozer.utils.get_string_from_date(tomorrow)
-    task_text = tests.helpers.get_task_text_en(task_date)
+    plan_date = todozer.utils.get_string_from_date(tomorrow)
+    plan = tests.helpers.get_plan_en(plan_date)
 
-    assert todozer.scheduler.match(task_text, today) is False
+    assert todozer.scheduler.match(plan, today) is False

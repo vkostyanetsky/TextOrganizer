@@ -2,17 +2,17 @@ import os
 
 import yaml
 from yaml.parser import ParserError
-
+from todozer import utils
 from todozer import constants
 
 
-def __save_yaml(file_name: str, file_data: dict) -> None:
+def save_yaml(file_name: str, file_data: dict) -> None:
 
     with open(file_name, encoding=constants.encoding, mode="w") as yaml_file:
         yaml.safe_dump(file_data, yaml_file)
 
 
-def __load_yaml(file_name: str) -> dict:
+def load_yaml(file_name: str) -> dict:
 
     result = None
 
@@ -30,20 +30,27 @@ def __load_yaml(file_name: str) -> dict:
     return result
 
 
-def __get_data_file_name() -> str:
+def get_data_file_name() -> str:
 
     return "todozer.dat"
 
 
+def get_data_by_default() -> dict:
+
+    return {
+        "last_date": utils.get_date_of_yesterday()
+    }
+
+
 def load() -> dict:
 
-    file_name = __get_data_file_name()
+    file_name = get_data_file_name()
 
-    return __load_yaml(file_name) if os.path.exists(file_name) else {}
+    return load_yaml(file_name) if os.path.exists(file_name) else get_data_by_default()
 
 
 def save(data: dict):
 
-    file_name = __get_data_file_name()
+    file_name = get_data_file_name()
 
-    __save_yaml(file_name, data)
+    save_yaml(file_name, data)

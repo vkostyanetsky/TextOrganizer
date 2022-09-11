@@ -9,7 +9,8 @@ from vkostyanetsky import cliutils
 
 from todozer import constants, datafile, scheduler
 from todozer.menu import TodozerMenu
-from todozer.parser import List, Parser, Task
+from todozer.parser import Parser, List, Task, Plan
+from todozer import utils
 
 
 def get_arguments() -> argparse.Namespace:
@@ -48,6 +49,20 @@ def get_config(filename: str) -> configparser.ConfigParser:
         config.write(file)
 
     return config
+
+
+def set_up_logging(config: configparser.ConfigParser) -> None:
+
+    if config.getboolean("LOG", "write_log"):
+
+        logging.basicConfig(
+            filename=config.get("LOG", "file_name"),
+            filemode=config.get("LOG", "file_mode"),
+            encoding=constants.encoding,
+            format="%(asctime)s [%(levelname)s] %(message)s",
+            level=logging.DEBUG,
+            force=True,
+        )
 
 
 def get_uncompleted_dates(file_items: list) -> list:
@@ -95,18 +110,31 @@ def check_for_uncompleted_dates(tasks_file_items: list) -> bool:
     return passed
 
 
-def get_tasks(config: configparser.ConfigParser):
+def load_tasks_file_items(config: configparser.ConfigParser):
 
     tasks_file_name = config.get("TASKS", "tasks_file_name")
 
-    return Parser(tasks_file_name).parse()
+    return Parser(tasks_file_name, Task).parse()
 
 
-def get_plans(config: configparser.ConfigParser):
+def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigParser):
+
+    content = []
+
+    for tasks_file_item in tasks_file_items:
+        content.append(str(tasks_file_item))
+
+    tasks_file_name = config.get("TASKS", "tasks_file_name")
+
+    with open(tasks_file_name, "w", encoding=constants.encoding) as tasks_file:
+        tasks_file.write("\n\n".join(content))
+
+
+def load_plans_file_items(config: configparser.ConfigParser):
 
     plans_file_name = config.get("TASKS", "plans_file_name")
 
-    return Parser(plans_file_name).parse()
+    return Parser(plans_file_name, Plan).parse()
 
 
 def create_planned_tasks(menu_item_parameters: dict) -> None:
@@ -117,38 +145,81 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
     to other upcoming date before the user runs the procedure.
     """
 
+    logging.debug("Creating planned tasks...")
+
     config = menu_item_parameters.get("config")
     data = menu_item_parameters.get("data")
 
-    tasks = get_tasks(config)
+    tasks_file_items = load_tasks_file_items(config)
 
-    if check_for_uncompleted_dates(tasks):
+    if check_for_uncompleted_dates(tasks_file_items):
 
-        plans = get_plans(config)
-        last_date = data.get("last_date")
-        tasks_lists = filter(lambda file_item: type(file_item) == List, tasks)
+        plans_file_items = load_plans_file_items(config)
 
-        for tasks_list in list(tasks_lists):
+        add_tasks_lists(tasks_file_items, data["last_date"])
 
-            is_date_to_plan = last_date is None or (
-                tasks_list.date is not None and tasks_list.date > last_date
+        fill_tasks_lists(tasks_file_items, plans_file_items, data)
+
+    save_tasks_file_items(tasks_file_items, config)
+
+    data['last_date'] = utils.get_date_of_today()
+    datafile.save(data)
+
+    cliutils.ask_for_enter()
+
+    main_menu(config, data)
+
+
+def add_tasks_lists(tasks: list, last_date: datetime.date):
+
+    date = utils.get_date_of_tomorrow(last_date)
+    today = utils.get_date_of_today()
+
+    while date <= today:
+
+        if (
+            len(
+                list(
+                    filter(lambda item: type(item) == List and item.date == date, tasks)
+                )
             )
+            == 0
+        ):
 
-            if is_date_to_plan:
-                plan_date(tasks_list.date, plans)
+            line = f"# {utils.get_string_from_date(date)}"
+            tasks.append(List(line))
 
-    # cliutils.ask_for_enter()
-    #
-    # main_menu(config, data)
+        date = utils.get_date_of_tomorrow(date)
 
 
-def plan_date(date: datetime.date, plans: list):
+def fill_tasks_lists(tasks_file_items: list, plans_file_items: list, data: dict):
 
-    for plan in plans:
-        if isinstance(plan, List):
-            plan_date(date, plan.items)
-        elif isinstance(plan, Task):
-            scheduler.match(plan.title, date)
+    for tasks_file_item in tasks_file_items:
+
+        if (
+            type(tasks_file_item) == List
+            and tasks_file_item.date is not None
+            and tasks_file_item.date > data["last_date"]
+        ):
+            fill_tasks_list(tasks_file_item, plans_file_items)
+            sort_tasks_list(tasks_file_item)
+
+
+def sort_tasks_list(tasks_file_item: List):
+
+    tasks_file_item.items = sorted(tasks_file_item.items, key=lambda item: item.time)
+
+
+def fill_tasks_list(tasks_file_item: List, plans_file_items: list):
+
+    for plans_file_item in plans_file_items:
+
+        if isinstance(plans_file_item, List):
+            fill_tasks_list(tasks_file_item, plans_file_item.items)
+        elif isinstance(plans_file_item, Plan):
+            if scheduler.match(plans_file_item, tasks_file_item.date):
+                line = f"{Task.scheduled_task_mark} {plans_file_item.title}"
+                tasks_file_item.items.append(Task(line))
 
 
 def statistics(menu_item_parameters: dict) -> None:
@@ -178,21 +249,10 @@ def main():
 
     config = get_config(arguments.config)
 
-    if config.getboolean("LOG", "write_log"):
-
-        logging.basicConfig(
-            filename=config.get("LOG", "file_name"),
-            filemode=config.get("LOG", "file_mode"),
-            encoding=constants.encoding,
-            format="%(asctime)s [%(levelname)s] %(message)s",
-            level=logging.DEBUG,
-            force=True,
-        )
-
-    logging.debug("The app is started!")
+    set_up_logging(config)
 
     data = datafile.load()
 
-    create_planned_tasks({"config": config, "data": data})
+    logging.debug("Initialization completed.")
 
-    # main_menu(config, data)
+    main_menu(config, data)

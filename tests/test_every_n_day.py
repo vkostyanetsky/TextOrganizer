@@ -14,16 +14,16 @@ def test_every_n_day():
 
     # ru
 
-    task_text = tests.helpers.get_task_text_ru("каждые 3 дня", today)
+    plan = tests.helpers.get_plan_ru("каждые 3 дня", today)
 
-    assert todozer.scheduler.match(task_text, today) is True
-    assert todozer.scheduler.match(task_text, three_days_after) is True
-    assert todozer.scheduler.match(task_text, seven_days_after) is False
+    assert todozer.scheduler.match(plan, today) is True
+    assert todozer.scheduler.match(plan, three_days_after) is True
+    assert todozer.scheduler.match(plan, seven_days_after) is False
 
     # en
 
-    task_text = tests.helpers.get_task_text_en("every 3 days", today)
+    plan = tests.helpers.get_plan_en("every 3 days", today)
 
-    assert todozer.scheduler.match(task_text, today) is True
-    assert todozer.scheduler.match(task_text, three_days_after) is True
-    assert todozer.scheduler.match(task_text, seven_days_after) is False
+    assert todozer.scheduler.match(plan, today) is True
+    assert todozer.scheduler.match(plan, three_days_after) is True
+    assert todozer.scheduler.match(plan, seven_days_after) is False

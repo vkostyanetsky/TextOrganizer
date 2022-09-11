@@ -12,12 +12,12 @@ def run_test_ru(
 
     locale.setlocale(locale.LC_ALL, "ru_RU.UTF-8")
 
-    task_date = task_date.strftime("%d %B")
-    task_text = tests.helpers.get_task_text_ru(f"каждый год, {task_date}", start_date)
+    plan_date = task_date.strftime("%d %B")
+    plan = tests.helpers.get_plan_ru(f"каждый год, {plan_date}", start_date)
 
     today = todozer.utils.get_date_of_today()
 
-    assert todozer.scheduler.match(task_text, today) is result
+    assert todozer.scheduler.match(plan, today) is result
 
 
 def run_test_en(
@@ -26,12 +26,12 @@ def run_test_en(
 
     locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
-    task_date = task_date.strftime("%B %d")
-    task_text = tests.helpers.get_task_text_ru(f"every year, {task_date}", start_date)
+    plan_date = task_date.strftime("%B %d")
+    plan = tests.helpers.get_plan_en(f"every year, {plan_date}", start_date)
 
     today = todozer.utils.get_date_of_today()
 
-    assert todozer.scheduler.match(task_text, today) is result
+    assert todozer.scheduler.match(plan, today) is result
 
 
 def test_every_year():

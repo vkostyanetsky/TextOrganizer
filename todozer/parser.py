@@ -14,8 +14,14 @@ class Item:
         return "\n".join(self.lines)
 
     @property
-    def title(self) -> str:
+    def first_line(self) -> str:
         return self.lines[0] if len(self.lines) > 0 else ""
+
+    @property
+    def title(self):
+        first_line = self.first_line
+
+        return first_line[1:].strip() if len(first_line) > 0 else first_line
 
 
 class List(Item):
@@ -31,7 +37,7 @@ class List(Item):
         lines = super().__str__()
         items = "\n".join(list(map(lambda item: str(item), self.items)))
 
-        return f"{lines}\n{items}"
+        return f"{lines}\n\n{items}"
 
     def get_tasks(self) -> list:
         filter_result = filter(lambda item: type(item) == Task, self.items)
@@ -80,10 +86,12 @@ class Task(Item):
     cancelled_task_mark: str = "- "
 
     @property
-    def title(self) -> str:
-        title = super().title
+    def time(self) -> datetime.time:
 
-        return title[1:].strip() if len(title) > 0 else title
+        match_object = re.match("^([0-9]{2}:[0-9]{2}).*", self.title)
+        time_string = "00:00" if match_object is None else match_object.group(1)
+
+        return datetime.time.fromisoformat(time_string)
 
     @property
     def is_scheduled(self) -> bool:
@@ -118,22 +126,44 @@ class Task(Item):
         )
 
 
-class Text(Item):
+class Text(Item):  # TODO probably deprecated
     @staticmethod
     def match(line: str):
         return not List.match(line) and not Task.match(line)
+
+
+class Plan(Task):
+
+    @property
+    def title(self) -> str:
+        title = super().title
+        index = title.rfind(";")
+
+        if index != -1:
+            title = title[:index]
+
+        return title
+
+    @property
+    def pattern(self) -> str:
+        title = super().title
+        index = title.rfind(";")
+
+        return title[index + 1:].strip() if index != -1 else ""
 
 
 class Parser:
     __file_path: str = ""
     __last_list: List | None
     __file_items: list = []
+    __task_class = None
     __empty_lines: list = []
 
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: str, task_class):
         self.__file_path = file_path
         self.__last_list = None
         self.__file_items = []
+        self.__task_class = task_class
         self.__empty_lines = []
 
     def parse(self) -> list:
@@ -153,9 +183,9 @@ class Parser:
 
                 if List.match(line):
                     self.__add_date(line)
-                elif Task.match(line):
+                elif self.__task_class.match(line):
                     self.__add_task(line)
-                else:
+                elif line.strip() != "":
                     self.__add_text(line)
 
         return self.__file_items
@@ -174,40 +204,35 @@ class Parser:
         if self.__last_list is None:
             self.__file_items.append(Text(line))
         else:
-            self.__last_list.items.append(Task(line))
+            self.__last_list.items.append(self.__task_class(line))
 
     def __add_text(self, line: str):
-        if line.strip() == "":
 
-            self.__empty_lines.append(line)
+        previous_task = self.__get_previous_task()
+
+        if previous_task is not None:
+
+            self.__add_empty_lines(previous_task.lines)
+
+            previous_task.lines.append(line)
 
         else:
 
-            previous_task = self.__get_previous_task()
+            new_item = Text(line)
 
-            if previous_task is not None:
+            if self.__last_list is not None:
 
-                self.__add_empty_lines(previous_task.lines)
+                self.__add_empty_lines(self.__last_list.items)
 
-                previous_task.lines.append(line)
+                self.__last_list.items.append(new_item)
 
             else:
 
-                new_item = Text(line)
+                self.__add_empty_lines(self.__file_items)
 
-                if self.__last_list is not None:
+                self.__file_items.append(new_item)
 
-                    self.__add_empty_lines(self.__last_list.items)
-
-                    self.__last_list.items.append(new_item)
-
-                else:
-
-                    self.__add_empty_lines(self.__file_items)
-
-                    self.__file_items.append(new_item)
-
-    def __get_previous_task(self) -> Task | None:
+    def __get_previous_task(self) -> Task | Plan | None:
         previous_task = None
 
         if len(self.__file_items) > 0:
@@ -218,15 +243,16 @@ class Parser:
 
                 if len(last_file_item.items) > 0:
 
-                    if type(last_file_item.items[-1]) == Task:
+                    if type(last_file_item.items[-1]) == self.__task_class:
                         previous_task = last_file_item.items[-1]
 
-            elif type(last_file_item) == Task:
+            elif type(last_file_item) == self.__task_class:
                 previous_task = last_file_item
 
         return previous_task
 
     def __add_empty_lines_to_last_date(self) -> None:
+
         self.__add_empty_lines(
             self.__file_items if self.__last_list is None else self.__last_list.items
         )
