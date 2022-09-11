@@ -3,7 +3,6 @@ import datetime
 import tests.helpers
 import todozer.scheduler
 import todozer.utils
-import todozer.utils
 
 
 def plan_ru(day: str | int, start_date: datetime.date | None = None):

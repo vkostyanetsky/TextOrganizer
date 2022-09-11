@@ -2,8 +2,8 @@ import os
 
 import yaml
 from yaml.parser import ParserError
-from todozer import utils
-from todozer import constants
+
+from todozer import constants, utils
 
 
 def save_yaml(file_name: str, file_data: dict) -> None:
@@ -37,9 +37,7 @@ def get_data_file_name() -> str:
 
 def get_data_by_default() -> dict:
 
-    return {
-        "last_date": utils.get_date_of_yesterday()
-    }
+    return {"last_date": utils.get_date_of_yesterday()}
 
 
 def load() -> dict:

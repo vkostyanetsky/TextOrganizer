@@ -7,10 +7,9 @@ import sys
 
 from vkostyanetsky import cliutils
 
-from todozer import constants, datafile, scheduler
+from todozer import constants, datafile, scheduler, utils
 from todozer.menu import TodozerMenu
-from todozer.parser import Parser, List, Task, Plan
-from todozer import utils
+from todozer.parser import List, Parser, Plan, Task
 
 
 def get_arguments() -> argparse.Namespace:
@@ -162,7 +161,7 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
 
             save_tasks_file_items(tasks_file_items, config)
 
-            data['last_date'] = utils.get_date_of_today()
+            data["last_date"] = utils.get_date_of_today()
             datafile.save(data)
 
     else:

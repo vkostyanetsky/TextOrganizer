@@ -133,7 +133,6 @@ class Text(Item):  # TODO probably deprecated
 
 
 class Plan(Task):
-
     @property
     def title(self) -> str:
         title = super().title
@@ -149,7 +148,7 @@ class Plan(Task):
         title = super().title
         index = title.rfind(";")
 
-        return title[index + 1:].strip() if index != -1 else ""
+        return title[index + 1 :].strip() if index != -1 else ""
 
 
 class Parser:

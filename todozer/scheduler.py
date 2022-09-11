@@ -2,8 +2,8 @@ import datetime
 import logging
 import re
 
-from todozer.parser import Plan
 from todozer import utils
+from todozer.parser import Plan
 
 
 def match(plan: Plan, date: datetime.date) -> bool:
