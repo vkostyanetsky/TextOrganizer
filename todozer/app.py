@@ -218,8 +218,12 @@ def fill_tasks_list(tasks_file_item: List, plans_file_items: list):
             fill_tasks_list(tasks_file_item, plans_file_item.items)
         elif isinstance(plans_file_item, Plan):
             if scheduler.match(plans_file_item, tasks_file_item.date):
-                line = f"{Task.scheduled_task_mark} {plans_file_item.title}"
-                tasks_file_item.items.append(Task(line))
+                line = f"{Task.scheduled_task_mark}{plans_file_item.title}"
+                task = Task(line)
+                if len(plans_file_item.lines) > 1:
+                    for plan_line in plans_file_item.lines:
+                        task.lines.append(plan_line)
+                tasks_file_item.items.append(task)
 
 
 def statistics(menu_item_parameters: dict) -> None:
