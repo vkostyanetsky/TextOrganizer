@@ -231,7 +231,11 @@ def fill_tasks_list(tasks_file_item: List, plans_file_items: list):
                 line = f"{Task.scheduled_task_mark}{plans_file_item.title}"
                 task = Task(line)
                 if len(plans_file_item.lines) > 1:
+                    i = 0
                     for plan_line in plans_file_item.lines:
+                        i += 1
+                        if i == 1:
+                            continue
                         task.lines.append(plan_line)
                 tasks_file_item.items.append(task)
 
