@@ -152,28 +152,34 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
 
     tasks_file_items = load_tasks_file_items(config)
 
-    if check_for_uncompleted_dates(tasks_file_items):
+    if add_tasks_lists(tasks_file_items, data["last_date"]) > 0:
 
         plans_file_items = load_plans_file_items(config)
 
-        add_tasks_lists(tasks_file_items, data["last_date"])
+        if check_for_uncompleted_dates(tasks_file_items):
 
-        fill_tasks_lists(tasks_file_items, plans_file_items, data)
+            fill_tasks_lists(tasks_file_items, plans_file_items, data)
 
-    save_tasks_file_items(tasks_file_items, config)
+            save_tasks_file_items(tasks_file_items, config)
 
-    data['last_date'] = utils.get_date_of_today()
-    datafile.save(data)
+            data['last_date'] = utils.get_date_of_today()
+            datafile.save(data)
+
+    else:
+
+        print("Unable to perform, since there are no days to plan tasks.")
+        print()
 
     cliutils.ask_for_enter()
 
     main_menu(config, data)
 
 
-def add_tasks_lists(tasks: list, last_date: datetime.date):
+def add_tasks_lists(tasks: list, last_date: datetime.date) -> int:
 
     date = utils.get_date_of_tomorrow(last_date)
     today = utils.get_date_of_today()
+    added = 0
 
     while date <= today:
 
@@ -189,7 +195,11 @@ def add_tasks_lists(tasks: list, last_date: datetime.date):
             line = f"# {utils.get_string_from_date(date)}"
             tasks.append(List(line))
 
+            added += 1
+
         date = utils.get_date_of_tomorrow(date)
+
+    return added
 
 
 def fill_tasks_lists(tasks_file_items: list, plans_file_items: list, data: dict):
