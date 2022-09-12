@@ -4,15 +4,34 @@ import re
 
 from todozer import utils
 from todozer.parser import Plan
+from enum import Enum, auto
 
 
-def match(plan: Plan, date: datetime.date) -> bool:
+class Pattern(Enum):
+    """Task repetition patterns."""
+
+    EXACT_DATE = auto()
+    EVERY_DAY = auto()
+    EVERY_N_DAY = auto()
+    EVERY_MONTH = auto()
+    EVERY_WEEKDAY = auto()
+    EVERY_YEAR = auto()
+    EVERY_MONDAY = auto()
+    EVERY_TUESDAY = auto()
+    EVERY_WEDNESDAY = auto()
+    EVERY_THURSDAY = auto()
+    EVERY_FRIDAY = auto()
+    EVERY_SATURDAY = auto()
+    EVERY_SUNDAY = auto()
+
+
+def match(plan: Plan, date: datetime.date) -> Pattern | None:
 
     logging.debug(
         f'Attempt to plan "{str(plan)}" on {utils.get_string_from_date(date)}'
     )
 
-    matched = False
+    matched = None
 
     if plan.pattern == "":
         logging.debug("Pattern to plan is not found.")
@@ -24,43 +43,45 @@ def match(plan: Plan, date: datetime.date) -> bool:
     return matched
 
 
-def match_pattern(pattern: str, date: datetime.date) -> bool:
+def match_pattern(pattern: str, date: datetime.date) -> Pattern | None:
 
-    matched = False
+    matched = None
 
     compiled_pattern = get_compiled_pattern(pattern)
 
     logging.debug("Compiled pattern: %s", compiled_pattern)
 
-    readers = [
-        pattern_exact_date,
-        pattern_every_day,
-        pattern_every_n_day,
-        pattern_every_month,
-        pattern_every_weekday,
-        pattern_every_year,
-        pattern_every_monday,
-        pattern_every_tuesday,
-        pattern_every_wednesday,
-        pattern_every_thursday,
-        pattern_every_friday,
-        pattern_every_saturday,
-        pattern_every_sunday,
-    ]
+    readers = {
+        Pattern.EXACT_DATE: pattern_exact_date,
+        Pattern.EVERY_DAY: pattern_every_day,
+        Pattern.EVERY_N_DAY: pattern_every_n_day,
+        Pattern.EVERY_MONTH: pattern_every_month,
+        Pattern.EVERY_WEEKDAY: pattern_every_weekday,
+        Pattern.EVERY_YEAR: pattern_every_year,
+        Pattern.EVERY_MONDAY: pattern_every_monday,
+        Pattern.EVERY_TUESDAY: pattern_every_tuesday,
+        Pattern.EVERY_WEDNESDAY: pattern_every_wednesday,
+        Pattern.EVERY_THURSDAY: pattern_every_thursday,
+        Pattern.EVERY_FRIDAY: pattern_every_friday,
+        Pattern.EVERY_SATURDAY: pattern_every_saturday,
+        Pattern.EVERY_SUNDAY: pattern_every_sunday,
+    }
 
     logging.debug("Matching the pattern...")
 
     for reader in readers:
 
-        logging.debug('Checking a reader: "%s"...', reader.__name__)
+        function = readers[reader]
 
-        matched = reader(compiled_pattern, date)
+        logging.debug('Checking a reader: "%s"...', function.__name__)
+
+        matched = function(compiled_pattern, date)
 
         if matched:
+            matched = reader
             break
 
-    if matched:
-        logging.debug("Success!")
+    logging.debug(f"Matched pattern: {matched}")
 
     return matched
 
@@ -403,3 +424,6 @@ def get_regexp_for_month_name() -> str:
 
 def get_regexp_for_day_number() -> str:
     return "[0-9]{1,2}"
+
+
+match(Plan("* blabla; every day"), datetime.date.today())

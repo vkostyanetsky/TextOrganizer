@@ -1,6 +1,6 @@
 import tests.helpers
-import todozer.scheduler
 import todozer.utils
+from todozer.scheduler import Pattern, match
 
 
 def test_every_month():
@@ -36,25 +36,25 @@ def run_test(variants: list, plan_function):
     for variant in variants:
 
         task_text = tests.helpers.get_plan_ru(variant)
-        assert todozer.scheduler.match(task_text, monday) is True
+        assert match(task_text, monday) is Pattern.EVERY_WEEKDAY
 
         task_text = tests.helpers.get_plan_ru(variant, before_monday)
-        assert todozer.scheduler.match(task_text, monday) is True
+        assert match(task_text, monday) is Pattern.EVERY_WEEKDAY
 
         task_text = tests.helpers.get_plan_ru(variant, monday)
-        assert todozer.scheduler.match(task_text, monday) is True
+        assert match(task_text, monday) is Pattern.EVERY_WEEKDAY
 
         task_text = tests.helpers.get_plan_ru(variant, after_monday)
-        assert todozer.scheduler.match(task_text, monday) is False
+        assert match(task_text, monday) is not Pattern.EVERY_WEEKDAY
 
         task_text = tests.helpers.get_plan_ru(variant)
-        assert todozer.scheduler.match(task_text, sunday) is False
+        assert match(task_text, sunday) is not Pattern.EVERY_WEEKDAY
 
         task_text = tests.helpers.get_plan_ru(variant, before_sunday)
-        assert todozer.scheduler.match(task_text, sunday) is False
+        assert match(task_text, sunday) is not Pattern.EVERY_WEEKDAY
 
         task_text = tests.helpers.get_plan_ru(variant, sunday)
-        assert todozer.scheduler.match(task_text, sunday) is False
+        assert match(task_text, sunday) is not Pattern.EVERY_WEEKDAY
 
         task_text = tests.helpers.get_plan_ru(variant, after_sunday)
-        assert todozer.scheduler.match(task_text, sunday) is False
+        assert match(task_text, sunday) is not Pattern.EVERY_WEEKDAY

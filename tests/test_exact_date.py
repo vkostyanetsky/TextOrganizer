@@ -1,6 +1,6 @@
 import tests.helpers
-import todozer.scheduler
 import todozer.utils
+from todozer.scheduler import Pattern, match
 
 
 def test_exact_date():
@@ -14,18 +14,18 @@ def test_exact_date():
     plan_date = todozer.utils.get_string_from_date(yesterday)
     plan = tests.helpers.get_plan_en(plan_date)
 
-    assert todozer.scheduler.match(plan, today) is False
+    assert match(plan, today) is not Pattern.EXACT_DATE
 
     # If an exact date is today:
 
     plan_date = todozer.utils.get_string_from_date(today)
     plan = tests.helpers.get_plan_en(plan_date)
 
-    assert todozer.scheduler.match(plan, today) is True
+    assert match(plan, today) is Pattern.EXACT_DATE
 
     # If an exact date is tomorrow:
 
     plan_date = todozer.utils.get_string_from_date(tomorrow)
     plan = tests.helpers.get_plan_en(plan_date)
 
-    assert todozer.scheduler.match(plan, today) is False
+    assert match(plan, today) is not Pattern.EXACT_DATE

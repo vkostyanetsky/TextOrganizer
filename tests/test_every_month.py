@@ -1,8 +1,8 @@
 import datetime
 
 import tests.helpers
-import todozer.scheduler
 import todozer.utils
+from todozer.scheduler import Pattern, match
 
 
 def plan_ru(day: str | int, start_date: datetime.date | None = None):
@@ -21,27 +21,27 @@ def run_test(date: datetime.date, plan_function):
     # The task date is today, but we try to match it yesterday:
 
     plan = plan_function(date.day)
-    assert todozer.scheduler.match(plan, yesterday) is False
+    assert match(plan, yesterday) is not Pattern.EVERY_MONTH
 
     # The task date is today:
 
     plan = plan_function(date.day)
-    assert todozer.scheduler.match(plan, date) is True
+    assert match(plan, date) is Pattern.EVERY_MONTH
 
     # The task date is today, and it starts yesterday:
 
     plan = plan_function(date.day, yesterday)
-    assert todozer.scheduler.match(plan, date) is True
+    assert match(plan, date) is Pattern.EVERY_MONTH
 
     # The task date is today, and it starts today:
 
     plan = plan_function(date.day, date)
-    assert todozer.scheduler.match(plan, date) is True
+    assert match(plan, date) is Pattern.EVERY_MONTH
 
     # The task date is today, and it starts tomorrow:
 
     plan = plan_function(date.day, tomorrow)
-    assert todozer.scheduler.match(plan, date) is False
+    assert match(plan, date) is not Pattern.EVERY_MONTH
 
 
 def test_every_month():
