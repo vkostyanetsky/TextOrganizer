@@ -89,13 +89,13 @@ def get_compiled_pattern(text: str) -> str:
         ("октябрь|октября|october", "oct"),
         ("ноябрь|ноября|november", "nov"),
         ("декабрь|декабря|december", "dec"),
-        ("понедельник|пн|monday", "mon"),
-        ("вторник|вт|tuesday", "tue"),
-        ("среда|ср|wednesday", "wed"),
-        ("четверг|чт|thursday", "thu"),
-        ("пятница|пятницу|пт|friday", "fri"),
-        ("суббота|субботу|сб|saturday", "sat"),
-        ("воскресенье|вс|sunday", "sun"),
+        ("понедельник", "monday"),
+        ("вторник", "tuesday"),
+        ("среда|среду", "wednesday"),
+        ("четверг", "thursday"),
+        ("пятница|пятницу", "friday"),
+        ("суббота|субботу", "saturday"),
+        ("воскресенье", "sunday"),
     ]
 
     for rule in rules:
@@ -175,7 +175,7 @@ def pattern_every_monday(text: str, date: datetime.date) -> bool:
     - every mon
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, "every mon", "Mon")
+    return match_pattern_title_and_day_name_for_date(text, date, "every monday", "Mon")
 
 
 def pattern_every_tuesday(text: str, date: datetime.date) -> bool:
@@ -187,7 +187,7 @@ def pattern_every_tuesday(text: str, date: datetime.date) -> bool:
     - every tue
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, "every tue", "Tue")
+    return match_pattern_title_and_day_name_for_date(text, date, "every tuesday", "Tue")
 
 
 def pattern_every_wednesday(text: str, date: datetime.date) -> bool:
@@ -199,7 +199,7 @@ def pattern_every_wednesday(text: str, date: datetime.date) -> bool:
     - every wed
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, "every wed", "Wed")
+    return match_pattern_title_and_day_name_for_date(text, date, "every wednesday", "Wed")
 
 
 def pattern_every_thursday(text: str, date: datetime.date) -> bool:
@@ -211,7 +211,7 @@ def pattern_every_thursday(text: str, date: datetime.date) -> bool:
     - every thu
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, "every thu", "Thu")
+    return match_pattern_title_and_day_name_for_date(text, date, "every thursday", "Thu")
 
 
 def pattern_every_friday(text: str, date: datetime.date) -> bool:
@@ -223,7 +223,7 @@ def pattern_every_friday(text: str, date: datetime.date) -> bool:
     - every fri
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, "every fri", "Fri")
+    return match_pattern_title_and_day_name_for_date(text, date, "every friday", "Fri")
 
 
 def pattern_every_saturday(text: str, date: datetime.date) -> bool:
@@ -234,7 +234,7 @@ def pattern_every_saturday(text: str, date: datetime.date) -> bool:
     - every sat
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, "every sat", "Sat")
+    return match_pattern_title_and_day_name_for_date(text, date, "every saturday", "Sat")
 
 
 def pattern_every_sunday(text: str, date: datetime.date) -> bool:
@@ -245,7 +245,7 @@ def pattern_every_sunday(text: str, date: datetime.date) -> bool:
     - every sun
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, "every sun", "Sun")
+    return match_pattern_title_and_day_name_for_date(text, date, "every sunday", "Sun")
 
 
 def pattern_every_weekday(text: str, date: datetime.date) -> bool:
