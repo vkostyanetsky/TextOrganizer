@@ -151,7 +151,9 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
 
     tasks_file_items = load_tasks_file_items(config)
 
-    if add_tasks_lists(tasks_file_items, data["last_date"]) > 0:
+    added_lists = add_tasks_lists(tasks_file_items, data["last_date"])
+
+    if len(added_lists) > 0:
 
         plans_file_items = load_plans_file_items(config)
 
@@ -164,6 +166,9 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
             data["last_date"] = utils.get_date_of_today()
             datafile.save(data)
 
+            print(f"Tasks for {', '.join(added_lists)} have been successfully scheduled.")
+            print()
+
     else:
 
         print("Unable to perform, since there are no days to plan tasks.")
@@ -174,11 +179,11 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
     main_menu(config, data)
 
 
-def add_tasks_lists(tasks: list, last_date: datetime.date) -> int:
+def add_tasks_lists(tasks: list, last_date: datetime.date) -> list:
 
     date = utils.get_date_of_tomorrow(last_date)
     today = utils.get_date_of_today()
-    added = 0
+    added = []
 
     while date <= today:
 
@@ -191,10 +196,11 @@ def add_tasks_lists(tasks: list, last_date: datetime.date) -> int:
             == 0
         ):
 
-            line = f"# {utils.get_string_from_date(date)}"
+            date_string = utils.get_string_from_date(date)
+            line = f"# {date_string}"
             tasks.append(List(line))
 
-            added += 1
+            added.append(date_string)
 
         date = utils.get_date_of_tomorrow(date)
 
