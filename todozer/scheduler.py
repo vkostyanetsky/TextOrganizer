@@ -36,6 +36,9 @@ def match_pattern(pattern: str, date: datetime.date) -> bool:
         pattern_exact_date,
         pattern_every_day,
         pattern_every_n_day,
+        pattern_every_month,
+        pattern_every_weekday,
+        pattern_every_year,
         pattern_every_monday,
         pattern_every_tuesday,
         pattern_every_wednesday,
@@ -43,9 +46,6 @@ def match_pattern(pattern: str, date: datetime.date) -> bool:
         pattern_every_friday,
         pattern_every_saturday,
         pattern_every_sunday,
-        pattern_every_month,
-        pattern_every_weekday,
-        pattern_every_year,
     ]
 
     logging.debug("Matching the pattern...")
