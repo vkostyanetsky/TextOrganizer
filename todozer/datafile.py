@@ -1,7 +1,7 @@
 import os
 
 import yaml
-from yaml.parser import ParserError
+import yaml.parser
 
 from todozer import constants, utils
 
@@ -21,7 +21,7 @@ def load_yaml(file_name: str) -> dict:
         with open(file_name, encoding=constants.ENCODING) as yaml_file:
             result = yaml.safe_load(yaml_file)
 
-    except ParserError:
+    except yaml.parser.ParserError:
         print(f"Unable to parse {file_name}!")
 
     if result is None:

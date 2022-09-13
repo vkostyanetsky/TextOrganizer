@@ -7,9 +7,7 @@ import sys
 
 from vkostyanetsky import cliutils
 
-from todozer import constants, datafile, scheduler, utils
-from todozer.menu import TodozerMenu
-from todozer.parser import List, Parser, Plan, Task
+from todozer import constants, datafile, scheduler, utils, parser, menu
 
 
 def get_arguments() -> argparse.Namespace:
@@ -70,12 +68,12 @@ def get_uncompleted_dates(file_items: list) -> list:
 
     for file_item in file_items:
 
-        if type(file_item) == List and file_item.date <= yesterday:
+        if type(file_item) == parser.List and file_item.date <= yesterday:
 
             scheduled_tasks = file_item.get_scheduled_tasks()
 
             if len(scheduled_tasks) > 0:
-                incomplete_day = List(file_item.lines[0])
+                incomplete_day = parser.List(file_item.lines[0])
                 incomplete_day.items = scheduled_tasks
 
                 dates_in_progress.append(incomplete_day)
@@ -113,7 +111,7 @@ def load_tasks_file_items(config: configparser.ConfigParser):
 
     tasks_file_name = config.get("TASKS", "tasks_file_name")
 
-    return Parser(tasks_file_name, Task).parse()
+    return parser.Parser(tasks_file_name, parser.Task).parse()
 
 
 def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigParser):
@@ -133,7 +131,7 @@ def load_plans_file_items(config: configparser.ConfigParser):
 
     plans_file_name = config.get("TASKS", "plans_file_name")
 
-    return Parser(plans_file_name, Plan).parse()
+    return parser.Parser(plans_file_name, parser.Plan).parse()
 
 
 def create_planned_tasks(menu_item_parameters: dict) -> None:
@@ -192,7 +190,10 @@ def add_tasks_lists(tasks: list, last_date: datetime.date) -> list:
         if (
             len(
                 list(
-                    filter(lambda item: type(item) == List and item.date == date, tasks)
+                    filter(
+                        lambda item: type(item) == parser.List and item.date == date,
+                        tasks,
+                    )
                 )
             )
             == 0
@@ -200,7 +201,7 @@ def add_tasks_lists(tasks: list, last_date: datetime.date) -> list:
 
             date_string = utils.get_string_from_date(date)
             line = f"# {date_string}"
-            tasks.append(List(line))
+            tasks.append(parser.List(line))
 
             added.append(date_string)
 
@@ -214,7 +215,7 @@ def fill_tasks_lists(tasks_file_items: list, plans_file_items: list, data: dict)
     for tasks_file_item in tasks_file_items:
 
         if (
-            type(tasks_file_item) == List
+            type(tasks_file_item) == parser.List
             and tasks_file_item.date is not None
             and tasks_file_item.date > data["last_date"]
         ):
@@ -222,21 +223,21 @@ def fill_tasks_lists(tasks_file_items: list, plans_file_items: list, data: dict)
             sort_tasks_list(tasks_file_item)
 
 
-def sort_tasks_list(tasks_file_item: List):
+def sort_tasks_list(tasks_file_item: parser.List):
 
     tasks_file_item.items = sorted(tasks_file_item.items, key=lambda item: item.time)
 
 
-def fill_tasks_list(tasks_file_item: List, plans_file_items: list):
+def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list):
 
     for plans_file_item in plans_file_items:
 
-        if isinstance(plans_file_item, List):
+        if isinstance(plans_file_item, parser.List):
             fill_tasks_list(tasks_file_item, plans_file_item.items)
-        elif isinstance(plans_file_item, Plan):
+        elif isinstance(plans_file_item, parser.Plan):
             if scheduler.match(plans_file_item, tasks_file_item.date) is not None:
-                line = f"{Task.scheduled_task_mark}{plans_file_item.title}"
-                task = Task(line)
+                line = f"{parser.Task.scheduled_task_mark}{plans_file_item.title}"
+                task = parser.Task(line)
                 if len(plans_file_item.lines) > 1:
                     i = 0
                     for plan_line in plans_file_item.lines:
@@ -257,15 +258,17 @@ def main_menu(config: configparser.ConfigParser, data: dict) -> None:
     Builds and then displays the main menu of the application.
     """
 
-    menu = TodozerMenu()
+    todozer_menu = menu.TodozerMenu()
 
     menu_item_parameters = {"config": config, "data": data}
 
-    menu.add_item("Create Planned Tasks", create_planned_tasks, menu_item_parameters)
-    menu.add_item("Statistics", statistics, menu_item_parameters)
-    menu.add_item("Exit", sys.exit)
+    todozer_menu.add_item(
+        "Create Planned Tasks", create_planned_tasks, menu_item_parameters
+    )
+    todozer_menu.add_item("Statistics", statistics, menu_item_parameters)
+    todozer_menu.add_item("Exit", sys.exit)
 
-    menu.choose()
+    todozer_menu.choose()
 
 
 def main():

@@ -1,31 +1,30 @@
 import datetime
 import logging
 import re
-from enum import Enum, auto
+import enum
 
-from todozer import utils
-from todozer.parser import Plan
+from todozer import utils, parser
 
 
-class Pattern(Enum):
+class Pattern(enum.Enum):
     """Task repetition patterns."""
 
-    EXACT_DATE = auto()
-    EVERY_DAY = auto()
-    EVERY_N_DAY = auto()
-    EVERY_MONTH = auto()
-    EVERY_WEEKDAY = auto()
-    EVERY_YEAR = auto()
-    EVERY_MONDAY = auto()
-    EVERY_TUESDAY = auto()
-    EVERY_WEDNESDAY = auto()
-    EVERY_THURSDAY = auto()
-    EVERY_FRIDAY = auto()
-    EVERY_SATURDAY = auto()
-    EVERY_SUNDAY = auto()
+    EXACT_DATE = enum.auto()
+    EVERY_DAY = enum.auto()
+    EVERY_N_DAY = enum.auto()
+    EVERY_MONTH = enum.auto()
+    EVERY_WEEKDAY = enum.auto()
+    EVERY_YEAR = enum.auto()
+    EVERY_MONDAY = enum.auto()
+    EVERY_TUESDAY = enum.auto()
+    EVERY_WEDNESDAY = enum.auto()
+    EVERY_THURSDAY = enum.auto()
+    EVERY_FRIDAY = enum.auto()
+    EVERY_SATURDAY = enum.auto()
+    EVERY_SUNDAY = enum.auto()
 
 
-def match(plan: Plan, date: datetime.date) -> Pattern | None:
+def match(plan: parser.Plan, date: datetime.date) -> Pattern | None:
 
     logging.debug(
         f'Attempt to plan "{str(plan)}" on {utils.get_string_from_date(date)}'
@@ -429,5 +428,3 @@ def get_regexp_for_month_name() -> str:
 def get_regexp_for_day_number() -> str:
     return "[0-9]{1,2}"
 
-
-match(Plan("* blabla; every day"), datetime.date.today())
