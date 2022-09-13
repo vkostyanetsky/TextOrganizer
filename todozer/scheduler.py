@@ -75,9 +75,7 @@ def match_pattern(pattern: str, date: datetime.date) -> Pattern | None:
 
         logging.debug('Checking a reader: "%s"...', function.__name__)
 
-        matched = function(compiled_pattern, date)
-
-        if matched:
+        if function(compiled_pattern, date):
             matched = reader
             break
 
