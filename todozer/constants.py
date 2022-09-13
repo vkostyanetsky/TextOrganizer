@@ -1,3 +1,3 @@
 #!/usr/bin/env python3
 
-encoding = "utf-8"
+ENCODING = "utf-8"

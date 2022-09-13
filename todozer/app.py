@@ -57,7 +57,7 @@ def set_up_logging(config: configparser.ConfigParser) -> None:
         logging.basicConfig(
             filename=config.get("LOG", "file_name"),
             filemode=config.get("LOG", "file_mode"),
-            encoding=constants.encoding,
+            encoding=constants.ENCODING,
             format="%(asctime)s [%(levelname)s] %(message)s",
             level=logging.DEBUG,
             force=True,
@@ -125,7 +125,7 @@ def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigPar
 
     tasks_file_name = config.get("TASKS", "tasks_file_name")
 
-    with open(tasks_file_name, "w", encoding=constants.encoding) as tasks_file:
+    with open(tasks_file_name, "w", encoding=constants.ENCODING) as tasks_file:
         tasks_file.write("\n\n".join(content))
 
 

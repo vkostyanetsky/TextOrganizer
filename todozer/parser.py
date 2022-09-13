@@ -167,7 +167,7 @@ class Parser:
 
     def parse(self) -> list:
 
-        tasks_file = open(self.__file_path, "r", encoding=constants.encoding)
+        tasks_file = open(self.__file_path, "r", encoding=constants.ENCODING)
 
         with tasks_file:
 
