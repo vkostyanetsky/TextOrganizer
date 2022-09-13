@@ -166,7 +166,9 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
             data["last_date"] = utils.get_date_of_today()
             datafile.save(data)
 
-            print(f"Tasks for {', '.join(added_lists)} have been successfully scheduled.")
+            print(
+                f"Tasks for {', '.join(added_lists)} have been successfully scheduled."
+            )
             print()
 
     else:

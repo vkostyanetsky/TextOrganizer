@@ -1,10 +1,10 @@
 import datetime
 import logging
 import re
+from enum import Enum, auto
 
 from todozer import utils
 from todozer.parser import Plan
-from enum import Enum, auto
 
 
 class Pattern(Enum):
@@ -218,7 +218,9 @@ def pattern_every_wednesday(text: str, date: datetime.date) -> bool:
     - every wed
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, "every wednesday", "Wed")
+    return match_pattern_title_and_day_name_for_date(
+        text, date, "every wednesday", "Wed"
+    )
 
 
 def pattern_every_thursday(text: str, date: datetime.date) -> bool:
@@ -230,7 +232,9 @@ def pattern_every_thursday(text: str, date: datetime.date) -> bool:
     - every thu
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, "every thursday", "Thu")
+    return match_pattern_title_and_day_name_for_date(
+        text, date, "every thursday", "Thu"
+    )
 
 
 def pattern_every_friday(text: str, date: datetime.date) -> bool:
@@ -253,7 +257,9 @@ def pattern_every_saturday(text: str, date: datetime.date) -> bool:
     - every sat
     """
 
-    return match_pattern_title_and_day_name_for_date(text, date, "every saturday", "Sat")
+    return match_pattern_title_and_day_name_for_date(
+        text, date, "every saturday", "Sat"
+    )
 
 
 def pattern_every_sunday(text: str, date: datetime.date) -> bool:
