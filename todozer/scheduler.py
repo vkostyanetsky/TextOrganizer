@@ -1,9 +1,9 @@
 import datetime
+import enum
 import logging
 import re
-import enum
 
-from todozer import utils, parser
+from todozer import parser, utils
 
 
 class Pattern(enum.Enum):

@@ -7,7 +7,7 @@ import sys
 
 from vkostyanetsky import cliutils
 
-from todozer import constants, datafile, scheduler, utils, parser, menu
+from todozer import constants, datafile, menu, parser, scheduler, utils
 
 
 def get_arguments() -> argparse.Namespace:
