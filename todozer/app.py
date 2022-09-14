@@ -149,15 +149,15 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
 
     tasks_file_items = load_tasks_file_items(config)
 
-    added_lists = add_tasks_lists(tasks_file_items, data["last_date"])
+    add_tasks_lists(tasks_file_items, data["last_date"])
 
-    if len(added_lists) > 0:
+    plans_file_items = load_plans_file_items(config)
 
-        plans_file_items = load_plans_file_items(config)
+    if check_for_uncompleted_dates(tasks_file_items):
 
-        if check_for_uncompleted_dates(tasks_file_items):
+        filled_list_titles = fill_tasks_lists(tasks_file_items, plans_file_items, data)
 
-            fill_tasks_lists(tasks_file_items, plans_file_items, data)
+        if filled_list_titles:
 
             save_tasks_file_items(tasks_file_items, config)
 
@@ -165,13 +165,13 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
             datafile.save(data)
 
             print(
-                f"Tasks for {', '.join(added_lists)} have been successfully scheduled."
+                f"Tasks for {', '.join(filled_list_titles)} have been successfully scheduled."
             )
-            print()
 
-    else:
+        else:
 
-        print("Unable to perform, since there are no days to plan tasks.")
+            print("Unable to perform, since there are no days to plan tasks.")
+
         print()
 
     cliutils.ask_for_enter()
@@ -179,11 +179,10 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
     main_menu(config, data)
 
 
-def add_tasks_lists(tasks: list, last_date: datetime.date) -> list:
+def add_tasks_lists(tasks: list, last_date: datetime.date):
 
     date = utils.get_date_of_tomorrow(last_date)
     today = utils.get_date_of_today()
-    added = []
 
     while date <= today:
 
@@ -203,14 +202,12 @@ def add_tasks_lists(tasks: list, last_date: datetime.date) -> list:
             line = f"# {date_string}"
             tasks.append(parser.List(line))
 
-            added.append(date_string)
-
         date = utils.get_date_of_tomorrow(date)
 
-    return added
 
+def fill_tasks_lists(tasks_file_items: list, plans_file_items: list, data: dict) -> list:
 
-def fill_tasks_lists(tasks_file_items: list, plans_file_items: list, data: dict):
+    filled_list_titles = []
 
     for tasks_file_item in tasks_file_items:
 
@@ -221,6 +218,10 @@ def fill_tasks_lists(tasks_file_items: list, plans_file_items: list, data: dict)
         ):
             fill_tasks_list(tasks_file_item, plans_file_items)
             sort_tasks_list(tasks_file_item)
+
+            filled_list_titles.append(tasks_file_item.title)
+
+    return filled_list_titles
 
 
 def sort_tasks_list(tasks_file_item: parser.List):
