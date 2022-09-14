@@ -111,7 +111,9 @@ def load_tasks_file_items(config: configparser.ConfigParser):
 
     tasks_file_name = config.get("TASKS", "tasks_file_name")
 
-    return parser.Parser(tasks_file_name, parser.Task).parse()
+    tasks_file_items = parser.Parser(tasks_file_name, parser.Task).parse()
+
+    return sorted(tasks_file_items, key=lambda item: item.date)
 
 
 def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigParser):
@@ -188,7 +190,7 @@ def add_tasks_lists(tasks: list, last_date: datetime.date):
 
         task_lists_by_date = filter(
             lambda item: type(item) is parser.List and item.date == date, tasks
-        )
+        )  # TODO probably better to do it like .is_date (duck typing)
 
         if not list(task_lists_by_date):
 
