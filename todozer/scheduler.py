@@ -427,4 +427,3 @@ def get_regexp_for_month_name() -> str:
 
 def get_regexp_for_day_number() -> str:
     return "[0-9]{1,2}"
-
