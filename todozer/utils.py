@@ -1,14 +1,15 @@
 import datetime
+from todozer import constants
 
 
 def get_date_from_string(source: str) -> datetime.date:
 
-    return datetime.datetime.strptime(source, "%Y-%m-%d").date()
+    return datetime.datetime.strptime(source, constants.DATE_FORMAT).date()
 
 
 def get_string_from_date(source: datetime.date) -> str:
 
-    return source.strftime("%Y-%m-%d")
+    return source.strftime(constants.DATE_FORMAT)
 
 
 def get_month_last_day_date(date: datetime.date) -> datetime.date:

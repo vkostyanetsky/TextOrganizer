@@ -25,7 +25,7 @@ class Item:
 
 
 class List(Item):
-    date_format: str = "%Y-%m-%d"
+    date_format: str = constants.DATE_FORMAT
     date_mark: str = "# "
     items: list
 
