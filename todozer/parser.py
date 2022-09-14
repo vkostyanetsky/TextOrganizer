@@ -25,7 +25,6 @@ class Item:
 
 
 class List(Item):
-    date_format: str = constants.DATE_FORMAT
     date_mark: str = "# "
     items: list
 
@@ -71,7 +70,7 @@ class List(Item):
 
             if match_object is not None:
                 string = match_object.group(1)
-                result = datetime.datetime.strptime(string, List.date_format).date()
+                result = datetime.datetime.strptime(string, constants.DATE_FORMAT).date()
 
         return result
 
@@ -148,7 +147,7 @@ class Plan(Task):
         title = super().title
         index = title.rfind(";")
 
-        return title[index + 1 :].strip() if index != -1 else ""
+        return title[index + 1:].strip() if index != -1 else ""
 
 
 class Parser:
