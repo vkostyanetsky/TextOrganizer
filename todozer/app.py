@@ -186,17 +186,11 @@ def add_tasks_lists(tasks: list, last_date: datetime.date):
 
     while date <= today:
 
-        if (
-            len(
-                list(
-                    filter(
-                        lambda item: type(item) == parser.List and item.date == date,
-                        tasks,
-                    )
-                )
-            )
-            == 0
-        ):
+        task_lists_by_date = filter(
+            lambda item: type(item) is parser.List and item.date == date, tasks
+        )
+
+        if not list(task_lists_by_date):
 
             date_string = utils.get_string_from_date(date)
             line = f"# {date_string}"
@@ -205,7 +199,9 @@ def add_tasks_lists(tasks: list, last_date: datetime.date):
         date = utils.get_date_of_tomorrow(date)
 
 
-def fill_tasks_lists(tasks_file_items: list, plans_file_items: list, data: dict) -> list:
+def fill_tasks_lists(
+    tasks_file_items: list, plans_file_items: list, data: dict
+) -> list:
 
     filled_list_titles = []
 
