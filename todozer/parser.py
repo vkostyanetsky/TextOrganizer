@@ -5,7 +5,6 @@ from todozer import constants
 
 
 class Item:
-    lines: list
 
     def __init__(self, line: str):
         self.lines = [line]
@@ -15,18 +14,16 @@ class Item:
 
     @property
     def first_line(self) -> str:
-        return self.lines[0] if len(self.lines) > 0 else ""
+        return self.lines[0] if self.lines else ""
 
     @property
     def title(self):
         first_line = self.first_line
 
-        return first_line[1:].strip() if len(first_line) > 0 else first_line
+        return first_line[1:].strip() if first_line else ""
 
 
 class List(Item):
-    date_mark: str = "# "
-    items: list
 
     def __init__(self, line: str):
         super().__init__(line)
@@ -76,13 +73,10 @@ class List(Item):
 
     @staticmethod
     def match(line: str):
-        return line.startswith(List.date_mark)
+        return line.startswith("# ")
 
 
 class Task(Item):
-    scheduled_task_mark: str = "* "
-    completed_task_mark: str = "+ "
-    cancelled_task_mark: str = "- "
 
     @property
     def time(self) -> datetime.time:
@@ -98,7 +92,7 @@ class Task(Item):
 
     @staticmethod
     def is_scheduled_task(line):
-        return line.startswith(Task.scheduled_task_mark)
+        return line.startswith("* ")
 
     @property
     def is_completed(self) -> bool:
@@ -106,7 +100,7 @@ class Task(Item):
 
     @staticmethod
     def is_completed_task(line):
-        return line.startswith(Task.completed_task_mark)
+        return line.startswith("+ ")
 
     @property
     def is_cancelled(self) -> bool:
@@ -114,7 +108,7 @@ class Task(Item):
 
     @staticmethod
     def is_cancelled_task(line):
-        return line.startswith(Task.cancelled_task_mark)
+        return line.startswith("- ")
 
     @staticmethod
     def match(line: str):
