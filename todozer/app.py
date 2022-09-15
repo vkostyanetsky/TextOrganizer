@@ -264,6 +264,8 @@ def main_menu(config: configparser.ConfigParser, data: dict) -> None:
     todozer_menu.add_item(
         "Create Planned Tasks", create_planned_tasks, menu_item_parameters
     )
+    todozer_menu.add_item("Tasks Browser", statistics, menu_item_parameters)
+    todozer_menu.add_item("Health Check", statistics, menu_item_parameters)
     todozer_menu.add_item("Statistics", statistics, menu_item_parameters)
     todozer_menu.add_item("Exit", sys.exit)
 
