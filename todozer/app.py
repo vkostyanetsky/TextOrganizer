@@ -235,7 +235,7 @@ def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list):
             fill_tasks_list(tasks_file_item, plans_file_item.items)
         elif isinstance(plans_file_item, parser.Plan):
             if scheduler.match(plans_file_item, tasks_file_item.date) is not None:
-                line = f"{parser.Task.scheduled_task_mark}{plans_file_item.title}"
+                line = f"* {plans_file_item.title}"
                 task = parser.Task(line)
                 if len(plans_file_item.lines) > 1:
                     i = 0
