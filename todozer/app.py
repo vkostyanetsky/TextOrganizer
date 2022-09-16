@@ -100,7 +100,7 @@ def check_for_uncompleted_dates(tasks_file_items: list) -> bool:
 
         print(
             "You have to rearrange tasks in progress"
-            " or mark them as completed (+) or cancelled (-)."
+            " or mark them as completed (+)."
         )
         print()
 
@@ -140,7 +140,7 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
     """
     Creates tasks for the today (and days before, in case it was not done yet).
 
-    All tasks in progress must be marked as completed, cancelled or rearranged
+    All tasks in progress must be marked as completed or rearranged
     to other upcoming date before the user runs the procedure.
     """
 
@@ -235,7 +235,7 @@ def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list):
             fill_tasks_list(tasks_file_item, plans_file_item.items)
         elif isinstance(plans_file_item, parser.Plan):
             if scheduler.match(plans_file_item, tasks_file_item.date) is not None:
-                line = f"* {plans_file_item.title}"
+                line = f"- {plans_file_item.title}"
                 task = parser.Task(line)
                 if len(plans_file_item.lines) > 1:
                     i = 0

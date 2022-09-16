@@ -5,6 +5,7 @@ from todozer import constants
 
 
 class Item:
+    """A base class for tasks file item."""
 
     def __init__(self, line: str):
         self.lines = [line]
@@ -24,6 +25,7 @@ class Item:
 
 
 class List(Item):
+    """Tasks collection class."""
 
     def __init__(self, line: str):
         super().__init__(line)
@@ -52,12 +54,6 @@ class List(Item):
 
         return list(filter_result)
 
-    def get_cancelled_tasks(self) -> list:
-        tasks = self.get_tasks()
-        filter_result = filter(lambda task: task.is_cancelled, tasks)
-
-        return list(filter_result)
-
     @property
     def date(self) -> datetime.date | None:
         result = None
@@ -77,6 +73,7 @@ class List(Item):
 
 
 class Task(Item):
+    """A single task class."""
 
     @property
     def time(self) -> datetime.time:
@@ -92,7 +89,7 @@ class Task(Item):
 
     @staticmethod
     def is_scheduled_task(line):
-        return line.startswith("* ")
+        return line.startswith("- ")
 
     @property
     def is_completed(self) -> bool:
@@ -102,20 +99,11 @@ class Task(Item):
     def is_completed_task(line):
         return line.startswith("+ ")
 
-    @property
-    def is_cancelled(self) -> bool:
-        return Task.is_cancelled_task(self.lines[0]) if len(self.lines) > 0 else False
-
-    @staticmethod
-    def is_cancelled_task(line):
-        return line.startswith("- ")
-
     @staticmethod
     def match(line: str):
         return (
             Task.is_scheduled_task(line)
             or Task.is_completed_task(line)
-            or Task.is_cancelled_task(line)
         )
 
 
@@ -126,6 +114,8 @@ class Text(Item):  # TODO probably deprecated
 
 
 class Plan(Task):
+    """A single plan class."""
+
     @property
     def title(self) -> str:
         title = super().title
