@@ -98,10 +98,7 @@ def check_for_uncompleted_dates(tasks_file_items: list) -> bool:
             print(date_in_progress)
             print()
 
-        print(
-            "You have to rearrange tasks in progress"
-            " or mark them as completed (+)."
-        )
+        print("You have to rearrange tasks in progress or mark them as completed (+).")
         print()
 
     return passed

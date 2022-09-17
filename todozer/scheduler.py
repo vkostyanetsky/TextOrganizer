@@ -145,7 +145,10 @@ class EveryNDayPattern(BasicPattern):
         return self.start_date is not None
 
     def match_date(self, date: datetime.date) -> bool:
-        return date >= self.start_date and abs(date - self.start_date).days % self.day_number == 0
+        return (
+            date >= self.start_date
+            and abs(date - self.start_date).days % self.day_number == 0
+        )
 
 
 class EveryMondayPattern(BasicPattern):

@@ -63,7 +63,9 @@ class List(Item):
 
             if match_object is not None:
                 string = match_object.group(1)
-                result = datetime.datetime.strptime(string, constants.DATE_FORMAT).date()
+                result = datetime.datetime.strptime(
+                    string, constants.DATE_FORMAT
+                ).date()
 
         return result
 
@@ -101,10 +103,7 @@ class Task(Item):
 
     @staticmethod
     def match(line: str):
-        return (
-            Task.is_scheduled_task(line)
-            or Task.is_completed_task(line)
-        )
+        return Task.is_scheduled_task(line) or Task.is_completed_task(line)
 
 
 class Text(Item):  # TODO probably deprecated
@@ -131,7 +130,9 @@ class Plan(Task):
         title = super().title
         index = title.rfind(";")
 
-        return title[index + 1:].strip() if index != -1 else ""
+        next_index = index + 1
+
+        return title[next_index:].strip() if index != -1 else ""
 
 
 class Parser:
