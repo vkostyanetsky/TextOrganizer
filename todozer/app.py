@@ -72,7 +72,7 @@ def get_uncompleted_dates(file_items: list) -> list:
 
             scheduled_tasks = file_item.get_scheduled_tasks()
 
-            if len(scheduled_tasks) > 0:
+            if scheduled_tasks:
                 incomplete_day = parser.List(file_item.lines[0])
                 incomplete_day.items = scheduled_tasks
 
@@ -87,7 +87,7 @@ def check_for_uncompleted_dates(tasks_file_items: list) -> bool:
 
     dates_in_progress = get_uncompleted_dates(tasks_file_items)
 
-    if len(dates_in_progress) > 0:
+    if dates_in_progress:
 
         passed = False
 

@@ -58,7 +58,7 @@ class List(Item):
     def date(self) -> datetime.date | None:
         result = None
 
-        if len(self.lines[0]) > 0:
+        if self.lines[0]:
             match_object = re.match(r"# ([0-9]{4}-[0-9]{2}-[0-9]{2})", self.lines[0])
 
             if match_object is not None:
@@ -217,13 +217,13 @@ class Parser:
     def __get_previous_task(self) -> Task | Plan | None:
         previous_task = None
 
-        if len(self.__file_items) > 0:
+        if self.__file_items:
 
             last_file_item = self.__file_items[-1]
 
             if type(last_file_item) == List:
 
-                if len(last_file_item.items) > 0:
+                if last_file_item.items:
 
                     if type(last_file_item.items[-1]) == self.__task_class:
                         previous_task = last_file_item.items[-1]

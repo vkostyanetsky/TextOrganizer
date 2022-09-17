@@ -37,48 +37,39 @@ def match(plan: parser.Plan, date: datetime.date) -> Pattern | None:
     else:
         logging.debug("Pattern to plan: %s", plan.pattern)
 
-        matched = match_pattern(plan.pattern, date)
+        compiled_pattern = get_compiled_pattern(plan.pattern)
 
-    return matched
+        logging.debug("Compiled pattern: %s", compiled_pattern)
 
+        readers = {
+            Pattern.EXACT_DATE: pattern_exact_date,
+            Pattern.EVERY_DAY: pattern_every_day,
+            Pattern.EVERY_N_DAY: pattern_every_n_day,
+            Pattern.EVERY_MONTH: pattern_every_month,
+            Pattern.EVERY_WEEKDAY: pattern_every_weekday,
+            Pattern.EVERY_YEAR: pattern_every_year,
+            Pattern.EVERY_MONDAY: pattern_every_monday,
+            Pattern.EVERY_TUESDAY: pattern_every_tuesday,
+            Pattern.EVERY_WEDNESDAY: pattern_every_wednesday,
+            Pattern.EVERY_THURSDAY: pattern_every_thursday,
+            Pattern.EVERY_FRIDAY: pattern_every_friday,
+            Pattern.EVERY_SATURDAY: pattern_every_saturday,
+            Pattern.EVERY_SUNDAY: pattern_every_sunday,
+        }
 
-def match_pattern(pattern: str, date: datetime.date) -> Pattern | None:
+        logging.debug("Matching the pattern...")
 
-    matched = None
+        for reader in readers:
 
-    compiled_pattern = get_compiled_pattern(pattern)
+            function = readers[reader]
 
-    logging.debug("Compiled pattern: %s", compiled_pattern)
+            logging.debug('Checking a reader: "%s"...', function.__name__)
 
-    readers = {
-        Pattern.EXACT_DATE: pattern_exact_date,
-        Pattern.EVERY_DAY: pattern_every_day,
-        Pattern.EVERY_N_DAY: pattern_every_n_day,
-        Pattern.EVERY_MONTH: pattern_every_month,
-        Pattern.EVERY_WEEKDAY: pattern_every_weekday,
-        Pattern.EVERY_YEAR: pattern_every_year,
-        Pattern.EVERY_MONDAY: pattern_every_monday,
-        Pattern.EVERY_TUESDAY: pattern_every_tuesday,
-        Pattern.EVERY_WEDNESDAY: pattern_every_wednesday,
-        Pattern.EVERY_THURSDAY: pattern_every_thursday,
-        Pattern.EVERY_FRIDAY: pattern_every_friday,
-        Pattern.EVERY_SATURDAY: pattern_every_saturday,
-        Pattern.EVERY_SUNDAY: pattern_every_sunday,
-    }
+            if function(compiled_pattern, date):
+                matched = reader
+                break
 
-    logging.debug("Matching the pattern...")
-
-    for reader in readers:
-
-        function = readers[reader]
-
-        logging.debug('Checking a reader: "%s"...', function.__name__)
-
-        if function(compiled_pattern, date):
-            matched = reader
-            break
-
-    logging.debug(f"Matched pattern: {matched}")
+        logging.debug(f"Matched pattern: {matched}")
 
     return matched
 
