@@ -91,7 +91,7 @@ def check_for_uncompleted_dates(tasks_file_items: list) -> bool:
 
         passed = False
 
-        print("Unable to perform, since there is at least one task in progress (*):")
+        print("Unable to perform, since there is at least one task in progress (-):")
         print()
 
         for date_in_progress in dates_in_progress:
