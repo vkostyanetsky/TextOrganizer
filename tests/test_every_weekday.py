@@ -35,26 +35,34 @@ def run_test(variants: list, plan_function):
 
     for variant in variants:
 
-        task_text = tests.helpers.get_plan_ru(variant)
-        assert match(task_text, monday) is Pattern.EVERY_WEEKDAY
+        plan = plan_function(variant)
+        matched_pattern, is_date_matched = match(plan, monday)
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched
 
-        task_text = tests.helpers.get_plan_ru(variant, before_monday)
-        assert match(task_text, monday) is Pattern.EVERY_WEEKDAY
+        plan = plan_function(variant, before_monday)
+        matched_pattern, is_date_matched = match(plan, monday)
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched
 
-        task_text = tests.helpers.get_plan_ru(variant, monday)
-        assert match(task_text, monday) is Pattern.EVERY_WEEKDAY
+        plan = plan_function(variant, monday)
+        matched_pattern, is_date_matched = match(plan, monday)
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched
 
-        task_text = tests.helpers.get_plan_ru(variant, after_monday)
-        assert match(task_text, monday) is not Pattern.EVERY_WEEKDAY
+        plan = plan_function(variant, after_monday)
+        matched_pattern, is_date_matched = match(plan, monday)
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
 
-        task_text = tests.helpers.get_plan_ru(variant)
-        assert match(task_text, sunday) is not Pattern.EVERY_WEEKDAY
+        plan = plan_function(variant)
+        matched_pattern, is_date_matched = match(plan, sunday)
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
 
-        task_text = tests.helpers.get_plan_ru(variant, before_sunday)
-        assert match(task_text, sunday) is not Pattern.EVERY_WEEKDAY
+        plan = plan_function(variant, before_sunday)
+        matched_pattern, is_date_matched = match(plan, sunday)
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
 
-        task_text = tests.helpers.get_plan_ru(variant, sunday)
-        assert match(task_text, sunday) is not Pattern.EVERY_WEEKDAY
+        plan = plan_function(variant, sunday)
+        matched_pattern, is_date_matched = match(plan, sunday)
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
 
-        task_text = tests.helpers.get_plan_ru(variant, after_sunday)
-        assert match(task_text, sunday) is not Pattern.EVERY_WEEKDAY
+        plan = plan_function(variant, after_sunday)
+        matched_pattern, is_date_matched = match(plan, sunday)
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched

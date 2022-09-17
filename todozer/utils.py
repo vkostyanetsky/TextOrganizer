@@ -37,3 +37,10 @@ def get_date_of_tomorrow(today: datetime.date = None) -> datetime.date:
         today = get_date_of_today()
 
     return today + datetime.timedelta(days=1)
+
+
+def get_regexp_for_date() -> str:
+    """
+    Returns regular expression for a standard date (YYYY-MM-DD).
+    """
+    return "[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}"

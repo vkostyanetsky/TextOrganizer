@@ -5,34 +5,37 @@ from todozer.scheduler import Pattern, match
 
 def run_test(pattern: str, plan_function):
 
+    yesterday = todozer.utils.get_date_of_yesterday()
+    tomorrow = todozer.utils.get_date_of_tomorrow()
     today = todozer.utils.get_date_of_today()
 
     # If there is no start date at all:
 
     plan = plan_function(pattern)
+    matched_pattern, is_date_matched = match(plan, today)
 
-    assert match(plan, today) is Pattern.EVERY_DAY
+    assert matched_pattern is Pattern.EVERY_DAY and is_date_matched
 
     # If start date is yesterday:
 
-    plan_date = todozer.utils.get_date_of_yesterday()
-    plan = plan_function(pattern, plan_date)
+    plan = plan_function(pattern, yesterday)
+    matched_pattern, is_date_matched = match(plan, today)
 
-    assert match(plan, today) is Pattern.EVERY_DAY
+    assert matched_pattern is Pattern.EVERY_DAY and is_date_matched
 
     # If start date is today:
 
-    plan_date = today
-    plan = plan_function(pattern, plan_date)
+    plan = plan_function(pattern, today)
+    matched_pattern, is_date_matched = match(plan, today)
 
-    assert match(plan, today) is Pattern.EVERY_DAY
+    assert matched_pattern is Pattern.EVERY_DAY and is_date_matched
 
     # If start date is tomorrow:
 
-    plan_date = todozer.utils.get_date_of_tomorrow()
-    plan = plan_function(pattern, plan_date)
+    plan = plan_function(pattern, tomorrow)
+    matched_pattern, is_date_matched = match(plan, today)
 
-    assert match(plan, today) is not Pattern.EVERY_DAY
+    assert matched_pattern is Pattern.EVERY_DAY and not is_date_matched
 
 
 def test_every_day():

@@ -16,14 +16,24 @@ def test_every_n_day():
 
     plan = tests.helpers.get_plan_ru("каждые 3 дня", today)
 
-    assert match(plan, today) is Pattern.EVERY_N_DAY
-    assert match(plan, three_days_after) is Pattern.EVERY_N_DAY
-    assert match(plan, seven_days_after) is not Pattern.EVERY_N_DAY
+    matched_pattern, is_date_matched = match(plan, today)
+    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched
+
+    matched_pattern, is_date_matched = match(plan, three_days_after)
+    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched
+
+    matched_pattern, is_date_matched = match(plan, seven_days_after)
+    assert matched_pattern is Pattern.EVERY_N_DAY and not is_date_matched
 
     # en
 
     plan = tests.helpers.get_plan_en("every 3 days", today)
 
-    assert match(plan, today) is Pattern.EVERY_N_DAY
-    assert match(plan, three_days_after) is Pattern.EVERY_N_DAY
-    assert match(plan, seven_days_after) is not Pattern.EVERY_N_DAY
+    matched_pattern, is_date_matched = match(plan, today)
+    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched
+
+    matched_pattern, is_date_matched = match(plan, three_days_after)
+    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched
+
+    matched_pattern, is_date_matched = match(plan, seven_days_after)
+    assert matched_pattern is Pattern.EVERY_N_DAY and not is_date_matched

@@ -232,18 +232,31 @@ def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list):
     for plans_file_item in plans_file_items:
 
         if isinstance(plans_file_item, parser.List):
+
             fill_tasks_list(tasks_file_item, plans_file_item.items)
+
         elif isinstance(plans_file_item, parser.Plan):
-            if scheduler.match(plans_file_item, tasks_file_item.date) is not None:
+
+            _, is_date_matched = scheduler.match(plans_file_item, tasks_file_item.date)
+
+            if is_date_matched:
+
                 line = f"- {plans_file_item.title}"
                 task = parser.Task(line)
+
                 if len(plans_file_item.lines) > 1:
+
                     i = 0
+
                     for plan_line in plans_file_item.lines:
+
                         i += 1
+
                         if i == 1:
                             continue
+
                         task.lines.append(plan_line)
+
                 tasks_file_item.items.append(task)
 
 
