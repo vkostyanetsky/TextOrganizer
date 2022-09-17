@@ -14,28 +14,28 @@ def run_test(pattern: str, plan_function):
     plan = plan_function(pattern)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert matched_pattern is Pattern.EVERY_DAY and is_date_matched
+    assert matched_pattern is Pattern.EVERY_DAY and is_date_matched, plan.first_line
 
     # If start date is yesterday:
 
     plan = plan_function(pattern, yesterday)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert matched_pattern is Pattern.EVERY_DAY and is_date_matched
+    assert matched_pattern is Pattern.EVERY_DAY and is_date_matched, plan.first_line
 
     # If start date is today:
 
     plan = plan_function(pattern, today)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert matched_pattern is Pattern.EVERY_DAY and is_date_matched
+    assert matched_pattern is Pattern.EVERY_DAY and is_date_matched, plan.first_line
 
     # If start date is tomorrow:
 
     plan = plan_function(pattern, tomorrow)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert matched_pattern is Pattern.EVERY_DAY and not is_date_matched
+    assert matched_pattern is Pattern.EVERY_DAY and not is_date_matched, plan.first_line
 
 
 def test_every_day():

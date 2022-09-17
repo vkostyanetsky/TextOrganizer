@@ -13,55 +13,55 @@ def run_test(day_index: int, pattern: str, plan_function, assert_to: Pattern):
 
     plan = plan_function(pattern)
     matched_pattern, is_date_matched = match(plan, date_of_day)
-    assert matched_pattern is assert_to and is_date_matched
+    assert matched_pattern is assert_to and is_date_matched, plan.first_line
 
     plan = plan_function(pattern, date_of_day_before)
     matched_pattern, is_date_matched = match(plan, date_of_day)
-    assert matched_pattern is assert_to and is_date_matched
+    assert matched_pattern is assert_to and is_date_matched, plan.first_line
 
     plan = plan_function(pattern, date_of_day)
     matched_pattern, is_date_matched = match(plan, date_of_day)
-    assert matched_pattern is assert_to and is_date_matched
+    assert matched_pattern is assert_to and is_date_matched, plan.first_line
 
     plan = plan_function(pattern, date_of_day_after)
     matched_pattern, is_date_matched = match(plan, date_of_day)
-    assert matched_pattern is assert_to and not is_date_matched
+    assert matched_pattern is assert_to and not is_date_matched, plan.first_line
 
     # If day of week is yesterday:
 
     plan = plan_function(pattern)
     matched_pattern, is_date_matched = match(plan, date_of_day_before)
-    assert matched_pattern is assert_to and not is_date_matched
+    assert matched_pattern is assert_to and not is_date_matched, plan.first_line
 
     plan = plan_function(pattern, date_of_day_before)
     matched_pattern, is_date_matched = match(plan, date_of_day_before)
-    assert matched_pattern is assert_to and not is_date_matched
+    assert matched_pattern is assert_to and not is_date_matched, plan.first_line
 
     plan = plan_function(pattern, date_of_day)
     matched_pattern, is_date_matched = match(plan, date_of_day_before)
-    assert matched_pattern is assert_to and not is_date_matched
+    assert matched_pattern is assert_to and not is_date_matched, plan.first_line
 
     plan = plan_function(pattern, date_of_day_after)
     matched_pattern, is_date_matched = match(plan, date_of_day_before)
-    assert matched_pattern is assert_to and not is_date_matched
+    assert matched_pattern is assert_to and not is_date_matched, plan.first_line
 
     # If day of week is tomorrow:
 
     plan = plan_function(pattern)
     matched_pattern, is_date_matched = match(plan, date_of_day_after)
-    assert matched_pattern is assert_to and not is_date_matched
+    assert matched_pattern is assert_to and not is_date_matched, plan.first_line
 
     plan = plan_function(pattern, date_of_day_before)
     matched_pattern, is_date_matched = match(plan, date_of_day_after)
-    assert matched_pattern is assert_to and not is_date_matched
+    assert matched_pattern is assert_to and not is_date_matched, plan.first_line
 
     plan = plan_function(pattern, date_of_day)
     matched_pattern, is_date_matched = match(plan, date_of_day_after)
-    assert matched_pattern is assert_to and not is_date_matched
+    assert matched_pattern is assert_to and not is_date_matched, plan.first_line
 
     plan = plan_function(pattern, date_of_day_after)
     matched_pattern, is_date_matched = match(plan, date_of_day_after)
-    assert matched_pattern is assert_to and not is_date_matched
+    assert matched_pattern is assert_to and not is_date_matched, plan.first_line
 
 
 def test_every_monday():

@@ -15,7 +15,7 @@ def test_exact_date():
     plan = tests.helpers.get_plan_en(plan_date)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert matched_pattern is Pattern.EXACT_DATE and not is_date_matched
+    assert matched_pattern is Pattern.EXACT_DATE and not is_date_matched, plan.first_line
 
     # If an exact date is today:
 
@@ -23,7 +23,7 @@ def test_exact_date():
     plan = tests.helpers.get_plan_en(plan_date)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert matched_pattern is Pattern.EXACT_DATE and is_date_matched
+    assert matched_pattern is Pattern.EXACT_DATE and is_date_matched, plan.first_line
 
     # If an exact date is tomorrow:
 
@@ -31,4 +31,4 @@ def test_exact_date():
     plan = tests.helpers.get_plan_en(plan_date)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert matched_pattern is Pattern.EXACT_DATE and not is_date_matched
+    assert matched_pattern is Pattern.EXACT_DATE and not is_date_matched, plan.first_line

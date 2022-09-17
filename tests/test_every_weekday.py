@@ -37,32 +37,32 @@ def run_test(variants: list, plan_function):
 
         plan = plan_function(variant)
         matched_pattern, is_date_matched = match(plan, monday)
-        assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched, plan.first_line
 
         plan = plan_function(variant, before_monday)
         matched_pattern, is_date_matched = match(plan, monday)
-        assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched, plan.first_line
 
         plan = plan_function(variant, monday)
         matched_pattern, is_date_matched = match(plan, monday)
-        assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched, plan.first_line
 
         plan = plan_function(variant, after_monday)
         matched_pattern, is_date_matched = match(plan, monday)
-        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched, plan.first_line
 
         plan = plan_function(variant)
         matched_pattern, is_date_matched = match(plan, sunday)
-        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched, plan.first_line
 
         plan = plan_function(variant, before_sunday)
         matched_pattern, is_date_matched = match(plan, sunday)
-        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched, plan.first_line
 
         plan = plan_function(variant, sunday)
         matched_pattern, is_date_matched = match(plan, sunday)
-        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched, plan.first_line
 
         plan = plan_function(variant, after_sunday)
         matched_pattern, is_date_matched = match(plan, sunday)
-        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
+        assert matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched, plan.first_line

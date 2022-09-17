@@ -17,7 +17,7 @@ def match_ru(task_date: datetime.date, start_date: datetime.date = None):
 
     matched_pattern, is_date_matched = match(plan, today)
 
-    return matched_pattern is Pattern.EVERY_YEAR and is_date_matched
+    return matched_pattern is Pattern.EVERY_YEAR and is_date_matched, plan
 
 
 def match_en(task_date: datetime.date, start_date: datetime.date = None):
@@ -31,7 +31,7 @@ def match_en(task_date: datetime.date, start_date: datetime.date = None):
 
     matched_pattern, is_date_matched = match(plan, today)
 
-    return matched_pattern is Pattern.EVERY_YEAR and is_date_matched
+    return matched_pattern is Pattern.EVERY_YEAR and is_date_matched, plan
 
 
 def test_every_year():
@@ -42,20 +42,40 @@ def test_every_year():
 
     # ru
 
-    assert match_ru(task_date=today) is True
-    assert match_ru(task_date=today, start_date=yesterday) is True
-    assert match_ru(task_date=today, start_date=tomorrow) is False
+    result, plan = match_ru(task_date=today)
+    assert result is True, plan
 
-    assert match_ru(task_date=tomorrow) is False
-    assert match_ru(task_date=tomorrow, start_date=yesterday) is False
-    assert match_ru(task_date=tomorrow, start_date=tomorrow) is False
+    result, plan = match_ru(task_date=today, start_date=yesterday)
+    assert result is True, plan
+
+    result, plan = match_ru(task_date=today, start_date=tomorrow)
+    assert result is False, plan
+
+    result, plan = match_ru(task_date=tomorrow)
+    assert result is False, plan
+
+    result, plan = match_ru(task_date=tomorrow, start_date=yesterday)
+    assert result is False, plan
+
+    result, plan = match_ru(task_date=tomorrow, start_date=tomorrow)
+    assert result is False, plan
 
     # en
 
-    assert match_en(task_date=today) is True
-    assert match_en(task_date=today, start_date=yesterday) is True
-    assert match_en(task_date=today, start_date=tomorrow) is False
+    result, plan = match_en(task_date=today)
+    assert result is True, plan
 
-    assert match_en(task_date=tomorrow) is False
-    assert match_en(task_date=tomorrow, start_date=yesterday) is False
-    assert match_en(task_date=tomorrow, start_date=tomorrow) is False
+    result, plan = match_en(task_date=today, start_date=yesterday)
+    assert result is True, plan
+
+    result, plan = match_en(task_date=today, start_date=tomorrow)
+    assert result is False, plan
+
+    result, plan = match_en(task_date=tomorrow)
+    assert result is False, plan
+
+    result, plan = match_en(task_date=tomorrow, start_date=yesterday)
+    assert result is False, plan
+
+    result, plan = match_en(task_date=tomorrow, start_date=tomorrow)
+    assert result is False, plan

@@ -22,31 +22,31 @@ def run_test(date: datetime.date, plan_function):
 
     plan = plan_function(date.day)
     matched_pattern, is_date_matched = match(plan, yesterday)
-    assert matched_pattern is Pattern.EVERY_MONTH and not is_date_matched
+    assert matched_pattern is Pattern.EVERY_MONTH and not is_date_matched, plan.first_line
 
     # The task date is today:
 
     plan = plan_function(date.day)
     matched_pattern, is_date_matched = match(plan, date)
-    assert matched_pattern is Pattern.EVERY_MONTH and is_date_matched
+    assert matched_pattern is Pattern.EVERY_MONTH and is_date_matched, plan.first_line
 
     # The task date is today, and it starts yesterday:
 
     plan = plan_function(date.day, yesterday)
     matched_pattern, is_date_matched = match(plan, date)
-    assert matched_pattern is Pattern.EVERY_MONTH and is_date_matched
+    assert matched_pattern is Pattern.EVERY_MONTH and is_date_matched, plan.first_line
 
     # The task date is today, and it starts today:
 
     plan = plan_function(date.day, date)
     matched_pattern, is_date_matched = match(plan, date)
-    assert matched_pattern is Pattern.EVERY_MONTH and is_date_matched
+    assert matched_pattern is Pattern.EVERY_MONTH and is_date_matched, plan.first_line
 
     # The task date is today, and it starts tomorrow:
 
     plan = plan_function(date.day, tomorrow)
     matched_pattern, is_date_matched = match(plan, date)
-    assert matched_pattern is Pattern.EVERY_MONTH and not is_date_matched
+    assert matched_pattern is Pattern.EVERY_MONTH and not is_date_matched, plan.first_line
 
 
 def test_every_month():
