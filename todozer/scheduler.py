@@ -134,7 +134,7 @@ class EveryNDayPattern(BasicPattern):
         self.start_date = None
 
     def parse(self):
-        regexp = ".*every ([0-9]+) (day|days).*"
+        regexp = ".*every ([0-9]+) day.*"
         groups = re.match(regexp, self.line)
 
         if groups is not None:
@@ -292,6 +292,9 @@ class EveryMonthPattern(BasicPattern):
     - каждый месяц, последний день
     - каждый месяц, 5 день, начиная с 29.12.1983
     - каждый месяц, 5 день с 29.12.1983
+    - every month, day 5
+    - every month, 5 day
+    - every month, last day
     """
 
     name: Pattern = Pattern.EVERY_MONTH
@@ -302,8 +305,13 @@ class EveryMonthPattern(BasicPattern):
         self.day = None
 
     def parse(self):
-        regexp = "every month, ([0-9]+|last) day.*"
-        groups = re.match(regexp, self.line)
+        regexp_1 = "every month, ([0-9]+|last) day.*"
+        regexp_2 = "every month, day ([0-9]+).*"
+
+        groups = re.match(regexp_1, self.line)
+
+        if groups is None:
+            groups = re.match(regexp_2, self.line)
 
         if groups is not None:
             self.day = groups[1]
@@ -452,6 +460,7 @@ def get_compiled_pattern(text: str) -> str:
         ("по будням|по будним дням", "every weekday"),
         ("будний день", "weekday"),
         ("день", "day"),
+        (" days", " day"),
         ("месяц", "month"),
         ("год", "year"),
         ("дня|дней", "days"),
@@ -486,3 +495,7 @@ def get_compiled_pattern(text: str) -> str:
         text = re.sub(source_regexp, result_regexp, text, flags=re.IGNORECASE)
 
     return text.strip()
+
+from todozer import parser
+t = parser.Plan(" - Bob, do something!; every 3 days from 2022-09-18")
+match(t, datetime.datetime.today().date())
