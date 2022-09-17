@@ -5,7 +5,7 @@ from todozer.parser import Plan
 
 
 def get_plan_ru(pattern: str, start_date: datetime.date = None) -> Plan:
-    text = f"* Боб, не стой столбом!; {pattern}"
+    text = f"- Боб, не стой столбом!; {pattern}"
 
     if start_date is not None:
         postfix = f" с {todozer.utils.get_string_from_date(start_date)}"
@@ -16,7 +16,7 @@ def get_plan_ru(pattern: str, start_date: datetime.date = None) -> Plan:
 
 
 def get_plan_en(pattern: str, start_date: datetime.date = None) -> Plan:
-    text = f"* Bob, do something!; {pattern}"
+    text = f"- Bob, do something!; {pattern}"
 
     if start_date is not None:
         postfix = f" from {todozer.utils.get_string_from_date(start_date)}"
