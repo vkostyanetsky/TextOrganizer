@@ -262,6 +262,52 @@ def statistics(menu_item_parameters: dict) -> None:
     sys.exit(0)
 
 
+def healthcheck(menu_item_parameters: dict) -> None:
+    logging.debug("Checking planned tasks...")
+
+    config = menu_item_parameters.get("config")
+    data = menu_item_parameters.get("data")
+
+    plans_file_items = load_plans_file_items(config)
+    plans_file_issues = []
+
+    check_plans_file_items(plans_file_items, plans_file_issues)
+
+    if plans_file_issues:
+        print("Issues found in the plans file:")
+        print()
+
+        for issue in plans_file_issues:
+            print(f"- {issue}")
+
+    else:
+        print("Everything seems nice and clear!")
+
+    print()
+
+    cliutils.ask_for_enter()
+
+    main_menu(config, data)
+
+
+def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
+
+    today = utils.get_date_of_today()
+
+    for item in plans_file_items:
+
+        if type(item) == parser.List:
+
+            check_plans_file_items(item.items, plans_file_issues)
+
+        elif type(item) == parser.Plan:
+
+            matched_pattern, _ = scheduler.match(item, today)
+
+            if matched_pattern == scheduler.Pattern.NONE:
+                plans_file_issues.append(f'Unable to match pattern for a "{item.title}" plan (pattern text: "{item.pattern}")')
+
+
 def main_menu(config: configparser.ConfigParser, data: dict) -> None:
     """
     Builds and then displays the main menu of the application.
@@ -275,7 +321,7 @@ def main_menu(config: configparser.ConfigParser, data: dict) -> None:
         "Create Planned Tasks", create_planned_tasks, menu_item_parameters
     )
     todozer_menu.add_item("Tasks Browser", statistics, menu_item_parameters)
-    todozer_menu.add_item("Health Check", statistics, menu_item_parameters)
+    todozer_menu.add_item("Health Check", healthcheck, menu_item_parameters)
     todozer_menu.add_item("Statistics", statistics, menu_item_parameters)
     todozer_menu.add_item("Exit", sys.exit)
 
