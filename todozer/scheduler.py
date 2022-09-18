@@ -151,7 +151,7 @@ class EveryNDayPattern(BasicPattern):
         )
 
 
-class EveryNDayOfWeek(BasicPattern):
+class EveryDayOfWeek(BasicPattern):
     """
     Samples:
     ...
@@ -203,7 +203,7 @@ class EveryNDayOfWeek(BasicPattern):
         )
 
 
-class EveryMondayPattern(EveryNDayOfWeek):
+class EveryMondayPattern(EveryDayOfWeek):
 
     name: Pattern = Pattern.EVERY_MONDAY
 
@@ -215,7 +215,7 @@ class EveryMondayPattern(EveryNDayOfWeek):
         self.abbreviated_day_name = "Mon"
 
 
-class EveryTuesdayPattern(EveryNDayOfWeek):
+class EveryTuesdayPattern(EveryDayOfWeek):
 
     name: Pattern = Pattern.EVERY_TUESDAY
 
@@ -227,7 +227,7 @@ class EveryTuesdayPattern(EveryNDayOfWeek):
         self.abbreviated_day_name = "Tue"
 
 
-class EveryWednesdayPattern(EveryNDayOfWeek):
+class EveryWednesdayPattern(EveryDayOfWeek):
 
     name: Pattern = Pattern.EVERY_WEDNESDAY
 
@@ -239,7 +239,7 @@ class EveryWednesdayPattern(EveryNDayOfWeek):
         self.abbreviated_day_name = "Wed"
 
 
-class EveryThursdayPattern(EveryNDayOfWeek):
+class EveryThursdayPattern(EveryDayOfWeek):
 
     name: Pattern = Pattern.EVERY_THURSDAY
 
@@ -251,7 +251,7 @@ class EveryThursdayPattern(EveryNDayOfWeek):
         self.abbreviated_day_name = "Thu"
 
 
-class EveryFridayPattern(EveryNDayOfWeek):
+class EveryFridayPattern(EveryDayOfWeek):
 
     name: Pattern = Pattern.EVERY_FRIDAY
 
@@ -263,7 +263,7 @@ class EveryFridayPattern(EveryNDayOfWeek):
         self.abbreviated_day_name = "Fri"
 
 
-class EverySaturdayPattern(EveryNDayOfWeek):
+class EverySaturdayPattern(EveryDayOfWeek):
 
     name: Pattern = Pattern.EVERY_SATURDAY
 
@@ -275,7 +275,7 @@ class EverySaturdayPattern(EveryNDayOfWeek):
         self.abbreviated_day_name = "Sat"
 
 
-class EverySundayPattern(EveryNDayOfWeek):
+class EverySundayPattern(EveryDayOfWeek):
 
     name: Pattern = Pattern.EVERY_SUNDAY
 
