@@ -11,12 +11,11 @@ def get_debug_code(first_line: str, date: datetime.date) -> str:
     date_string = utils.get_string_from_date(date)
     date_format = constants.DATE_FORMAT
 
-    return (
-        "\nfrom todozer import parser"
-        f'\ndebug_plan = parser.Plan("{first_line}")'
-        f'\ndebug_date = datetime.datetime.strptime("{date_string}", "{date_format}").date()'
-        f"\nprint(match(debug_plan, debug_date))"
-    )
+    return f'''
+    from todozer import parser
+    debug_plan = parser.Plan("{first_line}")
+    debug_date = datetime.datetime.strptime("{date_string}", "{date_format}").date()
+    print(match(debug_plan, debug_date))'''
 
 
 def get_plan_ru(pattern: str, start_date: datetime.date = None) -> Plan:

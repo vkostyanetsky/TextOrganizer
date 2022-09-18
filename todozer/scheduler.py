@@ -458,7 +458,9 @@ def match(plan: parser.Plan, date: datetime.date) -> tuple:
     is_date_matched = False
 
     logging.debug(
-        f'Attempt to match pattern for "{str(plan)}" on {utils.get_string_from_date(date)}'
+        'Attempt to match pattern for "%s" on %s',
+        str(plan),
+        utils.get_string_from_date(date),
     )
 
     if plan.pattern == "":
@@ -467,26 +469,9 @@ def match(plan: parser.Plan, date: datetime.date) -> tuple:
         pattern_text = get_compiled_pattern(plan.pattern)
 
         logging.debug("Pattern text: %s (compiled: %s)", plan.pattern, pattern_text)
-
-        patterns = {
-            ExactDatePattern,
-            EveryDayPattern,
-            EveryNDayPattern,
-            EveryMonthPattern,
-            EveryWeekdayPattern,
-            EveryYearPattern,
-            EveryMondayPattern,
-            EveryTuesdayPattern,
-            EveryWednesdayPattern,
-            EveryThursdayPattern,
-            EveryFridayPattern,
-            EverySaturdayPattern,
-            EverySundayPattern,
-        }
-
         logging.debug("Matching the pattern...")
 
-        for pattern in patterns:
+        for pattern in get_patterns():
 
             logging.debug('Checking a pattern: "%s"...', pattern.name)
 
@@ -510,6 +495,28 @@ def match(plan: parser.Plan, date: datetime.date) -> tuple:
                 break
 
     return matched_pattern, is_date_matched
+
+
+def get_patterns() -> list:
+    """
+    Makes list of available pattern classes.
+    """
+
+    return [
+        ExactDatePattern,
+        EveryDayPattern,
+        EveryNDayPattern,
+        EveryMonthPattern,
+        EveryWeekdayPattern,
+        EveryYearPattern,
+        EveryMondayPattern,
+        EveryTuesdayPattern,
+        EveryWednesdayPattern,
+        EveryThursdayPattern,
+        EveryFridayPattern,
+        EverySaturdayPattern,
+        EverySundayPattern,
+    ]
 
 
 def get_compiled_pattern(text: str) -> str:

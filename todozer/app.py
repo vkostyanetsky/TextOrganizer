@@ -163,9 +163,9 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
             data["last_date"] = utils.get_date_of_today()
             datafile.save(data)
 
-            print(
-                f"Tasks for {', '.join(filled_list_titles)} have been successfully scheduled."
-            )
+            scheduled_tasks = ", ".join(filled_list_titles)
+
+            print(f"Tasks for {scheduled_tasks} have been successfully scheduled.")
 
         else:
 
@@ -309,9 +309,13 @@ def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
             matched_pattern, _ = scheduler.match(item, today)
 
             if matched_pattern == scheduler.Pattern.NONE:
-                plans_file_issues.append(
-                    f'Unable to match pattern for a "{item.title}" plan (pattern text: "{item.pattern}")'
+
+                issue_text = (
+                    f'Unable to match pattern for a "{item.title}" plan'
+                    f' (pattern text: "{item.pattern}")'
                 )
+
+                plans_file_issues.append(issue_text)
 
 
 def main_menu(config: configparser.ConfigParser, data: dict) -> None:
