@@ -204,6 +204,11 @@ class EveryDayOfWeek(BasicPattern):
 
 
 class EveryMondayPattern(EveryDayOfWeek):
+    """
+    Samples:
+    - every Monday
+    - каждый понедельник
+    """
 
     name: Pattern = Pattern.EVERY_MONDAY
 
@@ -216,6 +221,11 @@ class EveryMondayPattern(EveryDayOfWeek):
 
 
 class EveryTuesdayPattern(EveryDayOfWeek):
+    """
+    Samples:
+    - every Tuesday
+    - каждый вторник
+    """
 
     name: Pattern = Pattern.EVERY_TUESDAY
 
@@ -228,6 +238,11 @@ class EveryTuesdayPattern(EveryDayOfWeek):
 
 
 class EveryWednesdayPattern(EveryDayOfWeek):
+    """
+    Samples:
+    - every Wednesday
+    - каждую среду
+    """
 
     name: Pattern = Pattern.EVERY_WEDNESDAY
 
@@ -240,6 +255,11 @@ class EveryWednesdayPattern(EveryDayOfWeek):
 
 
 class EveryThursdayPattern(EveryDayOfWeek):
+    """
+    Samples:
+    - every Thursday
+    - каждый четверг
+    """
 
     name: Pattern = Pattern.EVERY_THURSDAY
 
@@ -252,6 +272,11 @@ class EveryThursdayPattern(EveryDayOfWeek):
 
 
 class EveryFridayPattern(EveryDayOfWeek):
+    """
+    Samples:
+    - every Friday
+    - каждую пятницу
+    """
 
     name: Pattern = Pattern.EVERY_FRIDAY
 
@@ -264,6 +289,11 @@ class EveryFridayPattern(EveryDayOfWeek):
 
 
 class EverySaturdayPattern(EveryDayOfWeek):
+    """
+    Samples:
+    - every Saturday
+    - каждую субботу
+    """
 
     name: Pattern = Pattern.EVERY_SATURDAY
 
@@ -276,6 +306,11 @@ class EverySaturdayPattern(EveryDayOfWeek):
 
 
 class EverySundayPattern(EveryDayOfWeek):
+    """
+    Samples:
+    - every Sunday
+    - каждое воскресенье
+    """
 
     name: Pattern = Pattern.EVERY_SUNDAY
 
