@@ -13,22 +13,29 @@ def test_exact_date():
 
     plan_date = todozer.utils.get_string_from_date(yesterday)
     plan = tests.helpers.get_plan_en(plan_date)
+    debug_code = tests.helpers.get_debug_code(plan.first_line, today)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert matched_pattern is Pattern.EXACT_DATE and not is_date_matched, plan.first_line
+    assert (
+        matched_pattern is Pattern.EXACT_DATE and not is_date_matched
+    ), debug_code
 
     # If an exact date is today:
 
     plan_date = todozer.utils.get_string_from_date(today)
     plan = tests.helpers.get_plan_en(plan_date)
+    debug_code = tests.helpers.get_debug_code(plan.first_line, today)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert matched_pattern is Pattern.EXACT_DATE and is_date_matched, plan.first_line
+    assert matched_pattern is Pattern.EXACT_DATE and is_date_matched, debug_code
 
     # If an exact date is tomorrow:
 
     plan_date = todozer.utils.get_string_from_date(tomorrow)
     plan = tests.helpers.get_plan_en(plan_date)
+    debug_code = tests.helpers.get_debug_code(plan.first_line, today)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert matched_pattern is Pattern.EXACT_DATE and not is_date_matched, plan.first_line
+    assert (
+        matched_pattern is Pattern.EXACT_DATE and not is_date_matched
+    ), debug_code

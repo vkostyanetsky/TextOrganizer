@@ -16,24 +16,30 @@ def test_every_n_day():
 
     plan = tests.helpers.get_plan_ru("каждые 3 дня", today)
 
+    debug_code = tests.helpers.get_debug_code(plan.first_line, today)
     matched_pattern, is_date_matched = match(plan, today)
-    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched, plan.first_line
+    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched, debug_code
 
+    debug_code = tests.helpers.get_debug_code(plan.first_line, three_days_after)
     matched_pattern, is_date_matched = match(plan, three_days_after)
-    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched, plan.first_line
+    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched, debug_code
 
+    debug_code = tests.helpers.get_debug_code(plan.first_line, seven_days_after)
     matched_pattern, is_date_matched = match(plan, seven_days_after)
-    assert matched_pattern is Pattern.EVERY_N_DAY and not is_date_matched, plan.first_line
+    assert matched_pattern is Pattern.EVERY_N_DAY and not is_date_matched, debug_code
 
     # en
 
     plan = tests.helpers.get_plan_en("every 3 days", today)
 
+    debug_code = tests.helpers.get_debug_code(plan.first_line, today)
     matched_pattern, is_date_matched = match(plan, today)
-    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched, plan.first_line
+    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched, debug_code
 
+    debug_code = tests.helpers.get_debug_code(plan.first_line, three_days_after)
     matched_pattern, is_date_matched = match(plan, three_days_after)
-    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched, plan.first_line
+    assert matched_pattern is Pattern.EVERY_N_DAY and is_date_matched, debug_code
 
+    debug_code = tests.helpers.get_debug_code(plan.first_line, seven_days_after)
     matched_pattern, is_date_matched = match(plan, seven_days_after)
-    assert matched_pattern is Pattern.EVERY_N_DAY and not is_date_matched, plan.first_line
+    assert matched_pattern is Pattern.EVERY_N_DAY and not is_date_matched, debug_code
