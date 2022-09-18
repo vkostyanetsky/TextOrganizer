@@ -26,7 +26,7 @@ def run_test_every_day_of_week(
     day_index: int, plan_pattern: str, plan_getter, matched_pattern_value: Pattern
 ):
 
-    date_of_day = tests.helpers.get_day_of_week(day_index)
+    date_of_day = todozer.utils.get_next_day_of_week(day_index)
     date_of_day_plus_1_week = date_of_day + datetime.timedelta(days=7)
 
     run_single_test(
@@ -70,7 +70,7 @@ def run_test_every_2_day_of_week(
     day_index: int, plan_pattern: str, plan_getter, matched_pattern_value: Pattern
 ):
 
-    date_of_day = tests.helpers.get_day_of_week(day_index)
+    date_of_day = todozer.utils.get_next_day_of_week(day_index)
     date_of_day_plus_1_week = date_of_day + datetime.timedelta(days=7)
     date_of_day_plus_2_weeks = date_of_day + datetime.timedelta(days=14)
 
