@@ -44,3 +44,29 @@ def get_regexp_for_date() -> str:
     Returns regular expression for a standard date (YYYY-MM-DD).
     """
     return "[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}"
+
+
+def get_previous_day_of_week(day_index: int, date: datetime.date = None) -> datetime.date:
+
+    if date is None:
+        date = datetime.date.today()
+
+    previous_day = date
+
+    while previous_day.weekday() != day_index:
+        previous_day -= datetime.timedelta(days=1)
+
+    return previous_day
+
+
+def get_next_day_of_week(day_index: int, date: datetime.date = None) -> datetime.date:
+
+    if date is None:
+        date = datetime.date.today()
+
+    next_day = date
+
+    while next_day.weekday() != day_index:
+        next_day += datetime.timedelta(days=1)
+
+    return next_day

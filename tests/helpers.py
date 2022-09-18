@@ -13,9 +13,9 @@ def get_debug_code(first_line: str, date: datetime.date) -> str:
 
     return (
         "\nfrom todozer import parser"
-        f'\nplan = parser.Plan("{first_line}")'
-        f'\ndate = datetime.datetime.strptime("{date_string}", "{date_format}").date()'
-        f"\nprint(match(plan, date))"
+        f'\ndebug_plan = parser.Plan("{first_line}")'
+        f'\ndebug_date = datetime.datetime.strptime("{date_string}", "{date_format}").date()'
+        f"\nprint(match(debug_plan, debug_date))"
     )
 
 

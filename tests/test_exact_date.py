@@ -16,9 +16,7 @@ def test_exact_date():
     debug_code = tests.helpers.get_debug_code(plan.first_line, today)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert (
-        matched_pattern is Pattern.EXACT_DATE and not is_date_matched
-    ), debug_code
+    assert matched_pattern is Pattern.EXACT_DATE and not is_date_matched, debug_code
 
     # If an exact date is today:
 
@@ -36,6 +34,4 @@ def test_exact_date():
     debug_code = tests.helpers.get_debug_code(plan.first_line, today)
     matched_pattern, is_date_matched = match(plan, today)
 
-    assert (
-        matched_pattern is Pattern.EXACT_DATE and not is_date_matched
-    ), debug_code
+    assert matched_pattern is Pattern.EXACT_DATE and not is_date_matched, debug_code

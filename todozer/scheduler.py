@@ -61,7 +61,7 @@ class BasicPattern:
         date_regexp = utils.get_regexp_for_date()
         full_regexp = f".* from ({date_regexp}).*"
 
-        groups = re.match(full_regexp, self.line)
+        groups = re.match(full_regexp, self.line, flags=re.IGNORECASE)
         result = None
 
         if groups is not None:
@@ -87,7 +87,7 @@ class ExactDatePattern(BasicPattern):
         date_regexp = utils.get_regexp_for_date()
         full_regexp = f"({date_regexp}).*"
 
-        groups = re.match(full_regexp, self.line)
+        groups = re.match(full_regexp, self.line, flags=re.IGNORECASE)
 
         if groups is not None:
             self.exact_date = utils.get_date_from_string(groups[1])
@@ -135,7 +135,7 @@ class EveryNDayPattern(BasicPattern):
 
     def parse(self):
         regexp = ".*every ([0-9]+) day.*"
-        groups = re.match(regexp, self.line)
+        groups = re.match(regexp, self.line, flags=re.IGNORECASE)
 
         if groups is not None:
             self.day_number = int(groups[1])
@@ -151,116 +151,140 @@ class EveryNDayPattern(BasicPattern):
         )
 
 
-class EveryMondayPattern(BasicPattern):
+class EveryNDayOfWeek(BasicPattern):
     """
     Samples:
-    - каждый понедельник
-    - every monday
+    ...
     """
+
+    def __init__(self, line: str):
+        super().__init__(line)
+
+        self.day_number = None
+        self.start_date = None
+
+        self.day_name = None
+        self.day_index = None
+        self.abbreviated_day_name = None
+
+    def parse(self):
+
+        date_regexp = utils.get_regexp_for_date()
+
+        regexp = f'every {self.day_name}'
+        groups = re.match(regexp, self.line, flags=re.IGNORECASE)
+
+        if groups is not None:
+
+            self.day_number = 1
+            self.start_date = self.get_start_date()
+
+            if self.start_date is None:
+                self.start_date = utils.get_previous_day_of_week(self.day_index)
+
+        else:
+
+            regexp = f'every ([0-9]+) ({self.day_name}) from ({date_regexp})'
+            groups = re.match(regexp, self.line, flags=re.IGNORECASE)
+
+            if groups is not None:
+
+                self.day_number = int(groups[1])
+                self.start_date = self.get_start_date()
+
+    def match_line(self) -> bool:
+        return self.day_number is not None and self.start_date is not None
+
+    def match_date(self, date: datetime.date) -> bool:
+        return (
+            date >= self.start_date
+            and abs(date - self.start_date).days / 7 % self.day_number == 0
+            and date.strftime("%a") == self.abbreviated_day_name
+        )
+
+
+class EveryMondayPattern(EveryNDayOfWeek):
 
     name: Pattern = Pattern.EVERY_MONDAY
 
-    def match_line(self) -> bool:
-        return self.match_title("every monday")
+    def __init__(self, line: str):
+        super().__init__(line)
 
-    def match_date(self, date: datetime.date) -> bool:
-        return date.strftime("%a") == "Mon" and self.match_start_date(date)
+        self.day_name = "monday"
+        self.day_index = 0
+        self.abbreviated_day_name = "Mon"
 
 
-class EveryTuesdayPattern(BasicPattern):
-    """
-    Samples:
-    - каждый вторник
-    - every tuesday
-    """
+class EveryTuesdayPattern(EveryNDayOfWeek):
 
     name: Pattern = Pattern.EVERY_TUESDAY
 
-    def match_line(self) -> bool:
-        return self.match_title("every tuesday")
+    def __init__(self, line: str):
+        super().__init__(line)
 
-    def match_date(self, date: datetime.date) -> bool:
-        return date.strftime("%a") == "Tue" and self.match_start_date(date)
+        self.day_name = "tuesday"
+        self.day_index = 1
+        self.abbreviated_day_name = "Tue"
 
 
-class EveryWednesdayPattern(BasicPattern):
-    """
-    Samples:
-    - каждую среду
-    - every wednesday
-    """
+class EveryWednesdayPattern(EveryNDayOfWeek):
 
     name: Pattern = Pattern.EVERY_WEDNESDAY
 
-    def match_line(self) -> bool:
-        return self.match_title("every wednesday")
+    def __init__(self, line: str):
+        super().__init__(line)
 
-    def match_date(self, date: datetime.date) -> bool:
-        return date.strftime("%a") == "Wed" and self.match_start_date(date)
+        self.day_name = "wednesday"
+        self.day_index = 2
+        self.abbreviated_day_name = "Wed"
 
 
-class EveryThursdayPattern(BasicPattern):
-    """
-    Samples:
-    - каждый четверг
-    - every thursday
-    """
+class EveryThursdayPattern(EveryNDayOfWeek):
 
     name: Pattern = Pattern.EVERY_THURSDAY
 
-    def match_line(self) -> bool:
-        return self.match_title("every thursday")
+    def __init__(self, line: str):
+        super().__init__(line)
 
-    def match_date(self, date: datetime.date) -> bool:
-        return date.strftime("%a") == "Thu" and self.match_start_date(date)
+        self.day_name = "thursday"
+        self.day_index = 3
+        self.abbreviated_day_name = "Thu"
 
 
-class EveryFridayPattern(BasicPattern):
-    """
-    Samples:
-    - каждую пятницу
-    - every friday
-    """
+class EveryFridayPattern(EveryNDayOfWeek):
 
     name: Pattern = Pattern.EVERY_FRIDAY
 
-    def match_line(self) -> bool:
-        return self.match_title("every friday")
+    def __init__(self, line: str):
+        super().__init__(line)
 
-    def match_date(self, date: datetime.date) -> bool:
-        return date.strftime("%a") == "Fri" and self.match_start_date(date)
+        self.day_name = "friday"
+        self.day_index = 4
+        self.abbreviated_day_name = "Fri"
 
 
-class EverySaturdayPattern(BasicPattern):
-    """
-    Samples:
-    - каждую субботу
-    - every saturday
-    """
+class EverySaturdayPattern(EveryNDayOfWeek):
 
     name: Pattern = Pattern.EVERY_SATURDAY
 
-    def match_line(self) -> bool:
-        return self.match_title("every saturday")
+    def __init__(self, line: str):
+        super().__init__(line)
 
-    def match_date(self, date: datetime.date) -> bool:
-        return date.strftime("%a") == "Sat" and self.match_start_date(date)
+        self.day_name = "saturday"
+        self.day_index = 5
+        self.abbreviated_day_name = "Sat"
 
 
-class EverySundayPattern(BasicPattern):
-    """
-    Samples:
-    - каждое воскресенье
-    - every sunday
-    """
+class EverySundayPattern(EveryNDayOfWeek):
 
     name: Pattern = Pattern.EVERY_SUNDAY
 
-    def match_line(self) -> bool:
-        return self.match_title("every sunday")
+    def __init__(self, line: str):
+        super().__init__(line)
 
-    def match_date(self, date: datetime.date) -> bool:
-        return date.strftime("%a") == "Sun" and self.match_start_date(date)
+        self.day_name = "sunday"
+        self.day_index = 6
+        self.abbreviated_day_name = "Sun"
 
 
 class EveryWeekdayPattern(BasicPattern):
@@ -278,7 +302,7 @@ class EveryWeekdayPattern(BasicPattern):
     def match_line(self) -> bool:
         regexp = "(weekdays|every weekday).*"
 
-        return re.match(regexp, self.line) is not None
+        return re.match(regexp, self.line, flags=re.IGNORECASE) is not None
 
     def match_date(self, date: datetime.date) -> bool:
 
@@ -308,10 +332,10 @@ class EveryMonthPattern(BasicPattern):
         regexp_1 = "every month, ([0-9]+|last) day.*"
         regexp_2 = "every month, day ([0-9]+).*"
 
-        groups = re.match(regexp_1, self.line)
+        groups = re.match(regexp_1, self.line, flags=re.IGNORECASE)
 
         if groups is None:
-            groups = re.match(regexp_2, self.line)
+            groups = re.match(regexp_2, self.line, flags=re.IGNORECASE)
 
         if groups is not None:
             self.day = groups[1]
@@ -352,10 +376,10 @@ class EveryYearPattern(BasicPattern):
         regexp_1 = f".*every year, (?P<d>{day_regexp}) (?P<m>{month_regexp}).*"
         regexp_2 = f".*every year, (?P<m>{month_regexp}) (?P<d>{day_regexp}).*"
 
-        groups = re.match(regexp_1, self.line)
+        groups = re.match(regexp_1, self.line, flags=re.IGNORECASE)
 
         if groups is None:
-            groups = re.match(regexp_2, self.line)
+            groups = re.match(regexp_2, self.line, flags=re.IGNORECASE)
 
         if groups is not None:
             self.day = groups["d"]
@@ -495,7 +519,3 @@ def get_compiled_pattern(text: str) -> str:
         text = re.sub(source_regexp, result_regexp, text, flags=re.IGNORECASE)
 
     return text.strip()
-
-from todozer import parser
-t = parser.Plan(" - Bob, do something!; every 3 days from 2022-09-18")
-match(t, datetime.datetime.today().date())
