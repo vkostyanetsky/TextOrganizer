@@ -42,8 +42,8 @@ def get_config(filename: str) -> configparser.ConfigParser:
     if os.path.exists(filename):
         config.read(filename)
     else:
-        file = open(filename, "w")
-        config.write(file)
+        with open(filename, "w") as file:
+            config.write(file)
 
     return config
 

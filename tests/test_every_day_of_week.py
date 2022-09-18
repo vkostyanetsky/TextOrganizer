@@ -1,7 +1,8 @@
+import datetime
+
 import tests.helpers
 import todozer.utils
 from todozer.scheduler import Pattern, match
-import datetime
 
 
 def run_single_test(

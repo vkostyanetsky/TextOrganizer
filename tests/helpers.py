@@ -1,9 +1,8 @@
 import datetime
 
 import todozer.utils
+from todozer import constants, utils
 from todozer.parser import Plan
-from todozer import utils
-from todozer import constants
 
 
 def get_debug_code(first_line: str, date: datetime.date) -> str:
