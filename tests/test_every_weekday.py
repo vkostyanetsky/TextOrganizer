@@ -25,11 +25,11 @@ def test_every_month():
 
 def run_test(variants: list, plan_function):
 
-    monday = tests.helpers.get_day_of_week(0)
+    monday = todozer.utils.get_next_day_of_week(0)
     before_monday = todozer.utils.get_date_of_yesterday(monday)
     after_monday = todozer.utils.get_date_of_tomorrow(monday)
 
-    sunday = tests.helpers.get_day_of_week(6)
+    sunday = todozer.utils.get_next_day_of_week(6)
     before_sunday = todozer.utils.get_date_of_yesterday(sunday)
     after_sunday = todozer.utils.get_date_of_tomorrow(sunday)
 
