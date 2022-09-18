@@ -171,7 +171,7 @@ class EveryDayOfWeek(BasicPattern):
 
         date_regexp = utils.get_regexp_for_date()
 
-        regexp = f'every {self.day_name}'
+        regexp = f"every {self.day_name}"
         groups = re.match(regexp, self.line, flags=re.IGNORECASE)
 
         if groups is not None:
@@ -184,7 +184,7 @@ class EveryDayOfWeek(BasicPattern):
 
         else:
 
-            regexp = f'every ([0-9]+) ({self.day_name}) from ({date_regexp})'
+            regexp = f"every ([0-9]+) ({self.day_name}) from ({date_regexp})"
             groups = re.match(regexp, self.line, flags=re.IGNORECASE)
 
             if groups is not None:

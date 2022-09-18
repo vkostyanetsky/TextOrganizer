@@ -204,13 +204,17 @@ def fill_tasks_lists(
 
     filled_list_titles = []
 
+    today = utils.get_date_of_today()
+
     for tasks_file_item in tasks_file_items:
 
-        if (
+        is_list_to_fill = (
             type(tasks_file_item) == parser.List
             and tasks_file_item.date is not None
-            and tasks_file_item.date > data["last_date"]
-        ):
+            and data["last_date"] < tasks_file_item.date <= today
+        )
+
+        if is_list_to_fill:
             fill_tasks_list(tasks_file_item, plans_file_items)
             sort_tasks_list(tasks_file_item)
 
@@ -305,7 +309,9 @@ def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
             matched_pattern, _ = scheduler.match(item, today)
 
             if matched_pattern == scheduler.Pattern.NONE:
-                plans_file_issues.append(f'Unable to match pattern for a "{item.title}" plan (pattern text: "{item.pattern}")')
+                plans_file_issues.append(
+                    f'Unable to match pattern for a "{item.title}" plan (pattern text: "{item.pattern}")'
+                )
 
 
 def main_menu(config: configparser.ConfigParser, data: dict) -> None:

@@ -46,7 +46,9 @@ def get_regexp_for_date() -> str:
     return "[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}"
 
 
-def get_previous_day_of_week(day_index: int, date: datetime.date = None) -> datetime.date:
+def get_previous_day_of_week(
+    day_index: int, date: datetime.date = None
+) -> datetime.date:
 
     if date is None:
         date = datetime.date.today()
