@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+"""Methods to work with task lists in tasks file & plans file."""
+
 import datetime
 
 from todozer import parser, scheduler, utils
