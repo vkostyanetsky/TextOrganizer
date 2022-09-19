@@ -1,6 +1,5 @@
 import argparse
 import configparser
-import datetime
 import logging
 import os.path
 import sys
@@ -8,7 +7,8 @@ from collections import namedtuple
 
 from vkostyanetsky import cliutils
 
-from todozer import constants, datafile, menu, parser, scheduler, utils
+from todozer import (constants, datafile, menu, parser, scheduler, task_lists,
+                     utils)
 
 
 def get_arguments() -> argparse.Namespace:
@@ -49,62 +49,6 @@ def get_config(filename: str) -> configparser.ConfigParser:
     return config
 
 
-def set_up_logging(config: configparser.ConfigParser) -> None:
-
-    if config.getboolean("LOG", "write_log"):
-
-        logging.basicConfig(
-            filename=config.get("LOG", "file_name"),
-            filemode=config.get("LOG", "file_mode"),
-            encoding=constants.ENCODING,
-            format="%(asctime)s [%(levelname)s] %(message)s",
-            level=logging.DEBUG,
-            force=True,
-        )
-
-
-def get_uncompleted_dates(file_items: list) -> list:
-    yesterday = datetime.date.today() - datetime.timedelta(days=1)
-    dates_in_progress = []
-
-    for file_item in file_items:
-
-        if type(file_item) == parser.List and file_item.date <= yesterday:
-
-            scheduled_tasks = file_item.get_scheduled_tasks()
-
-            if scheduled_tasks:
-                incomplete_day = parser.List(file_item.lines[0])
-                incomplete_day.items = scheduled_tasks
-
-                dates_in_progress.append(incomplete_day)
-
-    return dates_in_progress
-
-
-def check_for_uncompleted_dates(tasks_file_items: list) -> bool:
-
-    passed = True
-
-    dates_in_progress = get_uncompleted_dates(tasks_file_items)
-
-    if dates_in_progress:
-
-        passed = False
-
-        print("Unable to perform, since there is at least one task in progress (-):")
-        print()
-
-        for date_in_progress in dates_in_progress:
-            print(date_in_progress)
-            print()
-
-        print("You have to rearrange tasks in progress or mark them as completed (+).")
-        print()
-
-    return passed
-
-
 def load_tasks_file_items(config: configparser.ConfigParser):
 
     tasks_file_name = config.get("TASKS", "tasks_file_name")
@@ -134,6 +78,53 @@ def load_plans_file_items(config: configparser.ConfigParser):
     return parser.Parser(plans_file_name, parser.Plan).parse()
 
 
+def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
+
+    today = utils.get_date_of_today()
+
+    for item in plans_file_items:
+
+        if type(item) == parser.List:
+
+            check_plans_file_items(item.items, plans_file_issues)
+
+        elif type(item) == parser.Plan:
+
+            matched_pattern, _ = scheduler.match(item, today)
+
+            if matched_pattern == scheduler.Pattern.NONE:
+
+                issue_text = (
+                    f'Unable to match pattern for a "{item.title}" plan'
+                    f' (pattern text: "{item.pattern}")'
+                )
+
+                plans_file_issues.append(issue_text)
+
+
+def check_for_tasks_in_progress(tasks_file_items: list) -> bool:
+
+    passed = True
+
+    dates_in_progress = task_lists.get_task_lists_in_progress(tasks_file_items)
+
+    if dates_in_progress:
+
+        passed = False
+
+        print("Unable to perform, since there is at least one task in progress (-):")
+        print()
+
+        for date_in_progress in dates_in_progress:
+            print(date_in_progress)
+            print()
+
+        print("You have to rearrange tasks in progress or mark them as completed (+).")
+        print()
+
+    return passed
+
+
 def create_planned_tasks(app: namedtuple) -> None:
     """
     Creates tasks for the today (and days before, in case it was not done yet).
@@ -145,14 +136,15 @@ def create_planned_tasks(app: namedtuple) -> None:
     logging.debug("Creating planned tasks...")
 
     tasks_file_items = load_tasks_file_items(app.config)
-
-    add_tasks_lists(tasks_file_items, app.data["last_date"])
-
     plans_file_items = load_plans_file_items(app.config)
 
-    if check_for_uncompleted_dates(tasks_file_items):
+    task_lists.add_tasks_lists(tasks_file_items, app.data["last_date"])
 
-        filled_list_titles = fill_tasks_lists(tasks_file_items, plans_file_items, app.data)
+    if check_for_tasks_in_progress(tasks_file_items):
+
+        filled_list_titles = task_lists.fill_tasks_lists(
+            tasks_file_items, plans_file_items, app.data
+        )
 
         if filled_list_titles:
 
@@ -174,89 +166,6 @@ def create_planned_tasks(app: namedtuple) -> None:
     cliutils.ask_for_enter()
 
     main_menu(app)
-
-
-def add_tasks_lists(tasks: list, last_date: datetime.date):
-
-    date = utils.get_date_of_tomorrow(last_date)
-    today = utils.get_date_of_today()
-
-    while date <= today:
-
-        task_lists_by_date = filter(
-            lambda item: type(item) is parser.List and item.date == date, tasks
-        )  # TODO probably better to do it like .is_date (duck typing)
-
-        if not list(task_lists_by_date):
-
-            date_string = utils.get_string_from_date(date)
-            line = f"# {date_string}"
-            tasks.append(parser.List(line))
-
-        date = utils.get_date_of_tomorrow(date)
-
-
-def fill_tasks_lists(
-    tasks_file_items: list, plans_file_items: list, data: dict
-) -> list:
-
-    filled_list_titles = []
-
-    today = utils.get_date_of_today()
-
-    for tasks_file_item in tasks_file_items:
-
-        is_list_to_fill = (
-            type(tasks_file_item) == parser.List
-            and tasks_file_item.date is not None
-            and data["last_date"] < tasks_file_item.date <= today
-        )
-
-        if is_list_to_fill:
-            fill_tasks_list(tasks_file_item, plans_file_items)
-            sort_tasks_list(tasks_file_item)
-
-            filled_list_titles.append(tasks_file_item.title)
-
-    return filled_list_titles
-
-
-def sort_tasks_list(tasks_file_item: parser.List):
-
-    tasks_file_item.items = sorted(tasks_file_item.items, key=lambda item: item.time)
-
-
-def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list):
-
-    for plans_file_item in plans_file_items:
-
-        if isinstance(plans_file_item, parser.List):
-
-            fill_tasks_list(tasks_file_item, plans_file_item.items)
-
-        elif isinstance(plans_file_item, parser.Plan):
-
-            _, is_date_matched = scheduler.match(plans_file_item, tasks_file_item.date)
-
-            if is_date_matched:
-
-                line = f"- {plans_file_item.title}"
-                task = parser.Task(line)
-
-                if len(plans_file_item.lines) > 1:
-
-                    i = 0
-
-                    for plan_line in plans_file_item.lines:
-
-                        i += 1
-
-                        if i == 1:
-                            continue
-
-                        task.lines.append(plan_line)
-
-                tasks_file_item.items.append(task)
 
 
 def tasks_browser(app: namedtuple) -> None:
@@ -288,30 +197,6 @@ def health_check(app: namedtuple) -> None:
     main_menu(app)
 
 
-def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
-
-    today = utils.get_date_of_today()
-
-    for item in plans_file_items:
-
-        if type(item) == parser.List:
-
-            check_plans_file_items(item.items, plans_file_issues)
-
-        elif type(item) == parser.Plan:
-
-            matched_pattern, _ = scheduler.match(item, today)
-
-            if matched_pattern == scheduler.Pattern.NONE:
-
-                issue_text = (
-                    f'Unable to match pattern for a "{item.title}" plan'
-                    f' (pattern text: "{item.pattern}")'
-                )
-
-                plans_file_issues.append(issue_text)
-
-
 def main_menu(app: namedtuple) -> None:
     """
     Builds and then displays the main menu of the application.
@@ -333,7 +218,16 @@ def main():
 
     config = get_config(arguments.config)
 
-    set_up_logging(config)
+    if config.getboolean("LOG", "write_log"):
+
+        logging.basicConfig(
+            filename=config.get("LOG", "file_name"),
+            filemode=config.get("LOG", "file_mode"),
+            encoding=constants.ENCODING,
+            format="%(asctime)s [%(levelname)s] %(message)s",
+            level=logging.DEBUG,
+            force=True,
+        )
 
     data = datafile.load()
 
