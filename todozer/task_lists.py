@@ -7,24 +7,23 @@ import datetime
 from todozer import parser, scheduler, utils
 
 
-def add_tasks_lists(tasks: list, last_date: datetime.date):
+def get_task_lists_in_progress(file_items: list) -> list:
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    dates_in_progress = []
 
-    date = utils.get_date_of_tomorrow(last_date)
-    today = utils.get_date_of_today()
+    for file_item in file_items:
 
-    while date <= today:
+        if type(file_item) == parser.List and file_item.date <= yesterday:
 
-        task_lists_by_date = filter(
-            lambda item: type(item) is parser.List and item.date == date, tasks
-        )  # TODO probably better to do it like .is_date (duck typing)
+            scheduled_tasks = file_item.get_scheduled_tasks()
 
-        if not list(task_lists_by_date):
+            if scheduled_tasks:
+                incomplete_day = parser.List(file_item.lines[0])
+                incomplete_day.items = scheduled_tasks
 
-            date_string = utils.get_string_from_date(date)
-            line = f"# {date_string}"
-            tasks.append(parser.List(line))
+                dates_in_progress.append(incomplete_day)
 
-        date = utils.get_date_of_tomorrow(date)
+    return dates_in_progress
 
 
 def fill_tasks_lists(task_items: list, plan_items: list, data: dict) -> list:
@@ -50,12 +49,7 @@ def fill_tasks_lists(task_items: list, plan_items: list, data: dict) -> list:
     return filled_list_titles
 
 
-def sort_tasks_list(tasks_file_item: parser.List):
-
-    tasks_file_item.items = sorted(tasks_file_item.items, key=lambda item: item.time)
-
-
-def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list):
+def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list) -> None:
 
     for plans_file_item in plans_file_items:
 
@@ -88,20 +82,28 @@ def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list):
                 tasks_file_item.items.append(task)
 
 
-def get_task_lists_in_progress(file_items: list) -> list:
-    yesterday = datetime.date.today() - datetime.timedelta(days=1)
-    dates_in_progress = []
+def sort_tasks_list(tasks_file_item: parser.List) -> None:
 
-    for file_item in file_items:
+    tasks_file_item.items = sorted(tasks_file_item.items, key=lambda item: item.time)
 
-        if type(file_item) == parser.List and file_item.date <= yesterday:
 
-            scheduled_tasks = file_item.get_scheduled_tasks()
+def add_tasks_lists(tasks: list, last_date: datetime.date) -> None:
 
-            if scheduled_tasks:
-                incomplete_day = parser.List(file_item.lines[0])
-                incomplete_day.items = scheduled_tasks
+    date = utils.get_date_of_tomorrow(last_date)
+    today = utils.get_date_of_today()
 
-                dates_in_progress.append(incomplete_day)
+    while date <= today:
 
-    return dates_in_progress
+        task_lists_by_date = filter(
+            lambda item: type(item) is parser.List and item.date == date, tasks
+        )  # TODO probably better to do it like .is_date (duck typing)
+
+        if not list(task_lists_by_date):
+
+            date_string = utils.get_string_from_date(date)
+            line = f"# {date_string}"
+            tasks.append(parser.List(line))
+
+        date = utils.get_date_of_tomorrow(date)
+
+
