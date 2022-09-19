@@ -9,8 +9,7 @@ from collections import namedtuple
 
 from vkostyanetsky import cliutils
 
-from todozer import (constants, datafile, menu, parser, scheduler, task_lists,
-                     utils)
+from todozer import constants, datafile, menu, parser, scheduler, task_lists, utils
 
 
 def get_arguments() -> argparse.Namespace:
