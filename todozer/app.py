@@ -261,12 +261,11 @@ def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list):
                 tasks_file_item.items.append(task)
 
 
-def statistics(menu_item_parameters: dict) -> None:
+def tasks_browser(menu_item_parameters: dict) -> None:
+    sys.exit(1)
 
-    sys.exit(0)
 
-
-def healthcheck(menu_item_parameters: dict) -> None:
+def health_check(menu_item_parameters: dict) -> None:
     logging.debug("Checking planned tasks...")
 
     config = menu_item_parameters.get("config")
@@ -330,9 +329,8 @@ def main_menu(config: configparser.ConfigParser, data: dict) -> None:
     todozer_menu.add_item(
         "Create Planned Tasks", create_planned_tasks, menu_item_parameters
     )
-    todozer_menu.add_item("Tasks Browser", statistics, menu_item_parameters)
-    todozer_menu.add_item("Health Check", healthcheck, menu_item_parameters)
-    todozer_menu.add_item("Statistics", statistics, menu_item_parameters)
+    todozer_menu.add_item("Tasks Browser", tasks_browser, menu_item_parameters)
+    todozer_menu.add_item("Health Check", health_check, menu_item_parameters)
     todozer_menu.add_item("Exit", sys.exit)
 
     todozer_menu.choose()
