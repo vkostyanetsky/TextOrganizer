@@ -4,6 +4,7 @@ import datetime
 import logging
 import os.path
 import sys
+from collections import namedtuple
 
 from vkostyanetsky import cliutils
 
@@ -133,7 +134,7 @@ def load_plans_file_items(config: configparser.ConfigParser):
     return parser.Parser(plans_file_name, parser.Plan).parse()
 
 
-def create_planned_tasks(parameters: dict) -> None:
+def create_planned_tasks(app: namedtuple) -> None:
     """
     Creates tasks for the today (and days before, in case it was not done yet).
 
@@ -143,25 +144,22 @@ def create_planned_tasks(parameters: dict) -> None:
 
     logging.debug("Creating planned tasks...")
 
-    config = parameters.get("config")
-    data = parameters.get("data")
+    tasks_file_items = load_tasks_file_items(app.config)
 
-    tasks_file_items = load_tasks_file_items(config)
+    add_tasks_lists(tasks_file_items, app.data["last_date"])
 
-    add_tasks_lists(tasks_file_items, data["last_date"])
-
-    plans_file_items = load_plans_file_items(config)
+    plans_file_items = load_plans_file_items(app.config)
 
     if check_for_uncompleted_dates(tasks_file_items):
 
-        filled_list_titles = fill_tasks_lists(tasks_file_items, plans_file_items, data)
+        filled_list_titles = fill_tasks_lists(tasks_file_items, plans_file_items, app.data)
 
         if filled_list_titles:
 
-            save_tasks_file_items(tasks_file_items, config)
+            save_tasks_file_items(tasks_file_items, app.config)
 
-            data["last_date"] = utils.get_date_of_today()
-            datafile.save(data)
+            app.data["last_date"] = utils.get_date_of_today()
+            datafile.save(app.data)
 
             scheduled_tasks = ", ".join(filled_list_titles)
 
@@ -175,7 +173,7 @@ def create_planned_tasks(parameters: dict) -> None:
 
     cliutils.ask_for_enter()
 
-    main_menu(config, data)
+    main_menu(app)
 
 
 def add_tasks_lists(tasks: list, last_date: datetime.date):
@@ -261,17 +259,14 @@ def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list):
                 tasks_file_item.items.append(task)
 
 
-def tasks_browser(parameters: dict) -> None:
+def tasks_browser(app: namedtuple) -> None:
     sys.exit(1)
 
 
-def health_check(parameters: dict) -> None:
+def health_check(app: namedtuple) -> None:
     logging.debug("Checking planned tasks...")
 
-    config = parameters.get("config")
-    data = parameters.get("data")
-
-    plans_file_items = load_plans_file_items(config)
+    plans_file_items = load_plans_file_items(app.config)
     plans_file_issues = []
 
     check_plans_file_items(plans_file_items, plans_file_issues)
@@ -290,7 +285,7 @@ def health_check(parameters: dict) -> None:
 
     cliutils.ask_for_enter()
 
-    main_menu(config, data)
+    main_menu(app)
 
 
 def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
@@ -317,18 +312,16 @@ def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
                 plans_file_issues.append(issue_text)
 
 
-def main_menu(config: configparser.ConfigParser, data: dict) -> None:
+def main_menu(app: namedtuple) -> None:
     """
     Builds and then displays the main menu of the application.
     """
 
     todozer_menu = menu.TodozerMenu()
 
-    parameters = {"config": config, "data": data}
-
-    todozer_menu.add_item("Create Planned Tasks", create_planned_tasks, parameters)
-    todozer_menu.add_item("Tasks Browser", tasks_browser, parameters)
-    todozer_menu.add_item("Health Check", health_check, parameters)
+    todozer_menu.add_item("Create Planned Tasks", create_planned_tasks, app)
+    todozer_menu.add_item("Tasks Browser", tasks_browser, app)
+    todozer_menu.add_item("Health Check", health_check, app)
     todozer_menu.add_item("Exit", sys.exit)
 
     todozer_menu.choose()
@@ -344,6 +337,9 @@ def main():
 
     data = datafile.load()
 
+    TodozerApp = namedtuple("TodozerApp", "config data")
+    app = TodozerApp(config=config, data=data)
+
     logging.debug("Initialization completed.")
 
-    main_menu(config, data)
+    main_menu(app)
