@@ -133,7 +133,7 @@ def load_plans_file_items(config: configparser.ConfigParser):
     return parser.Parser(plans_file_name, parser.Plan).parse()
 
 
-def create_planned_tasks(menu_item_parameters: dict) -> None:
+def create_planned_tasks(parameters: dict) -> None:
     """
     Creates tasks for the today (and days before, in case it was not done yet).
 
@@ -143,8 +143,8 @@ def create_planned_tasks(menu_item_parameters: dict) -> None:
 
     logging.debug("Creating planned tasks...")
 
-    config = menu_item_parameters.get("config")
-    data = menu_item_parameters.get("data")
+    config = parameters.get("config")
+    data = parameters.get("data")
 
     tasks_file_items = load_tasks_file_items(config)
 
@@ -261,15 +261,15 @@ def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list):
                 tasks_file_item.items.append(task)
 
 
-def tasks_browser(menu_item_parameters: dict) -> None:
+def tasks_browser(parameters: dict) -> None:
     sys.exit(1)
 
 
-def health_check(menu_item_parameters: dict) -> None:
+def health_check(parameters: dict) -> None:
     logging.debug("Checking planned tasks...")
 
-    config = menu_item_parameters.get("config")
-    data = menu_item_parameters.get("data")
+    config = parameters.get("config")
+    data = parameters.get("data")
 
     plans_file_items = load_plans_file_items(config)
     plans_file_issues = []
@@ -324,13 +324,11 @@ def main_menu(config: configparser.ConfigParser, data: dict) -> None:
 
     todozer_menu = menu.TodozerMenu()
 
-    menu_item_parameters = {"config": config, "data": data}
+    parameters = {"config": config, "data": data}
 
-    todozer_menu.add_item(
-        "Create Planned Tasks", create_planned_tasks, menu_item_parameters
-    )
-    todozer_menu.add_item("Tasks Browser", tasks_browser, menu_item_parameters)
-    todozer_menu.add_item("Health Check", health_check, menu_item_parameters)
+    todozer_menu.add_item("Create Planned Tasks", create_planned_tasks, parameters)
+    todozer_menu.add_item("Tasks Browser", tasks_browser, parameters)
+    todozer_menu.add_item("Health Check", health_check, parameters)
     todozer_menu.add_item("Exit", sys.exit)
 
     todozer_menu.choose()
