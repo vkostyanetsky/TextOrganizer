@@ -42,7 +42,7 @@ def fill_tasks_lists(task_items: list, plan_items: list, data: dict) -> list:
 
         if is_list_to_fill:
             fill_tasks_list(task_item, plan_items)
-            sort_tasks_list(task_item)
+            task_item.sort_items()
 
             filled_list_titles.append(task_item.title)
 
@@ -80,11 +80,6 @@ def fill_tasks_list(tasks_file_item: parser.List, plans_file_items: list) -> Non
                         task.lines.append(plan_line)
 
                 tasks_file_item.items.append(task)
-
-
-def sort_tasks_list(tasks_file_item: parser.List) -> None:
-
-    tasks_file_item.items = sorted(tasks_file_item.items, key=lambda item: item.time)
 
 
 def add_tasks_lists(tasks: list, last_date: datetime.date) -> None:

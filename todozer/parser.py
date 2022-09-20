@@ -56,6 +56,23 @@ class List(Item):
 
         return list(filter_result)
 
+    def sort_items(self):
+        """
+        Sorts tasks by their time.
+
+         For instance:
+
+         - 08:00 Bla bla bla!
+         - 07:30 Bla bla!
+
+         First item will be the second one after sorting (since 7:30 is earlier than 08:00).
+
+         Items without time in the beginning being considering as having 00:00, so they are
+         going to move to the very start of the list.
+         """
+
+        self.items = sorted(self.items, key=lambda item: item.time)
+
     @property
     def date(self) -> datetime.date | None:
         result = None
