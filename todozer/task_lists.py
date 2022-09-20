@@ -100,5 +100,3 @@ def add_tasks_lists(tasks: list, last_date: datetime.date) -> None:
             tasks.append(parser.List(line))
 
         date = utils.get_date_of_tomorrow(date)
-
-
