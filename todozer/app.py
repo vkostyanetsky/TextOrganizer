@@ -98,16 +98,19 @@ def start_timer(app: namedtuple) -> None:
 
     task_number_to_track_time = None
 
+    titles = []
+    task_number = 0
+
+    for task in tasks_list.items:
+        if task.is_scheduled:
+            titles.append(task.title)
+
     while task_number_to_track_time is None:
 
         cliutils.clear_terminal()
 
-        task_number = 0
-
-        for task in tasks_list.items:
-            if task.is_scheduled:
-                task_number += 1
-                print(f'{task_number} - {task.title}')
+        for title_index in range(len(titles)):
+            print(f'{title_index + 1} - {titles[title_index]}')
 
         print()
 
@@ -118,9 +121,9 @@ def start_timer(app: namedtuple) -> None:
 
         task_number = int(user_input)
 
-        task_number_to_track_time = task_number - 1 if 0 < task_number < len(tasks_list.items) else None
+        task_number_to_track_time = task_number - 1 if 0 < task_number < len(titles) else None
 
-    task_title = tasks_list.items[task_number_to_track_time - 1].title
+    task_title = titles[task_number_to_track_time]
 
     records = timer.read()
     records.append({'started': datetime.datetime.now(), 'task': task_title})
