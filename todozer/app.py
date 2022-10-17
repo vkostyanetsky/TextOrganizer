@@ -2,6 +2,7 @@
 
 import argparse
 import configparser
+import datetime
 import logging
 import os.path
 import sys
@@ -9,7 +10,132 @@ from collections import namedtuple
 
 from vkostyanetsky import cliutils
 
-from todozer import constants, datafile, menu, parser, scheduler, task_lists, utils
+from todozer import constants, datafile, menu, parser, scheduler, task_lists, utils, timer
+
+
+def main():
+
+    arguments = get_arguments()
+
+    config = get_config(arguments.config)
+
+    if config.getboolean("LOG", "write_log"):
+
+        logging.basicConfig(
+            filename=config.get("LOG", "file_name"),
+            filemode=config.get("LOG", "file_mode"),
+            encoding=constants.ENCODING,
+            format="%(asctime)s [%(levelname)s] %(message)s",
+            level=logging.DEBUG,
+            force=True,
+        )
+
+    data = datafile.load()
+
+    TodozerApp = namedtuple("TodozerApp", "config data")
+    app = TodozerApp(config=config, data=data)
+
+    logging.debug("Initialization completed.")
+
+    main_menu(app)
+
+
+def main_menu(app: namedtuple) -> None:
+    """
+    Displays the main menu of the application.
+    """
+
+    todozer_menu = menu.TodozerMenu()
+
+    todozer_menu.add_item("View Tasks", view_tasks, app)
+    todozer_menu.add_item("Plan Tasks", plan_tasks_submenu, app)
+    todozer_menu.add_item("Track Time", track_time_submenu, app)
+    todozer_menu.add_item("Exit", sys.exit)
+
+    todozer_menu.choose()
+
+
+def view_tasks(app: namedtuple) -> None:
+    pass
+
+
+def plan_tasks_submenu(app: namedtuple) -> None:
+    """
+    Displays a submenu to plan tasks.
+    """
+
+    todozer_menu = menu.TodozerMenu()
+
+    todozer_menu.add_item("Create Planned Tasks", create_planned_tasks, app)
+    todozer_menu.add_item("Health Check", health_check, app)
+    todozer_menu.add_item("Back", main_menu, app)
+
+    todozer_menu.choose()
+
+
+def track_time_submenu(app: namedtuple) -> None:
+    """
+    Displays a submenu to track time.
+    """
+
+    todozer_menu = menu.TodozerMenu()
+
+    todozer_menu.add_item("Start Timer", start_timer, app)
+    todozer_menu.add_item("Stop Timer", stop_timer, app)
+    todozer_menu.add_item("Back", main_menu, app)
+
+    todozer_menu.choose()
+
+
+def start_timer(app: namedtuple) -> None:
+    tasks = load_tasks_file_items(app.config)
+    today = utils.get_date_of_today()
+
+    tasks_list = task_lists.get_tasks_list_by_date(tasks, today)
+
+    if tasks_list is None:
+        exit(1)
+
+    task_number_to_track_time = None
+
+    while task_number_to_track_time is None:
+
+        cliutils.clear_terminal()
+
+        task_number = 0
+
+        for task in tasks_list.items:
+            if task.is_scheduled:
+                task_number += 1
+                print(f'{task_number} - {task.title}')
+
+        print()
+
+        user_input = cliutils.ask_for_enter("Enter a task number to track time for: ")
+
+        if not user_input.isdigit():
+            continue
+
+        task_number = int(user_input)
+
+        task_number_to_track_time = task_number - 1 if 0 < task_number < len(tasks_list.items) else None
+
+    task_title = tasks_list.items[task_number_to_track_time - 1].title
+
+    records = timer.read()
+    records.append({'started': datetime.datetime.now(), 'task': task_title})
+
+    timer.write(records)
+
+    track_time_submenu(app)
+
+
+def stop_timer(app: namedtuple) -> None:
+    records = timer.read()
+    if records[-1].get("stopped") is None:
+        records[-1]["stopped"] = datetime.datetime.now()
+    timer.write(records)
+    track_time_submenu(app)
 
 
 def get_arguments() -> argparse.Namespace:
@@ -166,11 +292,7 @@ def create_planned_tasks(app: namedtuple) -> None:
 
     cliutils.ask_for_enter()
 
-    main_menu(app)
-
-
-def tasks_browser(app: namedtuple) -> None:
-    sys.exit(1)
+    plan_tasks_submenu(app)
 
 
 def health_check(app: namedtuple) -> None:
@@ -195,46 +317,4 @@ def health_check(app: namedtuple) -> None:
 
     cliutils.ask_for_enter()
 
-    main_menu(app)
-
-
-def main_menu(app: namedtuple) -> None:
-    """
-    Builds and then displays the main menu of the application.
-    """
-
-    todozer_menu = menu.TodozerMenu()
-
-    todozer_menu.add_item("Create Planned Tasks", create_planned_tasks, app)
-    todozer_menu.add_item("Tasks Browser", tasks_browser, app)
-    todozer_menu.add_item("Health Check", health_check, app)
-    todozer_menu.add_item("Exit", sys.exit)
-
-    todozer_menu.choose()
-
-
-def main():
-
-    arguments = get_arguments()
-
-    config = get_config(arguments.config)
-
-    if config.getboolean("LOG", "write_log"):
-
-        logging.basicConfig(
-            filename=config.get("LOG", "file_name"),
-            filemode=config.get("LOG", "file_mode"),
-            encoding=constants.ENCODING,
-            format="%(asctime)s [%(levelname)s] %(message)s",
-            level=logging.DEBUG,
-            force=True,
-        )
-
-    data = datafile.load()
-
-    TodozerApp = namedtuple("TodozerApp", "config data")
-    app = TodozerApp(config=config, data=data)
-
-    logging.debug("Initialization completed.")
-
-    main_menu(app)
+    plan_tasks_submenu(app)

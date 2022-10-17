@@ -89,14 +89,19 @@ def add_tasks_lists(tasks: list, last_date: datetime.date) -> None:
 
     while date <= today:
 
-        task_lists_by_date = filter(
-            lambda item: type(item) is parser.List and item.date == date, tasks
-        )  # TODO probably better to do it like .is_date (duck typing)
-
-        if not list(task_lists_by_date):
+        if not get_tasks_list_by_date(tasks, date):
 
             date_string = utils.get_string_from_date(date)
             line = f"# {date_string}"
             tasks.append(parser.List(line))
 
         date = utils.get_date_of_tomorrow(date)
+
+
+def get_tasks_list_by_date(tasks: list, date: datetime.date) -> parser.List | None:
+    # TODO probably better to do it like .is_date (duck typing)
+    lists = list(filter(
+        lambda item: type(item) is parser.List and item.date == date, tasks
+    ))
+
+    return lists[0] if lists else None
