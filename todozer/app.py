@@ -10,7 +10,16 @@ from collections import namedtuple
 
 from vkostyanetsky import cliutils
 
-from todozer import constants, datafile, menu, parser, scheduler, task_lists, utils, timer
+from todozer import (
+    constants,
+    datafile,
+    menu,
+    parser,
+    scheduler,
+    task_lists,
+    utils,
+    timer,
+)
 
 
 def main():
@@ -78,67 +87,115 @@ def track_time_submenu(app: namedtuple) -> None:
     Displays a submenu to track time.
     """
 
+    timers = timer.read()
+    active_timer = get_active_timer(timers)
+
     todozer_menu = menu.TodozerMenu()
 
     todozer_menu.add_item("Start Timer", start_timer, app)
-    todozer_menu.add_item("Stop Timer", stop_timer, app)
+
+    if active_timer:
+        todozer_menu.add_item("Stop Timer", stop_timer, app)
+
     todozer_menu.add_item("Back", main_menu, app)
 
     todozer_menu.choose()
 
 
-def start_timer(app: namedtuple) -> None:
-    tasks = load_tasks_file_items(app.config)
-    today = utils.get_date_of_today()
+def get_titles_of_tasks_in_progress_for_today(app: namedtuple) -> list:
+    result = []
 
-    tasks_list = task_lists.get_tasks_list_by_date(tasks, today)
+    tasks_list = task_lists.get_tasks_list_by_date(
+        tasks=load_tasks_file_items(app.config), date=utils.get_date_of_today()
+    )
 
-    if tasks_list is None:
-        exit(1)
+    if tasks_list is not None:
+        for task in tasks_list.items:
+            if task.is_scheduled:
+                result.append(task.title)
 
-    task_number_to_track_time = None
+    return result
 
-    titles = []
-    task_number = 0
 
-    for task in tasks_list.items:
-        if task.is_scheduled:
-            titles.append(task.title)
+def get_chosen_task_title(titles: list):
 
-    while task_number_to_track_time is None:
+    result = None
+
+    while result is None:
 
         cliutils.clear_terminal()
 
         for title_index in range(len(titles)):
-            print(f'{title_index + 1} - {titles[title_index]}')
+            print(f"{title_index + 1} - {titles[title_index]}")
 
         print()
 
-        user_input = cliutils.ask_for_enter("Enter a task number to track time for: ")
+        message = "Enter a task number to track time for: "
+        user_input = cliutils.ask_for_enter(message).strip()
+
+        if user_input == "":
+            break
 
         if not user_input.isdigit():
             continue
 
         task_number = int(user_input)
 
-        task_number_to_track_time = task_number - 1 if 0 < task_number < len(titles) else None
+        result = titles[task_number - 1] if 0 < task_number < len(titles) else None
 
-    task_title = titles[task_number_to_track_time]
+    return result
 
-    records = timer.read()
-    records.append({'started': datetime.datetime.now(), 'task': task_title})
 
-    timer.write(records)
+def start_timer(app: namedtuple) -> None:
+
+    titles = get_titles_of_tasks_in_progress_for_today(app)
+
+    if titles:
+
+        title = get_chosen_task_title(titles)
+
+        if title is not None:
+
+            records = timer.read()
+            records.append(
+                {"started": datetime.datetime.now(), "task": title}
+            )
+
+            timer.write(records)
+
+    else:
+        print("No tasks in progress to track time today.")
+        print()
+
+        cliutils.ask_for_enter()
 
     track_time_submenu(app)
 
 
 def stop_timer(app: namedtuple) -> None:
-    records = timer.read()
-    if records[-1].get("stopped") is None:
-        records[-1]["stopped"] = datetime.datetime.now()
-    timer.write(records)
+    timers = timer.read()
+    active_timer = get_active_timer(timers)
+
+    if active_timer:
+
+        active_timer['stopped'] = datetime.datetime.now()
+        timer.write(timers)
+
+        print('The active timer has been stopped.')
+
+    else:
+
+        print('There is no active timer to stop.')
+
+    print()
+
+    cliutils.ask_for_enter()
+
     track_time_submenu(app)
+
+
+def get_active_timer(timers: list) -> dict:
+    return timers[-1] if len(timers) > 0 and timers[-1].get('stopped') is None else None
 
 
 def get_arguments() -> argparse.Namespace:
