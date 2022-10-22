@@ -157,9 +157,7 @@ def start_timer(app: namedtuple) -> None:
         if title is not None:
 
             records = timer.read()
-            records.append(
-                {"started": datetime.datetime.now(), "task": title}
-            )
+            records.append({"started": datetime.datetime.now(), "task": title})
 
             timer.write(records)
 
@@ -178,14 +176,14 @@ def stop_timer(app: namedtuple) -> None:
 
     if active_timer:
 
-        active_timer['stopped'] = datetime.datetime.now()
+        active_timer["stopped"] = datetime.datetime.now()
         timer.write(timers)
 
-        print('The active timer has been stopped.')
+        print("The active timer has been stopped.")
 
     else:
 
-        print('There is no active timer to stop.')
+        print("There is no active timer to stop.")
 
     print()
 
@@ -195,7 +193,7 @@ def stop_timer(app: namedtuple) -> None:
 
 
 def get_active_timer(timers: list) -> dict:
-    return timers[-1] if len(timers) > 0 and timers[-1].get('stopped') is None else None
+    return timers[-1] if len(timers) > 0 and timers[-1].get("stopped") is None else None
 
 
 def get_arguments() -> argparse.Namespace:
@@ -220,8 +218,11 @@ def get_config(filename: str) -> configparser.ConfigParser:
     config.read_dict(
         {
             "TASKS": {
-                "tasks_file_name": "tasks.md",
-                "plans_file_name": "plans.md",
+                "file_name": "tasks.md",
+                "reverse_days_order": False,
+            },
+            "PLANS": {
+                "file_name": "plans.md",
             },
             "LOG": {"write_log": False, "file_name": "todozer.log", "file_mode": "w"},
         }
@@ -238,7 +239,7 @@ def get_config(filename: str) -> configparser.ConfigParser:
 
 def load_tasks_file_items(config: configparser.ConfigParser):
 
-    tasks_file_name = config.get("TASKS", "tasks_file_name")
+    tasks_file_name = config.get("TASKS", "file_name")
 
     tasks_file_items = parser.Parser(tasks_file_name, parser.Task).parse()
 
@@ -249,10 +250,16 @@ def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigPar
 
     content = []
 
+    tasks_file_items = sorted(
+        tasks_file_items,
+        key=lambda item: item.date,
+        reverse=bool(config.get("TASKS", "reverse_days_order")),
+    )
+
     for tasks_file_item in tasks_file_items:
         content.append(str(tasks_file_item))
 
-    tasks_file_name = config.get("TASKS", "tasks_file_name")
+    tasks_file_name = config.get("TASKS", "file_name")
 
     with open(tasks_file_name, "w", encoding=constants.ENCODING) as tasks_file:
         tasks_file.write("\n\n".join(content))
@@ -260,7 +267,7 @@ def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigPar
 
 def load_plans_file_items(config: configparser.ConfigParser):
 
-    plans_file_name = config.get("TASKS", "plans_file_name")
+    plans_file_name = config.get("PLANS", "file_name")
 
     return parser.Parser(plans_file_name, parser.Plan).parse()
 

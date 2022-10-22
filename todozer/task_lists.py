@@ -100,8 +100,8 @@ def add_tasks_lists(tasks: list, last_date: datetime.date) -> None:
 
 def get_tasks_list_by_date(tasks: list, date: datetime.date) -> parser.List | None:
     # TODO probably better to do it like .is_date (duck typing)
-    lists = list(filter(
-        lambda item: type(item) is parser.List and item.date == date, tasks
-    ))
+    lists = list(
+        filter(lambda item: type(item) is parser.List and item.date == date, tasks)
+    )
 
     return lists[0] if lists else None

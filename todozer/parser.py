@@ -70,7 +70,7 @@ class List(Item):
 
          Items without time in the beginning being considering as having 00:00,
          so they are going to move to the very start of the list.
-         """
+        """
 
         self.items = sorted(self.items, key=lambda item: item.time)
 
