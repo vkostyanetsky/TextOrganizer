@@ -2,9 +2,45 @@
 
 """Methods to work with task lists in tasks file & plans file."""
 
+import configparser
 import datetime
 
-from todozer import parser, scheduler, utils
+from todozer import constants, parser, scheduler, utils
+
+
+def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigParser):
+
+    content = []
+
+    tasks_file_items = sorted(
+        tasks_file_items,
+        key=lambda item: item.date,
+        reverse=bool(config.getboolean("TASKS", "reverse_days_order")),
+    )
+
+    for tasks_file_item in tasks_file_items:
+        content.append(str(tasks_file_item))
+
+    tasks_file_name = config.get("TASKS", "file_name")
+
+    with open(tasks_file_name, "w", encoding=constants.ENCODING) as tasks_file:
+        tasks_file.write("\n\n".join(content))
+
+
+def load_tasks_file_items(config: configparser.ConfigParser):
+
+    tasks_file_name = config.get("TASKS", "file_name")
+
+    tasks_file_items = parser.Parser(tasks_file_name, parser.Task).parse()
+
+    return sorted(tasks_file_items, key=lambda item: item.date)
+
+
+def load_plans_file_items(config: configparser.ConfigParser):
+
+    plans_file_name = config.get("PLANS", "file_name")
+
+    return parser.Parser(plans_file_name, parser.Plan).parse()
 
 
 def get_task_lists_in_progress(file_items: list) -> list:
@@ -37,7 +73,7 @@ def fill_tasks_lists(task_items: list, plan_items: list, data: dict) -> list:
         is_list_to_fill = (
             type(task_item) == parser.List
             and task_item.date is not None
-            and data["last_date"] < task_item.date <= today
+            and data["last_planning_date"] < task_item.date <= today
         )
 
         if is_list_to_fill:

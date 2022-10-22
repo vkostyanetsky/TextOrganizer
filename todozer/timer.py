@@ -5,11 +5,11 @@ Functions to work with the tasks log file (timer.yaml by default).
 """
 
 import os.path
+from dataclasses import dataclass
+from datetime import datetime
 
 import yaml
 import yaml.parser
-from datetime import datetime
-from dataclasses import dataclass
 
 
 def read() -> list:
