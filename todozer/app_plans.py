@@ -46,7 +46,7 @@ def create_planned_tasks(session: dict) -> None:
 
             task_lists.save_tasks_file_items(tasks_file_items, session["config"])
 
-            session["state"]["last_date"] = utils.get_date_of_today()
+            session["state"]["last_planning_date"] = utils.get_date_of_today()
             state_file.save(session["state"])
 
             scheduled_tasks = ", ".join(filled_list_titles)
