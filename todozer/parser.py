@@ -74,6 +74,14 @@ class List(Item):
 
         self.items = sorted(self.items, key=lambda item: item.time)
 
+    def get_active_task(self):
+        result = None
+        for item in self.items:
+            if item.is_timer_running():
+                result = item
+                break
+        return result
+
     @property
     def date(self) -> datetime.date | None:
         result = None
@@ -104,6 +112,32 @@ class Task(Item):
         time_string = "00:00" if match_object is None else match_object.group(1)
 
         return datetime.time.fromisoformat(time_string)
+
+    def stop_timer(self):
+
+        line_index = self.get_line_index_with_running_timer()
+
+        if line_index != -1:
+            self.lines[line_index] = self.lines[line_index].replace(
+                "(...)", datetime.datetime.now().strftime("%H:%M"), 1
+            )
+
+    def get_line_index_with_running_timer(self) -> int:
+        """
+        Returns an index of line with a running timer.
+        """
+        result = -1
+
+        for line_index in range(len(self.lines)):
+
+            if self.lines[line_index].find("(...)") != -1:
+                result = line_index
+                break
+
+        return result
+
+    def is_timer_running(self):
+        return self.get_line_index_with_running_timer() != -1
 
     @property
     def is_scheduled(self) -> bool:

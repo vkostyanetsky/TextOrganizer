@@ -32,8 +32,8 @@ def start_timer(session: dict) -> None:
         task = get_chosen_task(tasks_in_progress)
 
         if task is not None:
-            current_time_string = get_current_time_string()
-            empty_time_string = get_empty_time_string()
+            current_time_string = datetime.datetime.now().strftime("%H:%M")
+            empty_time_string = "(...)"
             time_string = datetime.datetime.now().strftime(
                 f"    {current_time_string} -> {empty_time_string}  "
             )
@@ -75,31 +75,19 @@ def stop_timer(session: dict) -> None:
     if running_timer_date is not None:
 
         tasks_file_items = task_lists.load_tasks_file_items(session["config"])
+        tasks_list = task_lists.get_tasks_list_by_date(tasks=tasks_file_items, date=running_timer_date)
 
-        tasks_list = task_lists.get_tasks_list_by_date(
-            tasks=tasks_file_items, date=running_timer_date
-        )  # TODO WHAT IF NOT FOUND?
+        if tasks_list is not None:
 
-        task_found = False
+            active_task = tasks_list.get_active_task()
 
-        for task in tasks_list.items:
-            for line_index in range(len(task.lines)):
-                line = task.lines[line_index]
-                if line.find("(...)") != -1:
-                    current_time_string = get_current_time_string()
-                    empty_time_string = get_empty_time_string()
-                    task.lines[line_index] = line.replace(
-                        empty_time_string, current_time_string, 1
-                    )
-                    task_found = True
-                    break
-            if task_found:
-                break
+            if active_task is not None:
+                active_task.stop_timer()
 
-        task_lists.save_tasks_file_items(tasks_file_items, session["config"])
+                task_lists.save_tasks_file_items(tasks_file_items, session["config"])
 
-        session["state"]["running_timer_date"] = None
-        state_file.save(session["state"])
+                session["state"]["running_timer_date"] = None
+                state_file.save(session["state"])
 
         print("The active timer has been stopped.")
 
@@ -112,77 +100,6 @@ def stop_timer(session: dict) -> None:
     cliutils.ask_for_enter()
 
     main_menu(session)
-
-
-def get_current_time_string() -> str:
-    return datetime.datetime.now().strftime("%H:%M")
-
-
-def get_empty_time_string() -> str:
-    return "(...)"
-
-
-# def get_active_timer(timers: list) -> dict:
-#     return timers[-1] if len(timers) > 0 and timers[-1].get("stopped") is None else None
-#
-#
-# def read() -> list:
-#     """
-#     Reads records from the file.
-#     """
-#
-#     yaml_file_name = __get_file_name()
-#
-#     result = []
-#
-#     if os.path.isfile(yaml_file_name):
-#
-#         try:
-#
-#             with open(yaml_file_name, encoding="utf-8-sig") as yaml_file:
-#                 result = yaml.safe_load(yaml_file)
-#                 if result is None:
-#                     result = []
-#
-#         except yaml.parser.ParserError:
-#
-#             print(f"Unable to parse: {yaml_file_name}")
-#
-#     return result
-#
-#
-# def write(logs: list[dict]) -> None:
-#     """
-#     Writes given logs to the log file.
-#     """
-#
-#     __remove_microseconds(logs)
-#
-#     yaml_file_name = __get_file_name()
-#
-#     with open(yaml_file_name, encoding="utf-8-sig", mode="w") as yaml_file:
-#         yaml.safe_dump(logs, yaml_file)
-#
-#
-# def __get_file_name() -> str:
-#     """
-#     Returns a name for the log file.
-#     """
-#
-#     return "timer.yaml"
-#
-#
-# def __remove_microseconds(records: list[dict]):
-#     """
-#     Removes microseconds from every log.
-#     """
-#
-#     for record in records:
-#
-#         record["started"] = record["started"].replace(microsecond=0)
-#
-#         if record.get("stopped") is not None:
-#             record["stopped"] = record["stopped"].replace(microsecond=0)
 
 
 def get_chosen_task(tasks: list) -> parser.Task:
