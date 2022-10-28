@@ -113,13 +113,46 @@ class Task(Item):
 
         return datetime.time.fromisoformat(time_string)
 
+    @staticmethod
+    def get_time_for_timer() -> str:
+        """
+        Returns the current hour & minute as a string.
+        """
+
+        return datetime.datetime.now().strftime("%H:%M")
+
+    @staticmethod
+    def get_stub_for_timer() -> str:
+        """
+        Returns string to use instead of ending time string for active timer.
+        """
+
+        return "(...)"
+
+    def start_timer(self):
+        """
+        Adds a mark of an active timer to the task's body.
+        """
+
+        time = self.get_time_for_timer()
+        stub = self.get_stub_for_timer()
+
+        self.lines.append(f"    {time} -> {stub}")
+
     def stop_timer(self):
+        """
+        Replaces a mark of an active timer with an ending time in the task's body.
+        """
 
         line_index = self.get_line_index_with_running_timer()
 
         if line_index != -1:
+
+            time = self.get_time_for_timer()
+            stub = self.get_stub_for_timer()
+
             self.lines[line_index] = self.lines[line_index].replace(
-                "(...)", datetime.datetime.now().strftime("%H:%M"), 1
+                stub, time, 1
             )
 
     def get_line_index_with_running_timer(self) -> int:

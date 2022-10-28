@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import datetime
-
 from vkostyanetsky import cliutils
 
 from todozer import app, menu, parser, state_file, task_lists, utils
@@ -32,13 +30,9 @@ def start_timer(session: dict) -> None:
         task = get_chosen_task(tasks_in_progress)
 
         if task is not None:
-            current_time_string = datetime.datetime.now().strftime("%H:%M")
-            empty_time_string = "(...)"
-            time_string = datetime.datetime.now().strftime(
-                f"    {current_time_string} -> {empty_time_string}  "
-            )
 
-            task.lines.append(time_string)
+            task.start_timer()
+
             task_lists.save_tasks_file_items(tasks_file_items, session["config"])
 
             session["state"]["running_timer_date"] = utils.get_date_of_today()
