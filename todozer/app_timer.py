@@ -2,7 +2,8 @@
 
 from vkostyanetsky import cliutils
 
-from todozer import app, menu, parser, state_file, task_lists, utils
+from todozer import app, menu, state_file, task_lists, utils
+from todozer.todo import todo_task
 
 
 def main_menu(session: dict) -> None:
@@ -96,7 +97,7 @@ def stop_timer(session: dict) -> None:
     main_menu(session)
 
 
-def get_chosen_task(tasks: list) -> parser.Task:
+def get_chosen_task(tasks: list) -> todo_task.Task:
 
     result = None
 

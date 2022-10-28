@@ -3,8 +3,8 @@
 import logging
 
 from vkostyanetsky import cliutils
-
-from todozer import app, menu, parser, scheduler, state_file, task_lists, utils
+from todozer.todo import todo_list, todo_plan
+from todozer import app, menu, scheduler, state_file, task_lists, utils
 
 
 def main_menu(session: dict) -> None:
@@ -122,11 +122,11 @@ def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
 
     for item in plans_file_items:
 
-        if type(item) == parser.List:
+        if type(item) == todo_list.List:
 
             check_plans_file_items(item.items, plans_file_issues)
 
-        elif type(item) == parser.Plan:
+        elif type(item) == todo_plan.Plan:
 
             matched_pattern, _ = scheduler.match(item, today)
 
