@@ -5,10 +5,10 @@ import datetime
 import re
 
 from todozer import constants
-from todozer.todo import todo_item, todo_task
+from todozer.todo import item_todo, task_todo
 
 
-class List(todo_item.Item):
+class ListTodo(item_todo.ItemTodo):
     """Tasks collection class."""
 
     def __init__(self, line: str):
@@ -87,14 +87,14 @@ class List(todo_item.Item):
 
         return result
 
-    def get_scheduled_tasks(self) -> list[todo_task.Task]:
+    def get_scheduled_tasks(self) -> list[task_todo.TaskTodo]:
         """
         Returns a list of tasks which are scheduled.
         """
 
         return list(filter(lambda task: task.is_scheduled, self.items))
 
-    def get_completed_tasks(self) -> list[todo_task.Task]:
+    def get_completed_tasks(self) -> list[task_todo.TaskTodo]:
         """
         Returns a list of tasks which are completed.
         """

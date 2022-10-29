@@ -1,7 +1,7 @@
 """Contains a basic class of items to do."""
 
 
-class Item:
+class ItemTodo:
     """A basic class of items to do."""
 
     def __init__(self, line: str) -> None:

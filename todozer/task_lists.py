@@ -6,7 +6,7 @@ import configparser
 import datetime
 
 from todozer import constants, parser, scheduler, utils
-from todozer.todo import todo_list, todo_plan, todo_task
+from todozer.todo import list_todo, plan_todo, task_todo
 
 
 def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigParser):
@@ -32,7 +32,7 @@ def load_tasks_file_items(config: configparser.ConfigParser):
 
     tasks_file_name = config.get("TASKS", "file_name")
 
-    tasks_file_items = parser.Parser(tasks_file_name, todo_task.Task).parse()
+    tasks_file_items = parser.Parser(tasks_file_name, task_todo.TaskTodo).parse()
 
     return sorted(tasks_file_items, key=lambda item: item.date)
 
@@ -41,7 +41,7 @@ def load_plans_file_items(config: configparser.ConfigParser):
 
     plans_file_name = config.get("PLANS", "file_name")
 
-    return parser.Parser(plans_file_name, todo_plan.Plan).parse()
+    return parser.Parser(plans_file_name, plan_todo.PlanTodo).parse()
 
 
 def get_task_lists_in_progress(file_items: list) -> list:
@@ -50,12 +50,12 @@ def get_task_lists_in_progress(file_items: list) -> list:
 
     for file_item in file_items:
 
-        if type(file_item) == todo_list.List and file_item.date <= yesterday:
+        if type(file_item) == list_todo.ListTodo and file_item.date <= yesterday:
 
             scheduled_tasks = file_item.get_scheduled_tasks()
 
             if scheduled_tasks:
-                incomplete_day = todo_list.List(file_item.lines[0])
+                incomplete_day = list_todo.ListTodo(file_item.lines[0])
                 incomplete_day.items = scheduled_tasks
 
                 dates_in_progress.append(incomplete_day)
@@ -72,7 +72,7 @@ def fill_tasks_lists(task_items: list, plan_items: list, data: dict) -> list:
     for task_item in task_items:
 
         is_list_to_fill = (
-            type(task_item) == todo_list.List
+            type(task_item) == list_todo.ListTodo
             and task_item.date is not None
             and data["last_planning_date"] < task_item.date <= today
         )
@@ -86,22 +86,22 @@ def fill_tasks_lists(task_items: list, plan_items: list, data: dict) -> list:
     return filled_list_titles
 
 
-def fill_tasks_list(tasks_file_item: todo_list.List, plans_file_items: list) -> None:
+def fill_tasks_list(tasks_file_item: list_todo.ListTodo, plans_file_items: list) -> None:
 
     for plans_file_item in plans_file_items:
 
-        if isinstance(plans_file_item, todo_list.List):
+        if isinstance(plans_file_item, list_todo.ListTodo):
 
             fill_tasks_list(tasks_file_item, plans_file_item.items)
 
-        elif isinstance(plans_file_item, todo_plan.Plan):
+        elif isinstance(plans_file_item, plan_todo.PlanTodo):
 
             _, is_date_matched = scheduler.match(plans_file_item, tasks_file_item.date)
 
             if is_date_matched:
 
                 line = f"- {plans_file_item.title}"
-                task = todo_task.Task(line)
+                task = task_todo.TaskTodo(line)
 
                 if len(plans_file_item.lines) > 1:
 
@@ -130,15 +130,15 @@ def add_tasks_lists(tasks: list, last_date: datetime.date) -> None:
 
             date_string = utils.get_string_from_date(date)
             line = f"# {date_string}"
-            tasks.append(todo_list.List(line))
+            tasks.append(list_todo.ListTodo(line))
 
         date = utils.get_date_of_tomorrow(date)
 
 
-def get_tasks_list_by_date(tasks: list, date: datetime.date) -> todo_list.List | None:
+def get_tasks_list_by_date(tasks: list, date: datetime.date) -> list_todo.ListTodo | None:
     # TODO probably better to do it like .is_date (duck typing)
     lists = list(
-        filter(lambda item: type(item) is todo_list.List and item.date == date, tasks)
+        filter(lambda item: type(item) is list_todo.ListTodo and item.date == date, tasks)
     )
 
     return lists[0] if lists else None

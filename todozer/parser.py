@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 from todozer import constants
-from todozer.todo import todo_list, todo_task, todo_text, todo_plan
+from todozer.todo import list_todo, task_todo, text_todo, plan_todo
 
 
 class Parser:
     __file_path: str = ""
-    __last_list: todo_list.List | None
+    __last_list: list_todo.ListTodo | None
     __file_items: list = []
     __task_class = None
     __empty_lines: list = []
@@ -33,7 +33,7 @@ class Parser:
 
                 line = line.rstrip("\n")
 
-                if todo_list.List.match(line):
+                if list_todo.ListTodo.match(line):
                     self.__add_date(line)
                 elif self.__task_class.match(line):
                     self.__add_task(line)
@@ -45,7 +45,7 @@ class Parser:
     def __add_date(self, line: str):
         self.__add_empty_lines_to_last_date()
 
-        new_item = todo_list.List(line)
+        new_item = list_todo.ListTodo(line)
 
         self.__file_items.append(new_item)
         self.__last_list = new_item
@@ -54,7 +54,7 @@ class Parser:
         self.__add_empty_lines_to_last_date()
 
         if self.__last_list is None:
-            self.__file_items.append(todo_text.Text(line))
+            self.__file_items.append(text_todo.TextTodo(line))
         else:
             self.__last_list.items.append(self.__task_class(line))
 
@@ -70,7 +70,7 @@ class Parser:
 
         else:
 
-            new_item = todo_text.Text(line)
+            new_item = text_todo.TextTodo(line)
 
             if self.__last_list is not None:
 
@@ -84,14 +84,14 @@ class Parser:
 
                 self.__file_items.append(new_item)
 
-    def __get_previous_task(self) -> todo_task.Task | todo_plan.Plan | None:
+    def __get_previous_task(self) -> task_todo.TaskTodo | plan_todo.PlanTodo | None:
         previous_task = None
 
         if self.__file_items:
 
             last_file_item = self.__file_items[-1]
 
-            if type(last_file_item) == todo_list.List:
+            if type(last_file_item) == list_todo.ListTodo:
 
                 if last_file_item.items:
 
@@ -111,7 +111,7 @@ class Parser:
 
     def __add_empty_lines(self, collection) -> None:
         for empty_line in self.__empty_lines:
-            new_item = todo_text.Text(empty_line)
+            new_item = text_todo.TextTodo(empty_line)
             collection.append(new_item)
 
         self.__empty_lines.clear()

@@ -1,7 +1,7 @@
-from todozer.todo import todo_task
+from todozer.todo import task_todo
 
 
-class Plan(todo_task.Task):
+class PlanTodo(task_todo.TaskTodo):
     """A single plan class."""
 
     @property

@@ -1,9 +1,9 @@
-from todozer.todo import todo_item
+from todozer.todo import item_todo
 import datetime
 import re
 
 
-class Task(todo_item.Item):
+class TaskTodo(item_todo.ItemTodo):
     """A single task class."""
 
     @property
@@ -75,7 +75,7 @@ class Task(todo_item.Item):
 
     @property
     def is_scheduled(self) -> bool:
-        return Task.is_scheduled_task(self.lines[0]) if len(self.lines) > 0 else False
+        return TaskTodo.is_scheduled_task(self.lines[0]) if len(self.lines) > 0 else False
 
     @staticmethod
     def is_scheduled_task(line):
@@ -83,7 +83,7 @@ class Task(todo_item.Item):
 
     @property
     def is_completed(self) -> bool:
-        return Task.is_completed_task(self.lines[0]) if len(self.lines) > 0 else False
+        return TaskTodo.is_completed_task(self.lines[0]) if len(self.lines) > 0 else False
 
     @staticmethod
     def is_completed_task(line):
@@ -91,4 +91,4 @@ class Task(todo_item.Item):
 
     @staticmethod
     def match(line: str):
-        return Task.is_scheduled_task(line) or Task.is_completed_task(line)
+        return TaskTodo.is_scheduled_task(line) or TaskTodo.is_completed_task(line)

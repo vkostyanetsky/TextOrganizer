@@ -6,7 +6,7 @@ import logging
 import re
 
 from todozer import utils
-from todozer.todo import todo_plan
+from todozer.todo import plan_todo
 
 
 class Pattern(enum.Enum):
@@ -455,7 +455,7 @@ class EveryYearPattern(BasicPattern):
         return result
 
 
-def match(plan: todo_plan.Plan, date: datetime.date) -> tuple:
+def match(plan: plan_todo.PlanTodo, date: datetime.date) -> tuple:
 
     matched_pattern = Pattern.NONE
     is_date_matched = False

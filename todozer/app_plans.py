@@ -3,7 +3,7 @@
 import logging
 
 from vkostyanetsky import cliutils
-from todozer.todo import todo_list, todo_plan
+from todozer.todo import list_todo, plan_todo
 from todozer import app, menu, scheduler, state_file, task_lists, utils
 
 
@@ -122,11 +122,11 @@ def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
 
     for item in plans_file_items:
 
-        if type(item) == todo_list.List:
+        if type(item) == list_todo.ListTodo:
 
             check_plans_file_items(item.items, plans_file_issues)
 
-        elif type(item) == todo_plan.Plan:
+        elif type(item) == plan_todo.PlanTodo:
 
             matched_pattern, _ = scheduler.match(item, today)
 
