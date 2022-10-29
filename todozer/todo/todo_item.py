@@ -1,18 +1,24 @@
-class Item:
-    """A base class for tasks file item."""
+"""Contains a basic class of items to do."""
 
-    def __init__(self, line: str):
+
+class Item:
+    """A basic class of items to do."""
+
+    def __init__(self, line: str) -> None:
         self.lines = [line]
 
     def __str__(self) -> str:
+        """
+        Return all the lines of item, separated with line breaks.
+        """
         return "\n".join(self.lines)
 
     @property
-    def first_line(self) -> str:
-        return self.lines[0] if self.lines else ""
+    def title(self) -> str:
+        """
+        Returns the first line of the item without the first symbol (-, +, #).
+        """
 
-    @property
-    def title(self):
-        first_line = self.first_line
+        first_line = self.lines[0] if self.lines else ""
 
         return first_line[1:].strip() if first_line else ""

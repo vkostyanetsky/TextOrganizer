@@ -79,7 +79,7 @@ def fill_tasks_lists(task_items: list, plan_items: list, data: dict) -> list:
 
         if is_list_to_fill:
             fill_tasks_list(task_item, plan_items)
-            task_item.sort_items()
+            task_item.sort_tasks()
 
             filled_list_titles.append(task_item.title)
 
