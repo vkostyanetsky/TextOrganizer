@@ -15,7 +15,7 @@ def match_ru(task_date: datetime.date, start_date: datetime.date = None):
 
     today = todozer.utils.get_date_of_today()
 
-    debug_code = tests.helpers.get_debug_code(plan.first_line, today)
+    debug_code = tests.helpers.get_debug_code(plan.title_line, today)
     matched_pattern, is_date_matched = match(plan, today)
 
     return matched_pattern is Pattern.EVERY_YEAR and is_date_matched, debug_code
@@ -30,7 +30,7 @@ def match_en(task_date: datetime.date, start_date: datetime.date = None):
 
     today = todozer.utils.get_date_of_today()
 
-    debug_code = tests.helpers.get_debug_code(plan.first_line, today)
+    debug_code = tests.helpers.get_debug_code(plan.title_line, today)
     matched_pattern, is_date_matched = match(plan, today)
 
     return matched_pattern is Pattern.EVERY_YEAR and is_date_matched, debug_code

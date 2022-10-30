@@ -14,7 +14,7 @@ def run_single_test(
     is_date_matched_value: bool,
 ):
     plan = plan_getter(plan_pattern, plan_date)
-    debug_code = tests.helpers.get_debug_code(plan.first_line, test_date)
+    debug_code = tests.helpers.get_debug_code(plan.title_line, test_date)
     matched_pattern, is_date_matched = match(plan, test_date)
 
     assert (

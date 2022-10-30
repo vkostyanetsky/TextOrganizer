@@ -2,7 +2,7 @@ import datetime
 
 import todozer.utils
 from todozer import constants, utils
-from todozer.parser import Plan
+from todozer.todo.plan_todo import PlanTodo
 
 
 def get_debug_code(first_line: str, date: datetime.date) -> str:
@@ -17,7 +17,7 @@ def get_debug_code(first_line: str, date: datetime.date) -> str:
     print(match(debug_plan, debug_date))'''
 
 
-def get_plan_ru(pattern: str, start_date: datetime.date = None) -> Plan:
+def get_plan_ru(pattern: str, start_date: datetime.date = None) -> PlanTodo:
     text = f"- Боб, не стой столбом!; {pattern}"
 
     if start_date is not None:
@@ -25,10 +25,10 @@ def get_plan_ru(pattern: str, start_date: datetime.date = None) -> Plan:
     else:
         postfix = ""
 
-    return Plan(f"{text}{postfix}")
+    return PlanTodo(f"{text}{postfix}")
 
 
-def get_plan_en(pattern: str, start_date: datetime.date = None) -> Plan:
+def get_plan_en(pattern: str, start_date: datetime.date = None) -> PlanTodo:
     text = f"- Bob, do something!; {pattern}"
 
     if start_date is not None:
@@ -36,4 +36,4 @@ def get_plan_en(pattern: str, start_date: datetime.date = None) -> Plan:
     else:
         postfix = ""
 
-    return Plan(f"{text}{postfix}")
+    return PlanTodo(f"{text}{postfix}")

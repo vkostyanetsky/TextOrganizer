@@ -36,50 +36,50 @@ def run_test(variants: list, plan_function):
     for variant in variants:
 
         plan = plan_function(variant)
-        debug_code = tests.helpers.get_debug_code(plan.first_line, monday)
+        debug_code = tests.helpers.get_debug_code(plan.title_line, monday)
         matched_pattern, is_date_matched = match(plan, monday)
         assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched, debug_code
 
         plan = plan_function(variant, before_monday)
-        debug_code = tests.helpers.get_debug_code(plan.first_line, monday)
+        debug_code = tests.helpers.get_debug_code(plan.title_line, monday)
         matched_pattern, is_date_matched = match(plan, monday)
         assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched, debug_code
 
         plan = plan_function(variant, monday)
-        debug_code = tests.helpers.get_debug_code(plan.first_line, monday)
+        debug_code = tests.helpers.get_debug_code(plan.title_line, monday)
         matched_pattern, is_date_matched = match(plan, monday)
         assert matched_pattern is Pattern.EVERY_WEEKDAY and is_date_matched, debug_code
 
         plan = plan_function(variant, after_monday)
-        debug_code = tests.helpers.get_debug_code(plan.first_line, monday)
+        debug_code = tests.helpers.get_debug_code(plan.title_line, monday)
         matched_pattern, is_date_matched = match(plan, monday)
         assert (
             matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
         ), debug_code
 
         plan = plan_function(variant)
-        debug_code = tests.helpers.get_debug_code(plan.first_line, sunday)
+        debug_code = tests.helpers.get_debug_code(plan.title_line, sunday)
         matched_pattern, is_date_matched = match(plan, sunday)
         assert (
             matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
         ), debug_code
 
         plan = plan_function(variant, before_sunday)
-        debug_code = tests.helpers.get_debug_code(plan.first_line, sunday)
+        debug_code = tests.helpers.get_debug_code(plan.title_line, sunday)
         matched_pattern, is_date_matched = match(plan, sunday)
         assert (
             matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
         ), debug_code
 
         plan = plan_function(variant, sunday)
-        debug_code = tests.helpers.get_debug_code(plan.first_line, sunday)
+        debug_code = tests.helpers.get_debug_code(plan.title_line, sunday)
         matched_pattern, is_date_matched = match(plan, sunday)
         assert (
             matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
         ), debug_code
 
         plan = plan_function(variant, after_sunday)
-        debug_code = tests.helpers.get_debug_code(plan.first_line, sunday)
+        debug_code = tests.helpers.get_debug_code(plan.title_line, sunday)
         matched_pattern, is_date_matched = match(plan, sunday)
         assert (
             matched_pattern is Pattern.EVERY_WEEKDAY and not is_date_matched
