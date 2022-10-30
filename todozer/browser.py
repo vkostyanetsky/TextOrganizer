@@ -65,7 +65,11 @@ class TasksBrowser:
 
             for task in tasks_list.items:
                 timer = task.timer
-                timer = f" ({task.timer:%H:%M})" if timer.hour > 0 or timer.minute > 0 else ""
+                timer = (
+                    f" ({task.timer:%H:%M})"
+                    if timer.hour > 0 or timer.minute > 0
+                    else ""
+                )
 
                 print(f"{task.title_line}{timer}")
 
