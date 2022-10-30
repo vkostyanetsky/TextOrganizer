@@ -23,6 +23,29 @@ class TaskTodo(item_todo.ItemTodo):
 
         return datetime.datetime.now().strftime("%H:%M")
 
+    @property
+    def timer(self) -> datetime.time:
+
+        seconds = 0
+        regexp = r".*(\d{2}:\d{2}) -> (\d{2}:\d{2})"
+
+        for line in self.lines:
+            groups = re.match(regexp, line, flags=re.IGNORECASE)
+
+            if groups is not None:
+
+                date_from = datetime.datetime.strptime(groups[1], "%H:%M")
+                date_to = datetime.datetime.strptime(groups[2], "%H:%M")
+
+                seconds += (date_to - date_from).total_seconds()
+
+        hour = round(seconds / 60 / 60)
+        seconds -= hour * 60 * 60
+
+        minutes = round(seconds / 60)
+
+        return datetime.time(hour=hour, minute=minutes)
+
     @staticmethod
     def get_stub_for_timer() -> str:
         """
