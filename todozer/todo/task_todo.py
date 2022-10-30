@@ -1,6 +1,7 @@
-from todozer.todo import item_todo
 import datetime
 import re
+
+from todozer.todo import item_todo
 
 
 class TaskTodo(item_todo.ItemTodo):
@@ -52,9 +53,7 @@ class TaskTodo(item_todo.ItemTodo):
             time = self.get_time_for_timer()
             stub = self.get_stub_for_timer()
 
-            self.lines[line_index] = self.lines[line_index].replace(
-                stub, time, 1
-            )
+            self.lines[line_index] = self.lines[line_index].replace(stub, time, 1)
 
     def get_line_index_with_running_timer(self) -> int:
         """
@@ -75,7 +74,9 @@ class TaskTodo(item_todo.ItemTodo):
 
     @property
     def is_scheduled(self) -> bool:
-        return TaskTodo.is_scheduled_task(self.lines[0]) if len(self.lines) > 0 else False
+        return (
+            TaskTodo.is_scheduled_task(self.lines[0]) if len(self.lines) > 0 else False
+        )
 
     @staticmethod
     def is_scheduled_task(line):
@@ -83,7 +84,9 @@ class TaskTodo(item_todo.ItemTodo):
 
     @property
     def is_completed(self) -> bool:
-        return TaskTodo.is_completed_task(self.lines[0]) if len(self.lines) > 0 else False
+        return (
+            TaskTodo.is_completed_task(self.lines[0]) if len(self.lines) > 0 else False
+        )
 
     @staticmethod
     def is_completed_task(line):

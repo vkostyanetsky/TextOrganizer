@@ -3,9 +3,10 @@
 import logging
 
 from vkostyanetsky import cliutils
+
+from todozer import app, constants, scheduler, state_file, task_lists, utils
 from todozer.todo import list_todo, plan_todo
-from todozer import app, scheduler, state_file, task_lists, utils
-from todozer import constants
+
 
 def main_menu(session: dict) -> None:
     """

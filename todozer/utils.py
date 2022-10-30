@@ -2,7 +2,34 @@
 
 import datetime
 
-from todozer import constants
+from todozer import constants, task_lists
+from todozer.todo import task_todo
+
+
+def get_active_task(
+    session: dict, tasks_file_items: list = None
+) -> task_todo.TaskTodo | None:
+    """
+    Returns an active task for a current day, if a timer is running somewhere.
+    """
+
+    result = None
+
+    running_timer_date = session["state"]["running_timer_date"]
+
+    if running_timer_date is not None:
+
+        if tasks_file_items is None:
+            tasks_file_items = task_lists.load_tasks_file_items(session["config"])
+
+        tasks_list = task_lists.get_tasks_list_by_date(
+            tasks=tasks_file_items, date=running_timer_date
+        )
+
+        if tasks_list is not None:
+            result = tasks_list.get_active_task()
+
+    return result
 
 
 def get_date_from_string(source: str) -> datetime.date:

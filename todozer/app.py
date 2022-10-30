@@ -6,8 +6,9 @@ import logging
 import os.path
 import sys
 
-from todozer import app_plans, app_tasks, app_timer, constants, state_file
 from vkostyanetsky import cliutils
+
+from todozer import app_plans, app_tasks, app_timer, constants, state_file
 
 
 def main():

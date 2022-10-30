@@ -2,9 +2,8 @@
 
 from vkostyanetsky import cliutils
 
-from todozer import app, state_file, task_lists, utils
+from todozer import app, constants, state_file, task_lists, utils
 from todozer.todo import task_todo
-from todozer import constants
 
 
 def main_menu(session: dict) -> None:
@@ -12,17 +11,19 @@ def main_menu(session: dict) -> None:
     Displays a submenu to track time.
     """
 
-    active_task = get_active_task(session)
+    active_task = utils.get_active_task(session)
 
     texts = [constants.TITLE]
 
     if active_task is not None:
-        texts.append(active_task.title)
+        texts.append(f"\nActive task:\n\n- {active_task.title}\n")
 
     menu = cliutils.Menu(texts)
 
     menu.add_item("Start Timer", start_timer, session)
-    menu.add_item("Stop Timer", stop_timer, session)
+
+    if active_task is not None:
+        menu.add_item("Stop Timer", stop_timer, session)
 
     menu.add_item("Back", app.main_menu, session)
 
@@ -71,32 +72,10 @@ def get_tasks_in_progress_for_today(tasks_file_items) -> list:
     return result
 
 
-def get_active_task(session: dict, tasks_file_items: list = None) -> task_todo.TaskTodo | None:
-    """
-    Returns an active task for a current day, if a timer is running somewhere.
-    """
-
-    result = None
-
-    running_timer_date = session["state"]["running_timer_date"]
-
-    if running_timer_date is not None:
-
-        if tasks_file_items is None:
-            tasks_file_items = task_lists.load_tasks_file_items(session["config"])
-
-        tasks_list = task_lists.get_tasks_list_by_date(tasks=tasks_file_items, date=running_timer_date)
-
-        if tasks_list is not None:
-            result = tasks_list.get_active_task()
-
-    return result
-
-
 def stop_timer(session: dict) -> None:
 
     tasks_file_items = task_lists.load_tasks_file_items(session["config"])
-    active_task = get_active_task(session, tasks_file_items)
+    active_task = utils.get_active_task(session, tasks_file_items)
 
     if active_task is not None:
 
@@ -106,16 +85,6 @@ def stop_timer(session: dict) -> None:
 
         session["state"]["running_timer_date"] = None
         state_file.save(session["state"])
-
-        print("The active timer has been stopped.")
-
-    else:
-
-        print("There is no active timer to stop.")
-
-    print()
-
-    cliutils.ask_for_enter()
 
     main_menu(session)
 

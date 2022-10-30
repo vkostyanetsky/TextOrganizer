@@ -14,11 +14,15 @@ class ItemTodo:
         return "\n".join(self.lines)
 
     @property
+    def title_line(self):
+        return self.lines[0] if self.lines else ""
+
+    @property
     def title(self) -> str:
         """
         Returns the first line of the item without the first symbol (-, +, #).
         """
 
-        first_line = self.lines[0] if self.lines else ""
+        title_line = self.title_line
 
-        return first_line[1:].strip() if first_line else ""
+        return title_line[1:].strip() if title_line else ""

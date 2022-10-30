@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from todozer import constants
-from todozer.todo import list_todo, task_todo, text_todo, plan_todo
+from todozer.todo import list_todo, plan_todo, task_todo, text_todo
 
 
 class Parser:

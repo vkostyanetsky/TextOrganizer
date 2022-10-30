@@ -79,14 +79,15 @@ def fill_tasks_lists(task_items: list, plan_items: list, data: dict) -> list:
 
         if is_list_to_fill:
             fill_tasks_list(task_item, plan_items)
-            task_item.sort_tasks()
 
             filled_list_titles.append(task_item.title)
 
     return filled_list_titles
 
 
-def fill_tasks_list(tasks_file_item: list_todo.ListTodo, plans_file_items: list) -> None:
+def fill_tasks_list(
+    tasks_file_item: list_todo.ListTodo, plans_file_items: list
+) -> None:
 
     for plans_file_item in plans_file_items:
 
@@ -118,6 +119,8 @@ def fill_tasks_list(tasks_file_item: list_todo.ListTodo, plans_file_items: list)
 
                 tasks_file_item.items.append(task)
 
+    tasks_file_item.sort_tasks()
+
 
 def add_tasks_lists(tasks: list, last_date: datetime.date) -> None:
 
@@ -135,10 +138,14 @@ def add_tasks_lists(tasks: list, last_date: datetime.date) -> None:
         date = utils.get_date_of_tomorrow(date)
 
 
-def get_tasks_list_by_date(tasks: list, date: datetime.date) -> list_todo.ListTodo | None:
+def get_tasks_list_by_date(
+    tasks: list, date: datetime.date
+) -> list_todo.ListTodo | None:
     # TODO probably better to do it like .is_date (duck typing)
     lists = list(
-        filter(lambda item: type(item) is list_todo.ListTodo and item.date == date, tasks)
+        filter(
+            lambda item: type(item) is list_todo.ListTodo and item.date == date, tasks
+        )
     )
 
     return lists[0] if lists else None
