@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 from setuptools import setup
-from todozer.version import __version__
+from todozer.constants import VERSION
 
 
 setup(
     name="todozer",
-    version=__version__,
+    version=VERSION,
     description="A simple CLI tool to deal with tasks",
     long_description=open("README.md", encoding="utf-8-sig").read(),
     long_description_content_type="text/markdown",

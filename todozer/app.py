@@ -6,7 +6,8 @@ import logging
 import os.path
 import sys
 
-from todozer import app_plans, app_tasks, app_timer, constants, menu, state_file
+from todozer import app_plans, app_tasks, app_timer, constants, state_file
+from vkostyanetsky import cliutils
 
 
 def main():
@@ -40,15 +41,15 @@ def main_menu(session: dict) -> None:
     Displays the main menu of the application.
     """
 
-    todozer_menu = menu.TodozerMenu()
+    menu = cliutils.Menu([constants.TITLE])
 
-    todozer_menu.add_item("View Tasks", app_tasks.main_menu, session)
-    todozer_menu.add_item("Plan Tasks", app_plans.main_menu, session)
-    todozer_menu.add_item("Track Time", app_timer.main_menu, session)
+    menu.add_item("View Tasks", app_tasks.main_menu, session)
+    menu.add_item("Plan Tasks", app_plans.main_menu, session)
+    menu.add_item("Track Time", app_timer.main_menu, session)
 
-    todozer_menu.add_item("Exit", sys.exit)
+    menu.add_item("Exit", sys.exit)
 
-    todozer_menu.choose()
+    menu.choose()
 
 
 def get_arguments() -> argparse.Namespace:

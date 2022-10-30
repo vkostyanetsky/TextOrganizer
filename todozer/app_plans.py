@@ -4,21 +4,21 @@ import logging
 
 from vkostyanetsky import cliutils
 from todozer.todo import list_todo, plan_todo
-from todozer import app, menu, scheduler, state_file, task_lists, utils
-
+from todozer import app, scheduler, state_file, task_lists, utils
+from todozer import constants
 
 def main_menu(session: dict) -> None:
     """
     Displays a submenu to plan tasks.
     """
 
-    plans_menu = menu.TodozerMenu()
+    menu = cliutils.Menu([constants.TITLE])
 
-    plans_menu.add_item("Create Planned Tasks", create_planned_tasks, session)
-    plans_menu.add_item("Health Check", health_check, session)
-    plans_menu.add_item("Back", app.main_menu, session)
+    menu.add_item("Create Planned Tasks", create_planned_tasks, session)
+    menu.add_item("Health Check", health_check, session)
+    menu.add_item("Back", app.main_menu, session)
 
-    plans_menu.choose()
+    menu.choose()
 
 
 def create_planned_tasks(session: dict) -> None:
