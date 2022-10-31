@@ -77,7 +77,7 @@ class TasksBrowser:
         print()
         print(
             f"Press [{self.__previous_day_hotkey}] and "
-            f"[{self.__next_day_hotkey}] to switch logs."
+            f"[{self.__next_day_hotkey}] to switch days."
         )
         print(f"Press [{self.__exit_hotkey}] to return to the main menu.")
 
