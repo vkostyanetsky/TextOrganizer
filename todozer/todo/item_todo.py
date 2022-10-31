@@ -15,7 +15,7 @@ class ItemTodo:
 
     @property
     def title_line(self):
-        return self.lines[0] if self.lines else ""
+        return self.lines[0].strip() if self.lines else ""
 
     @property
     def title(self) -> str:
