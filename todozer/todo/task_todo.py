@@ -46,6 +46,19 @@ class TaskTodo(item_todo.ItemTodo):
 
         return datetime.time(hour=hour, minute=minutes)
 
+    @property
+    def timer_string(self):
+        timer = self.timer
+        values = []
+
+        if timer.hour > 0:
+            values.append(f"{timer.hour}h")
+
+        if timer.minute > 0:
+            values.append(f"{timer.minute}m")
+
+        return " ".join(values)
+
     @staticmethod
     def get_stub_for_timer() -> str:
         """
