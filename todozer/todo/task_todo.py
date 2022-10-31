@@ -39,10 +39,10 @@ class TaskTodo(item_todo.ItemTodo):
 
                 seconds += (date_to - date_from).total_seconds()
 
-        hour = round(seconds / 60 / 60)
+        hour = round(seconds // 60 // 60)
         seconds -= hour * 60 * 60
 
-        minutes = round(seconds / 60)
+        minutes = round(seconds // 60)
 
         return datetime.time(hour=hour, minute=minutes)
 
