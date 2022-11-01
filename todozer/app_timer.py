@@ -41,6 +41,8 @@ def start_timer(session: dict) -> None:
 
         if task is not None:
 
+            stop_running_timer(tasks_file_items, session)
+
             task.start_timer()
 
             task_lists.save_tasks_file_items(tasks_file_items, session["config"])
@@ -55,6 +57,21 @@ def start_timer(session: dict) -> None:
         cliutils.ask_for_enter()
 
     main_menu(session)
+
+
+def stop_running_timer(tasks_file_items: list, session: dict) -> None:
+    """
+    Stops a running timer.
+
+    :param tasks_file_items: tasks file content
+    :param session: session data
+    :return: nothing
+    """
+
+    active_task = utils.get_active_task(session, tasks_file_items)
+
+    if active_task is not None:
+        active_task.stop_timer()
 
 
 def get_tasks_in_progress_for_today(tasks_file_items) -> list:
@@ -73,18 +90,20 @@ def get_tasks_in_progress_for_today(tasks_file_items) -> list:
 
 
 def stop_timer(session: dict) -> None:
+    """
+    Stops a running timer.
+
+    :param session: session data
+    :return: nothing
+    """
 
     tasks_file_items = task_lists.load_tasks_file_items(session["config"])
-    active_task = utils.get_active_task(session, tasks_file_items)
+    stop_running_timer(tasks_file_items, session)
 
-    if active_task is not None:
+    task_lists.save_tasks_file_items(tasks_file_items, session["config"])
 
-        active_task.stop_timer()
-
-        task_lists.save_tasks_file_items(tasks_file_items, session["config"])
-
-        session["state"]["running_timer_date"] = None
-        state_file.save(session["state"])
+    session["state"]["running_timer_date"] = None
+    state_file.save(session["state"])
 
     main_menu(session)
 
