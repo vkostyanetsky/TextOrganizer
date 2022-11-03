@@ -16,6 +16,7 @@ class TasksBrowser:
     __plans: list
     __planned_dates: list
 
+    __toggle_time_mode_hotkey: str = "Up"
     __previous_day_hotkey: str = "Left"
     __next_day_hotkey: str = "Right"
     __exit_hotkey: str = "Esc"
@@ -24,6 +25,8 @@ class TasksBrowser:
 
         self.__tasks = tasks
         self.__plans = plans
+
+        self.__time_mode = False
 
         self.__planned_dates = []
 
@@ -36,9 +39,15 @@ class TasksBrowser:
         keyboard.add_hotkey(self.__previous_day_hotkey, self.show_previous_fast)
         keyboard.add_hotkey(self.__next_day_hotkey, self.show_next_fast)
 
+        keyboard.add_hotkey(self.__toggle_time_mode_hotkey, self.toggle_time_mode)
+
         keyboard.wait(self.__exit_hotkey)
 
         keyboard.remove_all_hotkeys()
+
+    def toggle_time_mode(self):
+        self.__time_mode = not self.__time_mode
+        self.show_tasks_by_date()
 
     def show_tasks_by_date(self):
 
@@ -65,6 +74,11 @@ class TasksBrowser:
 
             for task in tasks_list.items:
                 timer_string = task.timer_string
+
+                if self.__time_mode:
+                    if timer_string == "":
+                        continue
+
                 if timer_string != "":
                     timer_string = f" ({timer_string})"
 
@@ -77,8 +91,10 @@ class TasksBrowser:
         print()
         print(
             f"Press [{self.__previous_day_hotkey}] and "
-            f"[{self.__next_day_hotkey}] to switch days."
+            f"[{self.__next_day_hotkey}] to switch days "
+            f"or press [{self.__toggle_time_mode_hotkey}] to toggle time mode."
         )
+
         print(f"Press [{self.__exit_hotkey}] to return to the main menu.")
 
     def show_previous_fast(self):
