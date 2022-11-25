@@ -16,9 +16,9 @@ class TasksBrowser:
     __plans: list
     __planned_dates: list
 
-    __toggle_time_mode_hotkey: str = "Up"
-    __previous_day_hotkey: str = "Left"
-    __next_day_hotkey: str = "Right"
+    __toggle_time_mode_hotkey: str = "W"
+    __previous_day_hotkey: str = "A"
+    __next_day_hotkey: str = "D"
     __exit_hotkey: str = "Esc"
 
     def __init__(self, tasks: list, plans: list):
