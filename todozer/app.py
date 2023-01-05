@@ -48,7 +48,7 @@ def main_menu(session: dict) -> None:
     menu.add_item("Plan Tasks", app_plans.main_menu, session)
     menu.add_item("Track Time", app_timer.main_menu, session)
 
-    menu.add_item("Exit", sys.exit, character="Q")
+    menu.add_item("Exit", sys.exit)
 
     menu.choose()
 
