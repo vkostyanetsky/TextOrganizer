@@ -48,6 +48,8 @@ def main_menu(session: dict) -> None:
     menu.add_item("Plan Tasks", app_plans.main_menu, session)
     menu.add_item("Track Time", app_timer.main_menu, session)
 
+    menu.add_item_separator()
+
     menu.add_item("Exit", sys.exit, character="`")
 
     menu.choose()

@@ -17,6 +17,9 @@ def main_menu(session: dict) -> None:
 
     menu.add_item("Create Planned Tasks", create_planned_tasks, session)
     menu.add_item("Health Check", health_check, session)
+
+    menu.add_item_separator()
+
     menu.add_item("Back", app.main_menu, session, character="`")
 
     menu.choose()
