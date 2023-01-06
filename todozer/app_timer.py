@@ -25,7 +25,7 @@ def main_menu(session: dict) -> None:
     if active_task is not None:
         menu.add_item("Stop Timer", stop_timer, session)
 
-    menu.add_item("Back", app.main_menu, session)
+    menu.add_item("Back", app.main_menu, session, character="`")
 
     menu.choose()
 
