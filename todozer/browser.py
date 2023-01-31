@@ -19,7 +19,7 @@ class TasksBrowser:
     __toggle_time_mode_hotkey: str = "W"
     __previous_day_hotkey: str = "A"
     __next_day_hotkey: str = "D"
-    __exit_hotkey: str = "`"
+    __exit_hotkey: str = "Q"
 
     def __init__(self, tasks: list, plans: list):
 
