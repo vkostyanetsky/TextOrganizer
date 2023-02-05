@@ -126,7 +126,7 @@ class TaskTodo(item_todo.ItemTodo):
 
     @staticmethod
     def is_completed_task(line):
-        return line.startswith("+ ")
+        return line.startswith("- [x] ")
 
     @staticmethod
     def match(line: str):
