@@ -10,7 +10,7 @@ class TaskTodo(item_todo.ItemTodo):
     @property
     def time(self) -> datetime.time:
 
-        match_object = re.match("^([0-9]{2}:[0-9]{2}).*", self.title)
+        match_object = re.match("^ /[[.| ]/] ([0-9]{2}:[0-9]{2}).*", self.title)
         time_string = "00:00" if match_object is None else match_object.group(1)
 
         return datetime.time.fromisoformat(time_string)
@@ -116,7 +116,7 @@ class TaskTodo(item_todo.ItemTodo):
 
     @staticmethod
     def is_scheduled_task(line):
-        return line.startswith("- ")
+        return line.startswith("- [ ] ")
 
     @property
     def is_completed(self) -> bool:
