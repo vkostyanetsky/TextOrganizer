@@ -33,16 +33,13 @@ def main_menu(session: dict) -> None:
 
 
 def start_timer(session: dict) -> None:
-
     tasks_file_items = task_lists.load_tasks_file_items(session["config"])
     tasks_in_progress = get_tasks_in_progress_for_today(tasks_file_items)
 
     if tasks_in_progress:
-
         task = get_chosen_task(tasks_in_progress)
 
         if task is not None:
-
             stop_running_timer(tasks_file_items, session)
 
             task.start_timer()
@@ -111,11 +108,9 @@ def stop_timer(session: dict) -> None:
 
 
 def get_chosen_task(tasks: list) -> task_todo.TaskTodo:
-
     result = None
 
     while result is None:
-
         cliutils.clear_terminal()
 
         for task_index in range(len(tasks)):

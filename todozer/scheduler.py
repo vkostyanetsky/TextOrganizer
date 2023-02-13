@@ -49,7 +49,6 @@ class BasicPattern:
         return re.match(regexp, self.line, flags=re.IGNORECASE) is not None
 
     def match_start_date(self, date: datetime.date) -> bool:
-
         result = True
 
         start_date = self.get_start_date()
@@ -60,7 +59,6 @@ class BasicPattern:
         return result
 
     def get_start_date(self) -> datetime.date:
-
         date_regexp = utils.get_regexp_for_date()
         full_regexp = f".* from ({date_regexp}).*"
 
@@ -171,14 +169,12 @@ class EveryDayOfWeek(BasicPattern):
         self.abbreviated_day_name = None
 
     def parse(self):
-
         date_regexp = utils.get_regexp_for_date()
 
         regexp = f"every {self.day_name}"
         groups = re.match(regexp, self.line, flags=re.IGNORECASE)
 
         if groups is not None:
-
             self.day_number = 1
             self.start_date = self.get_start_date()
 
@@ -186,12 +182,10 @@ class EveryDayOfWeek(BasicPattern):
                 self.start_date = utils.get_previous_day_of_week(self.day_index)
 
         else:
-
             regexp = f"every ([0-9]+) ({self.day_name}) from ({date_regexp})"
             groups = re.match(regexp, self.line, flags=re.IGNORECASE)
 
             if groups is not None:
-
                 self.day_number = int(groups[1])
                 self.start_date = self.get_start_date()
 
@@ -343,7 +337,6 @@ class EveryWeekdayPattern(BasicPattern):
         return re.match(regexp, self.line, flags=re.IGNORECASE) is not None
 
     def match_date(self, date: datetime.date) -> bool:
-
         return 0 <= date.weekday() <= 4 and self.match_start_date(date)
 
 
@@ -427,11 +420,9 @@ class EveryYearPattern(BasicPattern):
         return self.day is not None and self.month is not None
 
     def match_date(self, date: datetime.date) -> bool:
-
         result = False
 
         if self.match_start_date(date):
-
             months = {
                 "jan": 1,
                 "feb": 2,
@@ -456,7 +447,6 @@ class EveryYearPattern(BasicPattern):
 
 
 def match(plan: plan_todo.PlanTodo, date: datetime.date) -> tuple:
-
     matched_pattern = Pattern.NONE
     is_date_matched = False
 
@@ -475,7 +465,6 @@ def match(plan: plan_todo.PlanTodo, date: datetime.date) -> tuple:
         logging.debug("Matching the pattern...")
 
         for pattern in get_patterns():
-
             logging.debug('Checking a pattern: "%s"...', pattern.name)
 
             pattern_object = pattern(pattern_text)
@@ -484,7 +473,6 @@ def match(plan: plan_todo.PlanTodo, date: datetime.date) -> tuple:
             line_matched = pattern_object.match_line()
 
             if line_matched:
-
                 logging.debug("Line is matched!")
 
                 matched_pattern = pattern_object.name
@@ -523,7 +511,6 @@ def get_patterns() -> list:
 
 
 def get_compiled_pattern(text: str) -> str:
-
     rules = [
         (" с ", " from "),
         ("по будням|по будним дням", "every weekday"),
@@ -557,7 +544,6 @@ def get_compiled_pattern(text: str) -> str:
     ]
 
     for rule in rules:
-
         source_regexp = rf"(.*)({rule[0]})(.*)"
         result_regexp = rf"\1{rule[1]}\3"
 

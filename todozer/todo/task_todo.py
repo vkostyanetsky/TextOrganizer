@@ -9,8 +9,7 @@ class TaskTodo(item_todo.ItemTodo):
 
     @property
     def time(self) -> datetime.time:
-
-        match_object = re.match("^ /[[.| ]/] ([0-9]{2}:[0-9]{2}).*", self.title)
+        match_object = re.match(r"^\[[.| ]\] ([0-9]{2}:[0-9]{2}).*", self.title)
         time_string = "00:00" if match_object is None else match_object.group(1)
 
         return datetime.time.fromisoformat(time_string)
@@ -25,7 +24,6 @@ class TaskTodo(item_todo.ItemTodo):
 
     @property
     def timer(self) -> datetime.time:
-
         seconds = 0
         regexp = r".*(\d{2}:\d{2}) -> (\d{2}:\d{2})"
 
@@ -33,7 +31,6 @@ class TaskTodo(item_todo.ItemTodo):
             groups = re.match(regexp, line, flags=re.IGNORECASE)
 
             if groups is not None:
-
                 date_from = datetime.datetime.strptime(groups[1], "%H:%M")
                 date_to = datetime.datetime.strptime(groups[2], "%H:%M")
 
@@ -85,7 +82,6 @@ class TaskTodo(item_todo.ItemTodo):
         line_index = self.get_line_index_with_running_timer()
 
         if line_index != -1:
-
             time = self.get_time_for_timer()
             stub = self.get_stub_for_timer()
 
@@ -98,7 +94,6 @@ class TaskTodo(item_todo.ItemTodo):
         result = -1
 
         for line_index in range(len(self.lines)):
-
             if self.lines[line_index].find("(...)") != -1:
                 result = line_index
                 break

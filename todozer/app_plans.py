@@ -41,13 +41,11 @@ def create_planned_tasks(session: dict) -> None:
     task_lists.add_tasks_lists(tasks_file_items, session["state"]["last_planning_date"])
 
     if check_for_tasks_in_progress(tasks_file_items):
-
         filled_list_titles = task_lists.fill_tasks_lists(
             tasks_file_items, plans_file_items, session["state"]
         )
 
         if filled_list_titles:
-
             task_lists.save_tasks_file_items(tasks_file_items, session["config"])
 
             session["state"]["last_planning_date"] = utils.get_date_of_today()
@@ -58,7 +56,6 @@ def create_planned_tasks(session: dict) -> None:
             print(f"Tasks for {scheduled_tasks} have been successfully scheduled.")
 
         else:
-
             print("Unable to perform, since there are no days to plan tasks.")
 
         print()
@@ -69,13 +66,11 @@ def create_planned_tasks(session: dict) -> None:
 
 
 def check_for_tasks_in_progress(tasks_file_items: list) -> bool:
-
     passed = True
 
     dates_in_progress = task_lists.get_task_lists_in_progress(tasks_file_items)
 
     if dates_in_progress:
-
         passed = False
 
         print("Unable to perform, since there is at least one task in progress:")
@@ -121,21 +116,16 @@ def health_check(session: dict) -> None:
 
 
 def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
-
     today = utils.get_date_of_today()
 
     for item in plans_file_items:
-
         if type(item) == list_todo.ListTodo:
-
             check_plans_file_items(item.items, plans_file_issues)
 
         elif type(item) == plan_todo.PlanTodo:
-
             matched_pattern, _ = scheduler.match(item, today)
 
             if matched_pattern == scheduler.Pattern.NONE:
-
                 issue_text = (
                     f'Unable to match pattern for a "{item.title}" plan'
                     f' (pattern text: "{item.pattern}")'

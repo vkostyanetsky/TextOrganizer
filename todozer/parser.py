@@ -19,13 +19,10 @@ class Parser:
         self.__empty_lines = []
 
     def parse(self) -> list:
-
         tasks_file = open(self.__file_path, "r", encoding=constants.ENCODING)
 
         with tasks_file:
-
             while True:
-
                 line = tasks_file.readline()
 
                 if not line:
@@ -59,27 +56,22 @@ class Parser:
             self.__last_list.items.append(self.__task_class(line))
 
     def __add_text(self, line: str):
-
         previous_task = self.__get_previous_task()
 
         if previous_task is not None:
-
             self.__add_empty_lines(previous_task.lines)
 
             previous_task.lines.append(line)
 
         else:
-
             new_item = text_todo.TextTodo(line)
 
             if self.__last_list is not None:
-
                 self.__add_empty_lines(self.__last_list.items)
 
                 self.__last_list.items.append(new_item)
 
             else:
-
                 self.__add_empty_lines(self.__file_items)
 
                 self.__file_items.append(new_item)
@@ -88,13 +80,10 @@ class Parser:
         previous_task = None
 
         if self.__file_items:
-
             last_file_item = self.__file_items[-1]
 
             if type(last_file_item) == list_todo.ListTodo:
-
                 if last_file_item.items:
-
                     if type(last_file_item.items[-1]) == self.__task_class:
                         previous_task = last_file_item.items[-1]
 
@@ -104,7 +93,6 @@ class Parser:
         return previous_task
 
     def __add_empty_lines_to_last_date(self) -> None:
-
         self.__add_empty_lines(
             self.__file_items if self.__last_list is None else self.__last_list.items
         )

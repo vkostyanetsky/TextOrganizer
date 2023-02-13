@@ -10,7 +10,6 @@ from todozer.todo import list_todo, plan_todo, task_todo
 
 
 def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigParser):
-
     content = []
 
     tasks_file_items = sorted(
@@ -29,7 +28,6 @@ def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigPar
 
 
 def load_tasks_file_items(config: configparser.ConfigParser):
-
     tasks_file_name = config.get("TASKS", "file_name")
 
     tasks_file_items = parser.Parser(tasks_file_name, task_todo.TaskTodo).parse()
@@ -38,7 +36,6 @@ def load_tasks_file_items(config: configparser.ConfigParser):
 
 
 def load_plans_file_items(config: configparser.ConfigParser):
-
     plans_file_name = config.get("PLANS", "file_name")
 
     return parser.Parser(plans_file_name, plan_todo.PlanTodo).parse()
@@ -49,9 +46,7 @@ def get_task_lists_in_progress(file_items: list) -> list:
     dates_in_progress = []
 
     for file_item in file_items:
-
         if type(file_item) == list_todo.ListTodo and file_item.date <= yesterday:
-
             scheduled_tasks = file_item.get_scheduled_tasks()
 
             if scheduled_tasks:
@@ -64,13 +59,11 @@ def get_task_lists_in_progress(file_items: list) -> list:
 
 
 def fill_tasks_lists(task_items: list, plan_items: list, data: dict) -> list:
-
     filled_list_titles = []
 
     today = utils.get_date_of_today()
 
     for task_item in task_items:
-
         is_list_to_fill = (
             type(task_item) == list_todo.ListTodo
             and task_item.date is not None
@@ -88,28 +81,21 @@ def fill_tasks_lists(task_items: list, plan_items: list, data: dict) -> list:
 def fill_tasks_list(
     tasks_file_item: list_todo.ListTodo, plans_file_items: list
 ) -> None:
-
     for plans_file_item in plans_file_items:
-
         if isinstance(plans_file_item, list_todo.ListTodo):
-
             fill_tasks_list(tasks_file_item, plans_file_item.items)
 
         elif isinstance(plans_file_item, plan_todo.PlanTodo):
-
             _, is_date_matched = scheduler.match(plans_file_item, tasks_file_item.date)
 
             if is_date_matched:
-
                 line = f"- {plans_file_item.title}"
                 task = task_todo.TaskTodo(line)
 
                 if len(plans_file_item.lines) > 1:
-
                     i = 0
 
                     for plan_line in plans_file_item.lines:
-
                         i += 1
 
                         if i == 1:
@@ -123,14 +109,11 @@ def fill_tasks_list(
 
 
 def add_tasks_lists(tasks: list, last_date: datetime.date) -> None:
-
     date = utils.get_date_of_tomorrow(last_date)
     today = utils.get_date_of_today()
 
     while date <= today:
-
         if not get_tasks_list_by_date(tasks, date):
-
             date_string = utils.get_string_from_date(date)
             line = f"# {date_string}"
             tasks.append(list_todo.ListTodo(line))

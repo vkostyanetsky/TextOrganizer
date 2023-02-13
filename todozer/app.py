@@ -22,7 +22,6 @@ def main():
     state = state_file.load()
 
     if config.getboolean("LOG", "write_log"):
-
         logging.basicConfig(
             filename=config.get("LOG", "file_name"),
             filemode=config.get("LOG", "file_mode"),
@@ -56,7 +55,6 @@ def main_menu(session: dict) -> None:
 
 
 def get_arguments() -> argparse.Namespace:
-
     args_parser = argparse.ArgumentParser(description="TODOZER KNOWS THE DRILL!")
 
     args_parser.add_argument(
@@ -71,7 +69,6 @@ def get_arguments() -> argparse.Namespace:
 
 
 def get_config(filename: str) -> configparser.ConfigParser:
-
     config = configparser.ConfigParser()
 
     config.read_dict(

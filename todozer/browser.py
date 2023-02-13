@@ -22,7 +22,6 @@ class TasksBrowser:
     __exit_hotkey: str = "Q"
 
     def __init__(self, tasks: list, plans: list):
-
         self.__tasks = tasks
         self.__plans = plans
 
@@ -33,7 +32,6 @@ class TasksBrowser:
         self.__date = utils.get_date_of_today()
 
     def open(self) -> None:
-
         self.show_tasks_by_date()
 
         keyboard.add_hotkey(self.__previous_day_hotkey, self.show_previous_fast)
@@ -50,7 +48,6 @@ class TasksBrowser:
         self.show_tasks_by_date()
 
     def show_tasks_by_date(self):
-
         cliutils.clear_terminal()
 
         title = utils.get_string_from_date(self.__date)
@@ -65,13 +62,11 @@ class TasksBrowser:
             tasks_list = self.__tasks[-1]
 
         if self.__date > utils.get_date_of_today():
-
             if self.__date not in self.__planned_dates:
                 task_lists.fill_tasks_list(tasks_list, self.__plans)
                 self.__planned_dates.append(self.__date)
 
         if tasks_list.items:
-
             for task in tasks_list.items:
                 timer_string = task.timer_string
 
@@ -85,7 +80,6 @@ class TasksBrowser:
                 print(f"{task.title_line}{timer_string}")
 
         else:
-
             print("No tasks found.")
 
         print()

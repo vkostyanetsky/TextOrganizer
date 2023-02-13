@@ -23,7 +23,6 @@ def load_yaml(file_name: str) -> dict:
     result = None
 
     try:
-
         with open(file_name, encoding=constants.ENCODING) as yaml_file:
             result = yaml.safe_load(yaml_file)
 

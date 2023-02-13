@@ -6,7 +6,6 @@ from todozer import app, browser, task_lists
 
 
 def main_menu(session: dict) -> None:
-
     tasks_file_items = task_lists.load_tasks_file_items(session["config"])
     plans_file_items = task_lists.load_plans_file_items(session["config"])
 
