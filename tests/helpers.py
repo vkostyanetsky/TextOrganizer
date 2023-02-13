@@ -6,7 +6,6 @@ from todozer.todo.plan_todo import PlanTodo
 
 
 def get_debug_code(first_line: str, date: datetime.date) -> str:
-
     date_string = utils.get_string_from_date(date)
     date_format = constants.DATE_FORMAT
 

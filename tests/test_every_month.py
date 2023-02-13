@@ -14,7 +14,6 @@ def plan_en(day: str | int, start_date: datetime.date | None = None):
 
 
 def run_test(date: datetime.date, plan_function):
-
     yesterday = date - datetime.timedelta(days=1)
     tomorrow = date + datetime.timedelta(days=1)
 
@@ -55,7 +54,6 @@ def run_test(date: datetime.date, plan_function):
 
 
 def test_every_month():
-
     this_day = todozer.utils.get_date_of_today()
     last_day = todozer.utils.get_month_last_day_date(this_day)
 

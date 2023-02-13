@@ -6,7 +6,6 @@ from todozer.scheduler import Pattern, match
 
 
 def test_every_n_day():
-
     today = todozer.utils.get_date_of_today()
 
     three_days_after = today + datetime.timedelta(days=3)

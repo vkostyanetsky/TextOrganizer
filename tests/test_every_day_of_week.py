@@ -26,7 +26,6 @@ def run_single_test(
 def run_test_every_day_of_week(
     day_index: int, plan_pattern: str, plan_getter, matched_pattern_value: Pattern
 ):
-
     date_of_day = todozer.utils.get_next_day_of_week(day_index)
     date_of_day_plus_1_week = date_of_day + datetime.timedelta(days=7)
 
@@ -70,7 +69,6 @@ def run_test_every_day_of_week(
 def run_test_every_2_day_of_week(
     day_index: int, plan_pattern: str, plan_getter, matched_pattern_value: Pattern
 ):
-
     date_of_day = todozer.utils.get_next_day_of_week(day_index)
     date_of_day_plus_1_week = date_of_day + datetime.timedelta(days=7)
     date_of_day_plus_2_weeks = date_of_day + datetime.timedelta(days=14)
@@ -104,7 +102,6 @@ def run_test_every_2_day_of_week(
 
 
 def test_every_monday():
-
     day_index = 0
     pattern = Pattern.EVERY_MONDAY
     ru_plan_getter, en_plan_getter = get_plan_getters()
@@ -123,7 +120,6 @@ def test_every_monday():
 
 
 def test_every_tuesday():
-
     day_index = 1
     pattern = Pattern.EVERY_TUESDAY
     ru_plan_getter, en_plan_getter = get_plan_getters()
@@ -140,7 +136,6 @@ def test_every_tuesday():
 
 
 def test_every_wednesday():
-
     day_index = 2
     pattern = Pattern.EVERY_WEDNESDAY
     ru_plan_getter, en_plan_getter = get_plan_getters()
@@ -155,7 +150,6 @@ def test_every_wednesday():
 
 
 def test_every_thursday():
-
     day_index = 3
     pattern = Pattern.EVERY_THURSDAY
     ru_plan_getter, en_plan_getter = get_plan_getters()
@@ -168,7 +162,6 @@ def test_every_thursday():
 
 
 def test_every_friday():
-
     day_index = 4
     pattern = Pattern.EVERY_FRIDAY
     ru_plan_getter, en_plan_getter = get_plan_getters()
@@ -181,7 +174,6 @@ def test_every_friday():
 
 
 def test_every_saturday():
-
     day_index = 5
     pattern = Pattern.EVERY_SATURDAY
     ru_plan_getter, en_plan_getter = get_plan_getters()
@@ -194,7 +186,6 @@ def test_every_saturday():
 
 
 def test_every_sunday():
-
     day_index = 6
     pattern = Pattern.EVERY_SUNDAY
     ru_plan_getter, en_plan_getter = get_plan_getters()
@@ -209,5 +200,4 @@ def test_every_sunday():
 
 
 def get_plan_getters():
-
     return tests.helpers.get_plan_en, tests.helpers.get_plan_ru

@@ -4,7 +4,6 @@ from todozer.scheduler import Pattern, match
 
 
 def test_exact_date():
-
     yesterday = todozer.utils.get_date_of_yesterday()
     tomorrow = todozer.utils.get_date_of_tomorrow()
     today = todozer.utils.get_date_of_today()

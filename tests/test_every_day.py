@@ -4,7 +4,6 @@ from todozer.scheduler import Pattern, match
 
 
 def run_test(pattern: str, plan_function):
-
     yesterday = todozer.utils.get_date_of_yesterday()
     tomorrow = todozer.utils.get_date_of_tomorrow()
     today = todozer.utils.get_date_of_today()
@@ -43,6 +42,5 @@ def run_test(pattern: str, plan_function):
 
 
 def test_every_day():
-
     run_test("каждый день", tests.helpers.get_plan_ru)
     run_test("every day", tests.helpers.get_plan_en)

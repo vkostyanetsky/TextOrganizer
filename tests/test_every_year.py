@@ -7,7 +7,6 @@ from todozer.scheduler import Pattern, match
 
 
 def match_ru(task_date: datetime.date, start_date: datetime.date = None):
-
     locale.setlocale(locale.LC_ALL, "ru_RU.UTF-8")
 
     plan_date = task_date.strftime("%d %B")
@@ -22,7 +21,6 @@ def match_ru(task_date: datetime.date, start_date: datetime.date = None):
 
 
 def match_en(task_date: datetime.date, start_date: datetime.date = None):
-
     locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
 
     plan_date = task_date.strftime("%B %d")
@@ -37,7 +35,6 @@ def match_en(task_date: datetime.date, start_date: datetime.date = None):
 
 
 def test_every_year():
-
     yesterday = todozer.utils.get_date_of_yesterday()
     tomorrow = todozer.utils.get_date_of_tomorrow()
     today = todozer.utils.get_date_of_today()

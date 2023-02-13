@@ -4,7 +4,6 @@ from todozer.scheduler import Pattern, match
 
 
 def test_every_month():
-
     run_test(
         [
             "по будням",
@@ -24,7 +23,6 @@ def test_every_month():
 
 
 def run_test(variants: list, plan_function):
-
     monday = todozer.utils.get_next_day_of_week(0)
     before_monday = todozer.utils.get_date_of_yesterday(monday)
     after_monday = todozer.utils.get_date_of_tomorrow(monday)
@@ -34,7 +32,6 @@ def run_test(variants: list, plan_function):
     after_sunday = todozer.utils.get_date_of_tomorrow(sunday)
 
     for variant in variants:
-
         plan = plan_function(variant)
         debug_code = tests.helpers.get_debug_code(plan.title_line, monday)
         matched_pattern, is_date_matched = match(plan, monday)
