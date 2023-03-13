@@ -8,7 +8,7 @@ import sys
 
 from vkostyanetsky import cliutils
 
-from todozer import app_plans, app_tasks, app_timer, constants, state_file
+from todozer import app_plans, app_tasks, constants, state_file
 
 
 def main():
@@ -45,7 +45,6 @@ def main_menu(session: dict) -> None:
 
     menu.add_item("View Tasks", app_tasks.main_menu, session)
     menu.add_item("Plan Tasks", app_plans.main_menu, session)
-    menu.add_item("Track Time", app_timer.main_menu, session)
 
     menu.add_item_separator()
 
