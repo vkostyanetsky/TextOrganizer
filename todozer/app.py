@@ -48,7 +48,7 @@ def main_menu(session: dict) -> None:
 
     menu.add_item_separator()
 
-    menu.add_item("Exit", sys.exit, character="`")
+    menu.add_item("Exit", sys.exit)
 
     menu.choose()
 
