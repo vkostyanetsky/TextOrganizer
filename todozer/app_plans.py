@@ -20,7 +20,7 @@ def main_menu(session: dict) -> None:
 
     menu.add_item_separator()
 
-    menu.add_item("Back", app.main_menu, session, character="`")
+    menu.add_item("Back", app.main_menu, session)
 
     menu.choose()
 
