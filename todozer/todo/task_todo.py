@@ -41,7 +41,9 @@ class TaskTodo(item_todo.ItemTodo):
 
         minutes = round(seconds // 60)
 
-        return datetime.time(hour=hour, minute=minutes)
+        return datetime.time(
+            hour=hour if hour >= 0 else 0, minute=minutes if minutes >= 0 else 0
+        )
 
     @property
     def timer_string(self):
