@@ -71,20 +71,6 @@ class ListTodo(item_todo.ItemTodo):
 
         self.items = sorted(self.items, key=lambda item: item.time)
 
-    def get_active_task(self):
-        """
-        Returns a task in the list which has a running timer.
-        """
-
-        result = None
-
-        for item in self.items:
-            if item.is_timer_running():
-                result = item
-                break
-
-        return result
-
     def get_scheduled_tasks(self) -> list[task_todo.TaskTodo]:
         """
         Returns a list of tasks which are scheduled.
