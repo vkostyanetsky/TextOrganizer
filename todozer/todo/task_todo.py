@@ -9,10 +9,22 @@ class TaskTodo(item_todo.ItemTodo):
 
     @property
     def time(self) -> datetime.time:
-        match_object = re.match(r"^\[[.| ]\] ([0-9]{2}:[0-9]{2}).*", self.title)
-        time_string = "00:00" if match_object is None else match_object.group(1)
+        time_string = self.get_time_string()
 
-        return datetime.time.fromisoformat(time_string)
+        return datetime.time.fromisoformat(time_string if time_string else "00:00")
+
+    @property
+    def has_time(self) -> bool:
+        """
+        Returns true if time is specified for this task.
+        :return: True of False, depends on time presence
+        """
+        return len(self.get_time_string()) > 0
+
+    def get_time_string(self) -> str:
+        match_object = re.match(r"^\[[.| ]\] ([0-9]{2}:[0-9]{2}).*", self.title)
+
+        return "" if match_object is None else match_object.group(1)
 
     @staticmethod
     def get_time_for_timer() -> str:
