@@ -57,19 +57,27 @@ class ListTodo(item_todo.ItemTodo):
         """
         Sorts tasks by their time.
 
-         For instance:
+        For instance:
 
-         - 08:00 Bla bla bla!
-         - 07:30 Bla!
+        - 08:00 Bla bla bla!
+        - Buy a cup of coffee
+        - 07:30 Bla!
 
-         First item will be the second one after sorting (since 7:30 is earlier
-         than 08:00).
+        After sorting:
 
-         Items without time in the beginning being considering as having 00:00,
-         so they are going to move to the very start of the list.
+        - 07:30 Bla!
+        - 08:00 Bla bla bla!
+        - Buy a cup of coffee
+
+        Pay attention that tasks without time specified come last.
         """
 
-        self.items = sorted(self.items, key=lambda item: item.time)
+        self.items = sorted(
+            self.items,
+            key=lambda item: datetime.time(hour=23, minute=59, second=59)
+            if item.time == datetime.time(hour=0, minute=0, second=0)
+            else item.time,
+        )
 
     def get_scheduled_tasks(self) -> list[task_todo.TaskTodo]:
         """
