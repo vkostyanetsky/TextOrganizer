@@ -70,53 +70,6 @@ class TaskTodo(item_todo.ItemTodo):
 
         return " ".join(values)
 
-    @staticmethod
-    def get_stub_for_timer() -> str:
-        """
-        Returns string to use instead of ending time string for active timer.
-        """
-
-        return "(...)"
-
-    def start_timer(self):
-        """
-        Adds a mark of an active timer to the task's body.
-        """
-
-        time = self.get_time_for_timer()
-        stub = self.get_stub_for_timer()
-
-        self.lines.append(f"    {time} -> {stub}")
-
-    def stop_timer(self):
-        """
-        Replaces a mark of an active timer with an ending time in the task's body.
-        """
-
-        line_index = self.get_line_index_with_running_timer()
-
-        if line_index != -1:
-            time = self.get_time_for_timer()
-            stub = self.get_stub_for_timer()
-
-            self.lines[line_index] = self.lines[line_index].replace(stub, time, 1)
-
-    def get_line_index_with_running_timer(self) -> int:
-        """
-        Returns an index of line with a running timer.
-        """
-        result = -1
-
-        for line_index in range(len(self.lines)):
-            if self.lines[line_index].find("(...)") != -1:
-                result = line_index
-                break
-
-        return result
-
-    def is_timer_running(self):
-        return self.get_line_index_with_running_timer() != -1
-
     @property
     def is_scheduled(self) -> bool:
         return (
