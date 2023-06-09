@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-from vkostyanetsky import cliutils
-
 from todozer import app, browser, task_lists
 
 

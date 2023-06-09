@@ -27,6 +27,34 @@ class TaskTodo(item_todo.ItemTodo):
         return "" if match_object is None else match_object.group(1)
 
     @staticmethod
+    def get_reminder_1(line: str) -> dict | None:
+        regexp = ".*remind at ([0-9]{1,2}):([0-9]{1,2}).*"
+        groups = re.match(regexp, line, flags=re.IGNORECASE)
+
+        return (
+            None
+            if groups is None
+            else {
+                "time": datetime.time(hour=int(groups[1]), minute=int(groups[2])),
+                "repetitions_number": 1,
+                "repetitions_period": 0,
+            }
+        )
+
+    @property
+    def reminder(self) -> dict | None:
+        result = None
+
+        for line in self.lines:
+            reminder = self.get_reminder_1(line)
+
+            if reminder is not None:
+                result = reminder
+                break
+
+        return result
+
+    @staticmethod
     def get_time_for_timer() -> str:
         """
         Returns the current hour & minute as a string.

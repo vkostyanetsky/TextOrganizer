@@ -46,7 +46,7 @@ def get_data_by_default() -> dict:
 
     return {
         "last_planning_date": utils.get_date_of_yesterday(),
-        "running_timer_date": None,
+        "triggered_notifications": {},
     }
 
 
