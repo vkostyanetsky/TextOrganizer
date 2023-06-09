@@ -20,29 +20,39 @@ def main(session: dict) -> None:
     last_planned_date = session["state"]["last_planning_date"]
 
     while True:
-        date = last_planned_date
 
         tasks_file_items = task_lists.load_tasks_file_items(session["config"])
         plans_file_items = task_lists.load_plans_file_items(session["config"])
 
-        tasks_group = task_lists.get_tasks_list_by_date(tasks_file_items, date)
+        date = last_planned_date
 
-        if date > last_planned_date:
-            task_lists.fill_tasks_list(tasks_group, plans_file_items)
+        future_days_number = int(session["config"].get("NOTIFICATIONS", "future_days_number"))
 
-        for task in tasks_group.items:
-            if task.is_scheduled and task.reminder is not None:
-                remind_at = datetime.datetime(
-                    year=tasks_group.date.year,
-                    month=tasks_group.date.month,
-                    day=tasks_group.date.day,
-                    hour=task.reminder["time"].hour,
-                    minute=task.reminder["time"].minute,
-                    second=0,
-                )
+        for _ in range(future_days_number):
 
-                if datetime.datetime.now() >= remind_at:
-                    __notify(date, task, session)
+            tasks_group = task_lists.get_tasks_list_by_date(tasks_file_items, date)
+
+            if tasks_group is None:
+                tasks_group = list_todo.ListTodo(f"# {utils.get_string_from_date(date)}")
+
+            if date > last_planned_date:
+                task_lists.fill_tasks_list(tasks_group, plans_file_items)
+
+            for task in tasks_group.items:
+                if task.is_scheduled and task.reminder is not None:
+                    remind_at = datetime.datetime(
+                        year=tasks_group.date.year,
+                        month=tasks_group.date.month,
+                        day=tasks_group.date.day,
+                        hour=task.reminder["time"].hour,
+                        minute=task.reminder["time"].minute,
+                        second=0,
+                    )
+
+                    if datetime.datetime.now() >= remind_at:
+                        __notify(date, task, session)
+
+            date += datetime.timedelta(days=1)
 
         state_file.save(session["state"])
 

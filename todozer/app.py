@@ -81,7 +81,11 @@ def get_config(filename: str) -> configparser.ConfigParser:
                 "file_name": "plans.md",
             },
             "LOG": {"write_log": False, "file_name": "todozer.log", "file_mode": "w"},
-            "NOTIFICATIONS": {"telegram_bot_api_token": "", "telegram_chat_id": ""},
+            "NOTIFICATIONS": {
+                "future_days_number": 7,
+                "telegram_bot_api_token": "",
+                "telegram_chat_id": "",
+            },
         }
     )
 
