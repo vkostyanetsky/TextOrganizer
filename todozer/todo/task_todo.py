@@ -27,8 +27,8 @@ class TaskTodo(item_todo.ItemTodo):
         return "" if match_object is None else match_object.group(1)
 
     @staticmethod
-    def get_reminder_1(line: str) -> dict | None:
-        regexp = ".*remind at ([0-9]{1,2}):([0-9]{1,2}).*"
+    def get_notification_1(line: str) -> dict | None:
+        regexp = ".*notify at ([0-9]{1,2}):([0-9]{1,2}).*"
         groups = re.match(regexp, line, flags=re.IGNORECASE)
 
         return (
@@ -42,14 +42,14 @@ class TaskTodo(item_todo.ItemTodo):
         )
 
     @property
-    def reminder(self) -> dict | None:
+    def notification(self) -> dict | None:
         result = None
 
         for line in self.lines:
-            reminder = self.get_reminder_1(line)
+            notification = self.get_notification_1(line)
 
-            if reminder is not None:
-                result = reminder
+            if notification is not None:
+                result = notification
                 break
 
         return result

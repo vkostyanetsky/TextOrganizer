@@ -41,13 +41,13 @@ def main(session: dict) -> None:
                 task_lists.fill_tasks_list(tasks_group, plans_file_items)
 
             for task in tasks_group.items:
-                if task.is_scheduled and task.reminder is not None:
+                if task.is_scheduled and task.notification is not None:
                     remind_at = datetime.datetime(
                         year=tasks_group.date.year,
                         month=tasks_group.date.month,
                         day=tasks_group.date.day,
-                        hour=task.reminder["time"].hour,
-                        minute=task.reminder["time"].minute,
+                        hour=task.notification["time"].hour,
+                        minute=task.notification["time"].minute,
                         second=0,
                     )
 
@@ -73,7 +73,7 @@ def __notify(date, task, session) -> None:
         triggered_notifications[date_string][task.title] = 0
 
     if (
-        task.reminder["repetitions_number"]
+        task.notification["repetitions_number"]
         > triggered_notifications[date_string][task.title]
     ):
         __send_to_telegram_chat(task.title, session["config"])
@@ -84,40 +84,6 @@ def __wait_for_next_minute() -> None:
     logging.debug(f"Waiting for the next minute...")
 
     time.sleep(60 - datetime.datetime.now().second)
-
-
-# def main2(session: dict) -> None:
-#     """
-#     Starts the everlasting loop of notifying.
-#     :param session: user's session data
-#     :return: nothing
-#     """
-#
-#     logging.debug("Notifier is starting...")
-#
-#     while True:
-#         tasks_file_items = task_lists.load_tasks_file_items(session["config"])
-#         last_planning_date =
-#
-#         index_to_start_from = __tasks_for_today(tasks_file_items, last_planning_date)
-#
-#         group = tasks_file_items[index_to_start_from]
-#
-#         for task in group.items:
-#             if task.is_scheduled and task.reminder is not None:
-#                 remind_at = datetime.datetime(
-#                     year=group.date.year,
-#                     month=group.date.month,
-#                     day=group.date.day,
-#                     hour=task.reminder["time"].hour,
-#                     minute=task.reminder["time"].minute,
-#                     second=0,
-#                 )
-#
-#                 if datetime.datetime.now() >= remind_at:
-#                     __send_to_telegram_chat(task.title, session["config"])
-#
-#         time.sleep(60 - datetime.datetime.now().second)
 
 
 def __send_to_telegram_chat(text: str, config: dict) -> None:
