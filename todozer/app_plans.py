@@ -69,11 +69,14 @@ def create_planned_tasks(session: dict) -> None:
 
 
 def __clean_triggered_notifications(session: dict) -> None:
-    date_strings = session["triggered_notifications"].keys()
+    date_strings = list(session["state"]["triggered_notifications"].keys())
 
     for date_string in date_strings:
-        if utils.get_date_from_string(date_string) < session["last_planning_date"]:
-            del session["triggered_notifications"][date_string]
+        if (
+            utils.get_date_from_string(date_string)
+            < session["state"]["last_planning_date"]
+        ):
+            del session["state"]["triggered_notifications"][date_string]
 
 
 def check_for_tasks_in_progress(tasks_file_items: list) -> bool:

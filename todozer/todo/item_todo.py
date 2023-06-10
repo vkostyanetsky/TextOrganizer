@@ -22,7 +22,7 @@ class ItemTodo:
     @property
     def title(self) -> str:
         """
-        Returns the task's title (first line without markers) (-, +, #, []).
+        Returns the task's title (first line without markers) (-, +, []).
         """
 
         result = self.title_line.strip()

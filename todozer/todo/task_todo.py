@@ -22,7 +22,7 @@ class TaskTodo(item_todo.ItemTodo):
         return len(self.get_time_string()) > 0
 
     def get_time_string(self) -> str:
-        match_object = re.match(r"^\[[.| ]\] ([0-9]{2}:[0-9]{2}).*", self.title)
+        match_object = re.match(r"^([0-9]{1,2}:[0-9]{1,2}).*", self.title)
 
         return "" if match_object is None else match_object.group(1)
 

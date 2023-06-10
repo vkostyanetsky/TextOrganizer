@@ -26,6 +26,19 @@ class ListTodo(item_todo.ItemTodo):
 
         return f"{lines}\n\n{items}"
 
+    @property
+    def title(self) -> str:
+        """
+        Returns the list's title.
+        """
+
+        result = self.title_line.strip()
+
+        if result.startswith("#"):
+            result = result[1:].strip()
+
+        return result
+
     @staticmethod
     def match(line: str):
         """
@@ -75,7 +88,7 @@ class ListTodo(item_todo.ItemTodo):
         self.items = sorted(
             self.items,
             key=lambda item: datetime.time(hour=23, minute=59, second=59)
-            if item.time == datetime.time(hour=0, minute=0, second=0)
+            if not item.has_time
             else item.time,
         )
 

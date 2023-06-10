@@ -89,7 +89,7 @@ def fill_tasks_list(
             _, is_date_matched = scheduler.match(plans_file_item, tasks_file_item.date)
 
             if is_date_matched:
-                line = f"- {plans_file_item.title}"
+                line = f"- [ ] {plans_file_item.title}"
                 task = task_todo.TaskTodo(line)
 
                 if len(plans_file_item.lines) > 1:
