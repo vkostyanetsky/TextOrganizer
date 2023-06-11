@@ -67,7 +67,7 @@ def main(session: dict) -> None:
 
         cliutils.clear_terminal()
 
-        print("NOTIFICATIONS TODAY")
+        print(f"TODAY'S NOTIFICATIONS AS OF {datetime.datetime.now().strftime('%H:%M')}")
         print()
 
         if notifications_today:
@@ -75,9 +75,6 @@ def main(session: dict) -> None:
                 print(f"- {t['title']}")
         else:
             print("No notifications planned.")
-
-        print()
-        print(f"The list above made at: {utils.get_string_from_datetime(datetime.datetime.now())}")
 
         __wait_for_next_minute()
 
