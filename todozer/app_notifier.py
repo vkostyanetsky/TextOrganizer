@@ -7,6 +7,8 @@ import requests
 from todozer import state_file, task_lists, utils
 from todozer.todo import list_todo
 
+from vkostyanetsky import cliutils
+
 
 def main(session: dict) -> None:
     """
@@ -19,7 +21,12 @@ def main(session: dict) -> None:
 
     last_planned_date = session["state"]["last_planning_date"]
 
+    notifications_today = []
+
     while True:
+
+        cliutils.clear_terminal()
+
         tasks_file_items = task_lists.load_tasks_file_items(session["config"])
         plans_file_items = task_lists.load_plans_file_items(session["config"])
 
@@ -53,10 +60,24 @@ def main(session: dict) -> None:
 
                     if datetime.datetime.now() >= remind_at:
                         __notify(date, task, session)
+                    elif date == datetime.date.today():
+                        notifications_today.append({'time': task.notification["time"], 'title': task.title})
 
             date += datetime.timedelta(days=1)
 
         state_file.save(session["state"])
+
+        print("NOTIFICATIONS TODAY")
+        print()
+
+        if notifications_today:
+            for t in notifications_today:
+                print(f"- {t['title']}")
+        else:
+            print("No notifications planned.")
+
+        print()
+        print(f"The list above made at: {utils.get_string_from_datetime(datetime.datetime.now())}")
 
         __wait_for_next_minute()
 

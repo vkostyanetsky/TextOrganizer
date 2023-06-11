@@ -39,6 +39,10 @@ def get_string_from_date(source: datetime.date) -> str:
     return source.strftime(constants.DATE_FORMAT)
 
 
+def get_string_from_datetime(source: datetime.datetime) -> str:
+    return source.strftime(constants.DATETIME_FORMAT)
+
+
 def get_month_last_day_date(date: datetime.date) -> datetime.date:
     next_month = date.replace(day=28) + datetime.timedelta(days=4)
     return next_month - datetime.timedelta(days=next_month.day)
