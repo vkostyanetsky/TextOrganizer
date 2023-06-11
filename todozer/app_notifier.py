@@ -21,11 +21,9 @@ def main(session: dict) -> None:
 
     last_planned_date = session["state"]["last_planning_date"]
 
-    notifications_today = []
-
     while True:
 
-        cliutils.clear_terminal()
+        notifications_today = []
 
         tasks_file_items = task_lists.load_tasks_file_items(session["config"])
         plans_file_items = task_lists.load_plans_file_items(session["config"])
@@ -66,6 +64,8 @@ def main(session: dict) -> None:
             date += datetime.timedelta(days=1)
 
         state_file.save(session["state"])
+
+        cliutils.clear_terminal()
 
         print("NOTIFICATIONS TODAY")
         print()
