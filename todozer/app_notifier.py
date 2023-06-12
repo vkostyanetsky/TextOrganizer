@@ -74,7 +74,7 @@ def main(session: dict) -> None:
             for t in notifications_today:
                 print(f"- {t['title']}")
         else:
-            print("No notifications planned.")
+            print("No notifications found.")
 
         __wait_for_next_minute()
 
