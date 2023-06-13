@@ -65,7 +65,7 @@ class TaskTodo(item_todo.ItemTodo):
     @property
     def timer(self) -> datetime.time:
         seconds = 0
-        regexp = r".*(\d{2}:\d{2}) - (\d{2}:\d{2})"
+        regexp = r".*(\d{1,2}:\d{1,2}) - (\d{1,2}:\d{1,2})"
 
         for line in self.lines:
             groups = re.match(regexp, line, flags=re.IGNORECASE)
