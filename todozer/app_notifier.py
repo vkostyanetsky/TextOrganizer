@@ -22,7 +22,6 @@ def main(session: dict) -> None:
     last_planned_date = session["state"]["last_planning_date"]
 
     while True:
-
         notifications_today = []
 
         tasks_file_items = task_lists.load_tasks_file_items(session["config"])
@@ -59,7 +58,9 @@ def main(session: dict) -> None:
                     if datetime.datetime.now() >= remind_at:
                         __notify(date, task, session)
                     elif date == datetime.date.today():
-                        notifications_today.append({'time': task.notification["time"], 'title': task.title})
+                        notifications_today.append(
+                            {"time": task.notification["time"], "title": task.title}
+                        )
 
             date += datetime.timedelta(days=1)
 
@@ -67,10 +68,17 @@ def main(session: dict) -> None:
 
         cliutils.clear_terminal()
 
-        print(f"TODAY'S NOTIFICATIONS AS OF {datetime.datetime.now().strftime('%H:%M')}")
+        print(
+            f"TODAY'S NOTIFICATIONS AS OF {datetime.datetime.now().strftime('%H:%M')}"
+        )
         print()
 
         if notifications_today:
+            notifications_today = sorted(
+                notifications_today,
+                key=lambda item: item["time"],
+            )
+
             for t in notifications_today:
                 print(f"- {t['title']}")
         else:
