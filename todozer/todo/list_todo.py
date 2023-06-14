@@ -32,7 +32,7 @@ class ListTodo(item_todo.ItemTodo):
         Returns the list's title.
         """
 
-        result = self.title_line.strip()
+        result = super().title
 
         if result.startswith("#"):
             result = result[1:].strip()

@@ -8,6 +8,24 @@ class TaskTodo(item_todo.ItemTodo):
     """A single task class."""
 
     @property
+    def title(self) -> str:
+        """
+        Returns the task's title (first line without markers) (-, +, []).
+        """
+
+        result = super().title
+
+        if result.startswith("-"):
+            result = result[1:].strip()
+
+        if result.startswith("["):
+            regexp = "^(\[.?\])?(.*)"
+            groups = re.match(regexp, result)
+            result = "" if groups is None else groups[2].strip()
+
+        return result
+
+    @property
     def time(self) -> datetime.time:
         time_string = self.get_time_string()
 

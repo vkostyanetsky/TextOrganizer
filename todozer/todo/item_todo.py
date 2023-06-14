@@ -25,14 +25,4 @@ class ItemTodo:
         Returns the task's title (first line without markers) (-, +, []).
         """
 
-        result = self.title_line.strip()
-
-        if result.startswith("-"):
-            result = result[1:].strip()
-
-        if result.startswith("["):
-            regexp = "^(\[.?\])?(.*)"
-            groups = re.match(regexp, result)
-            result = "" if groups is None else groups[2].strip()
-
-        return result
+        return self.title_line.strip()

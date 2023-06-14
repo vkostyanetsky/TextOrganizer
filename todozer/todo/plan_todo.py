@@ -6,13 +6,14 @@ class PlanTodo(task_todo.TaskTodo):
 
     @property
     def title(self) -> str:
-        title = super().title
-        index = title.rfind(";")
+
+        result = super().title
+        index = result.rfind(";")
 
         if index != -1:
-            title = title[:index]
+            result = result[:index]
 
-        return title
+        return result
 
     @property
     def pattern(self) -> str:
