@@ -46,7 +46,7 @@ class TaskTodo(item_todo.ItemTodo):
 
     @staticmethod
     def get_notification_1(line: str) -> dict | None:
-        regexp = ".*notify at ([0-9]{1,2}):([0-9]{1,2}).*"
+        regexp = ".*[notify at|напомнить в] ([0-9]{1,2}):([0-9]{1,2}).*"
         groups = re.match(regexp, line, flags=re.IGNORECASE)
 
         return (

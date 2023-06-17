@@ -25,4 +25,4 @@ class ItemTodo:
         Returns the task's title (first line without markers) (-, +, []).
         """
 
-        return self.title_line.strip()
+        return self.title_line

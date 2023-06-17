@@ -79,8 +79,8 @@ def main(session: dict) -> None:
                 key=lambda item: item["time"],
             )
 
-            for t in notifications_today:
-                print(f"- {t['title']}")
+            for task in notifications_today:
+                print(f"🔔 {task['time']:%H:%M} | {task['title']}")
         else:
             print("No notifications found.")
 
@@ -95,15 +95,15 @@ def __notify(date, task, session) -> None:
     if triggered_notifications.get(date_string) is None:
         triggered_notifications[date_string] = {}
 
-    if triggered_notifications[date_string].get(task.title) is None:
-        triggered_notifications[date_string][task.title] = 0
+    if triggered_notifications[date_string].get(task.title_line) is None:
+        triggered_notifications[date_string][task.title_line] = 0
 
     if (
         task.notification["repetitions_number"]
-        > triggered_notifications[date_string][task.title]
+        > triggered_notifications[date_string][task.title_line]
     ):
         __send_to_telegram_chat(task.title, session["config"])
-        triggered_notifications[date_string][task.title] += 1
+        triggered_notifications[date_string][task.title_line] += 1
 
 
 def __wait_for_next_minute() -> None:
