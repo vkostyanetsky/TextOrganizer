@@ -45,22 +45,24 @@ def main(session: dict) -> None:
                 task_lists.fill_tasks_list(tasks_group, plans_file_items)
 
             for task in tasks_group.items:
-                if task.is_scheduled and task.notification is not None:
-                    remind_at = datetime.datetime(
-                        year=tasks_group.date.year,
-                        month=tasks_group.date.month,
-                        day=tasks_group.date.day,
-                        hour=task.notification["time"].hour,
-                        minute=task.notification["time"].minute,
-                        second=0,
-                    )
+                if task.is_scheduled and task.notifications:
 
-                    if datetime.datetime.now() >= remind_at:
-                        __notify(date, task, session)
-                    elif date == datetime.date.today():
-                        notifications_today.append(
-                            {"time": task.notification["time"], "title": task.title}
+                    for notification in task.notifications:
+                        remind_at = datetime.datetime(
+                            year=tasks_group.date.year,
+                            month=tasks_group.date.month,
+                            day=tasks_group.date.day,
+                            hour=notification["time"].hour,
+                            minute=notification["time"].minute,
+                            second=0,
                         )
+
+                        if datetime.datetime.now() >= remind_at:
+                            __notify(date, task, notification["time"], session)
+                        elif date == datetime.date.today():
+                            notifications_today.append(
+                                {"time": notification["time"], "title": task.title}
+                            )
 
             date += datetime.timedelta(days=1)
 
@@ -87,8 +89,9 @@ def main(session: dict) -> None:
         __wait_for_next_minute()
 
 
-def __notify(date, task, session) -> None:
+def __notify(date, task, notification_time, session) -> None:
     date_string = utils.get_string_from_date(date)
+    time_string = notification_time.strftime('%H:%M')
 
     triggered_notifications = session["state"].get("triggered_notifications")
 
@@ -96,14 +99,12 @@ def __notify(date, task, session) -> None:
         triggered_notifications[date_string] = {}
 
     if triggered_notifications[date_string].get(task.title_line) is None:
-        triggered_notifications[date_string][task.title_line] = 0
+        triggered_notifications[date_string][task.title_line] = []
 
-    if (
-        task.notification["repetitions_number"]
-        > triggered_notifications[date_string][task.title_line]
-    ):
+    if time_string not in triggered_notifications[date_string][task.title_line]:
+
         __send_to_telegram_chat(task.title, session["config"])
-        triggered_notifications[date_string][task.title_line] += 1
+        triggered_notifications[date_string][task.title_line].append(time_string)
 
 
 def __wait_for_next_minute() -> None:
