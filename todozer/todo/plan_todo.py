@@ -6,7 +6,6 @@ class PlanTodo(task_todo.TaskTodo):
 
     @property
     def title(self) -> str:
-
         result = super().title
         index = result.rfind(";")
 

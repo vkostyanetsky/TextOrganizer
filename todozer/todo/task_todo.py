@@ -85,12 +85,10 @@ class TaskTodo(item_todo.ItemTodo):
 
     @staticmethod
     def add_notifications_by_line(notifications: list, line: str) -> None:
-
         regexp = "^.*notify at (.*[0-9]{1,2}:[0-9]{1,2}).*$"
         groups = re.match(regexp, line, flags=re.IGNORECASE)
 
         if groups is not None:
-
             timers = groups[1].split(",")
 
             for timer in timers:
@@ -98,9 +96,7 @@ class TaskTodo(item_todo.ItemTodo):
                 hour = int(timer[0])
                 minute = int(timer[1])
 
-                notification = {
-                    "time": datetime.time(hour=hour, minute=minute)
-                }
+                notification = {"time": datetime.time(hour=hour, minute=minute)}
 
                 notifications.append(notification)
 

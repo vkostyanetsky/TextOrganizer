@@ -3,11 +3,10 @@ import logging
 import time
 
 import requests
+from vkostyanetsky import cliutils
 
 from todozer import state_file, task_lists, utils
 from todozer.todo import list_todo
-
-from vkostyanetsky import cliutils
 
 
 def main(session: dict) -> None:
@@ -46,7 +45,6 @@ def main(session: dict) -> None:
 
             for task in tasks_group.items:
                 if task.is_scheduled and task.notifications:
-
                     for notification in task.notifications:
                         remind_at = datetime.datetime(
                             year=tasks_group.date.year,
@@ -91,7 +89,7 @@ def main(session: dict) -> None:
 
 def __notify(date, task, notification_time, session) -> None:
     date_string = utils.get_string_from_date(date)
-    time_string = notification_time.strftime('%H:%M')
+    time_string = notification_time.strftime("%H:%M")
 
     triggered_notifications = session["state"].get("triggered_notifications")
 
@@ -102,7 +100,6 @@ def __notify(date, task, notification_time, session) -> None:
         triggered_notifications[date_string][task.title_line] = []
 
     if time_string not in triggered_notifications[date_string][task.title_line]:
-
         __send_to_telegram_chat(task.title, session["config"])
         triggered_notifications[date_string][task.title_line].append(time_string)
 

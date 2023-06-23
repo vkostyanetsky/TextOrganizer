@@ -56,7 +56,9 @@ class ListTodo(item_todo.ItemTodo):
         result = None
 
         if self.lines[0]:
-            match_object = re.match(r"# ([0-9]{4}-[0-9]{1,2}-[0-9]{1,2})", self.lines[0])
+            match_object = re.match(
+                r"# ([0-9]{4}-[0-9]{1,2}-[0-9]{1,2})", self.lines[0]
+            )
 
             if match_object is not None:
                 string = match_object.group(1)
