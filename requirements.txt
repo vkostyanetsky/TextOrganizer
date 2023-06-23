@@ -1,2 +1,5 @@
 keyboard==0.13.5
 setuptools==63.2.0
+
+PyYAML~=6.0
+requests~=2.27.1

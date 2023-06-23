@@ -1,5 +1,7 @@
 """Contains a basic class of items to do."""
 
+import re
+
 
 class ItemTodo:
     """A basic class of items to do."""
@@ -20,9 +22,7 @@ class ItemTodo:
     @property
     def title(self) -> str:
         """
-        Returns the first line of the item without the first symbol (-, +, #).
+        Returns the task's title (first line without markers) (-, +, []).
         """
 
-        title_line = self.title_line
-
-        return title_line[1:].strip() if title_line else ""
+        return self.title_line

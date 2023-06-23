@@ -8,7 +8,7 @@ import sys
 
 from vkostyanetsky import cliutils
 
-from todozer import app_plans, app_tasks, constants, state_file
+from todozer import app_notifier, app_plans, app_tasks, constants, state_file
 
 
 def main():
@@ -45,6 +45,7 @@ def main_menu(session: dict) -> None:
 
     menu.add_item("View Tasks", app_tasks.main_menu, session)
     menu.add_item("Plan Tasks", app_plans.main_menu, session)
+    menu.add_item("Run Notifier", app_notifier.main, session)
 
     menu.add_item_separator()
 
@@ -80,6 +81,11 @@ def get_config(filename: str) -> configparser.ConfigParser:
                 "file_name": "plans.md",
             },
             "LOG": {"write_log": False, "file_name": "todozer.log", "file_mode": "w"},
+            "NOTIFICATIONS": {
+                "future_days_number": 7,
+                "telegram_bot_api_token": "",
+                "telegram_chat_id": "",
+            },
         }
     )
 

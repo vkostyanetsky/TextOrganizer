@@ -8,6 +8,24 @@ class TaskTodo(item_todo.ItemTodo):
     """A single task class."""
 
     @property
+    def title(self) -> str:
+        """
+        Returns the task's title (first line without markers) (-, +, []).
+        """
+
+        result = super().title
+
+        if result.startswith("-"):
+            result = result[1:].strip()
+
+        if result.startswith("["):
+            regexp = "^(\[.?\])?(.*)"
+            groups = re.match(regexp, result)
+            result = "" if groups is None else groups[2].strip()
+
+        return result
+
+    @property
     def time(self) -> datetime.time:
         time_string = self.get_time_string()
 
@@ -22,9 +40,81 @@ class TaskTodo(item_todo.ItemTodo):
         return len(self.get_time_string()) > 0
 
     def get_time_string(self) -> str:
-        match_object = re.match(r"^\[[.| ]\] ([0-9]{2}:[0-9]{2}).*", self.title)
+        match_object = re.match(r"^([0-9]{1,2}:[0-9]{1,2}).*", self.title)
 
         return "" if match_object is None else match_object.group(1)
+
+    @staticmethod
+    def get_notification_1(line: str) -> dict | None:
+        regexp = "^.*notify at ([0-9]{1,2}):([0-9]{1,2}).*"
+        groups = re.match(regexp, line, flags=re.IGNORECASE)
+
+        return (
+            None
+            if groups is None
+            else {
+                "time": datetime.time(hour=int(groups[1]), minute=int(groups[2])),
+                "repetitions_number": 1,
+                "repetitions_period": 0,
+            }
+        )
+
+    @staticmethod
+    def get_notification_2(line: str) -> dict | None:
+        regexp = "^.*напомнить в ([0-9]{1,2}):([0-9]{1,2}).*"
+        groups = re.match(regexp, line, flags=re.IGNORECASE)
+
+        return (
+            None
+            if groups is None
+            else {
+                "time": datetime.time(hour=int(groups[1]), minute=int(groups[2])),
+                "repetitions_number": 1,
+                "repetitions_period": 0,
+            }
+        )
+
+    @property
+    def notifications(self) -> list:
+        notifications = []
+
+        for line in self.lines:
+            self.add_notifications_by_line(notifications, line)
+
+        return notifications
+
+    @staticmethod
+    def add_notifications_by_line(notifications: list, line: str) -> None:
+        regexp = "^.*notify at (.*[0-9]{1,2}:[0-9]{1,2}).*$"
+        groups = re.match(regexp, line, flags=re.IGNORECASE)
+
+        if groups is not None:
+            timers = groups[1].split(",")
+
+            for timer in timers:
+                timer = timer.strip().split(":")
+                hour = int(timer[0])
+                minute = int(timer[1])
+
+                notification = {"time": datetime.time(hour=hour, minute=minute)}
+
+                notifications.append(notification)
+
+    @property
+    def notification(self) -> dict | None:
+        result = None
+
+        for line in self.lines:
+            notification = self.get_notification_1(line)
+
+            if notification is None:
+                notification = self.get_notification_2(line)
+
+            if notification is not None:
+                result = notification
+                break
+
+        return result
 
     @staticmethod
     def get_time_for_timer() -> str:
@@ -37,7 +127,7 @@ class TaskTodo(item_todo.ItemTodo):
     @property
     def timer(self) -> datetime.time:
         seconds = 0
-        regexp = r".*(\d{2}:\d{2}) - (\d{2}:\d{2})"
+        regexp = r".*(\d{1,2}:\d{1,2}) - (\d{1,2}:\d{1,2})"
 
         for line in self.lines:
             groups = re.match(regexp, line, flags=re.IGNORECASE)
