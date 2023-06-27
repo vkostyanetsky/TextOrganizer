@@ -17,6 +17,7 @@ setup(
     install_requires=[
         "PyYAML~=6.0",
         "keyboard~=0.13.5",
+        "requests~=2.27.1",
         "vkostyanetsky.cliutils~=0.2.0",
     ],
     entry_points={"console_scripts": ["todozer=todozer.app:main"]},
