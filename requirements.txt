@@ -1,5 +1,3 @@
-PyYAML~=6.0
-keyboard==0.13.5
-requests~=2.27.1
-vkostyanetsky.cliutils~=0.2.0
-setuptools==63.2.0
+setuptools==68.0.0
+requests==2.31.0
+vkostyanetsky.cliutils==0.2.0
