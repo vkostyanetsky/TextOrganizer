@@ -1,34 +1,11 @@
 #!/usr/bin/env python3
 
+import configparser
 import datetime
+import logging
+import os
 
-from todozer import constants, task_lists
-from todozer.todo import task_todo
-
-
-def get_active_task(
-    session: dict, tasks_file_items: list = None
-) -> task_todo.TaskTodo | None:
-    """
-    Returns an active task for a current day, if a timer is running somewhere.
-    """
-
-    result = None
-
-    running_timer_date = session["state"]["running_timer_date"]
-
-    if running_timer_date is not None:
-        if tasks_file_items is None:
-            tasks_file_items = task_lists.load_tasks_file_items(session["config"])
-
-        tasks_list = task_lists.get_tasks_list_by_date(
-            tasks=tasks_file_items, date=running_timer_date
-        )
-
-        if tasks_list is not None:
-            result = tasks_list.get_active_task()
-
-    return result
+from todozer import constants
 
 
 def get_date_from_string(source: str) -> datetime.date:
@@ -93,3 +70,50 @@ def get_next_day_of_week(day_index: int, date: datetime.date = None) -> datetime
         next_day += datetime.timedelta(days=1)
 
     return next_day
+
+
+def get_config(path: str) -> configparser.ConfigParser:
+    config = configparser.ConfigParser()
+
+    settings = {
+        "TASKS": {
+            "file_name": "tasks.md",
+            "reverse_days_order": False,
+        },
+        "PLANS": {
+            "file_name": "plans.md",
+        },
+        "LOG": {"write_log": False, "file_name": "todozer.log", "file_mode": "w"},
+        "NOTIFICATIONS": {
+            "future_days_number": 7,
+            "telegram_bot_api_token": "",
+            "telegram_chat_id": "",
+        },
+    }
+
+    config.read_dict(settings)
+
+    filename = "todozer.cfg"
+
+    if path is not None:
+        filename = os.path.join(path, filename)
+
+    if os.path.exists(filename):
+        config.read(filename, encoding=constants.ENCODING)
+    else:
+        with open(filename, "w", encoding=constants.ENCODING) as file:
+            config.write(file)
+
+    return config
+
+
+def set_logging(config: configparser.ConfigParser) -> None:
+    if config.getboolean("LOG", "write_log"):
+        logging.basicConfig(
+            filename=config.get("LOG", "file_name"),
+            filemode=config.get("LOG", "file_mode"),
+            encoding=constants.ENCODING,
+            format="%(asctime)s [%(levelname)s] %(message)s",
+            level=logging.DEBUG,
+            force=True,
+        )

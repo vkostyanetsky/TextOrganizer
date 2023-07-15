@@ -1,45 +1,48 @@
 import logging
 
 import click
-from vkostyanetsky import cliutils
 
 from todozer import scheduler, task_lists, utils
 from todozer.todo import list_todo, plan_todo
 
 
-def main(session: dict) -> None:
+def main(path: str = None) -> None:
     """
     Checks plans file for errors.
     """
 
+    config = utils.get_config(path)
+    utils.set_logging(config)
+
     logging.debug("Checking planned tasks...")
 
-    plans_file_items = task_lists.load_plans_file_items(session["config"])
+    plans_file_items = task_lists.load_plans_file_items(config, path)
     plans_file_issues = []
 
-    check_plans_file_items(plans_file_items, plans_file_issues)
+    __check_plans_file_items(plans_file_items, plans_file_issues)
+    __print_report(plans_file_issues)
 
+
+def __print_report(plans_file_issues) -> None:
     if plans_file_issues:
-        print("Issues found in the plans file:")
-        print()
+        click.echo("Issues found in the plans file:")
+        click.echo()
 
         for issue in plans_file_issues:
-            print(f"- {issue}")
+            click.echo(f"- {issue}")
 
     else:
-        print("Everything seems nice and clear!")
+        click.echo("Everything seems nice and clear!")
 
-    print()
-
-    cliutils.ask_for_enter()
+    click.echo()
 
 
-def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
+def __check_plans_file_items(plans_file_items: list, plans_file_issues: list):
     today = utils.get_date_of_today()
 
     for item in plans_file_items:
         if type(item) == list_todo.ListTodo:
-            check_plans_file_items(item.items, plans_file_issues)
+            __check_plans_file_items(item.items, plans_file_issues)
 
         elif type(item) == plan_todo.PlanTodo:
             matched_pattern, _ = scheduler.match(item, today)
@@ -51,3 +54,7 @@ def check_plans_file_items(plans_file_items: list, plans_file_issues: list):
                 )
 
                 plans_file_issues.append(issue_text)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,13 +1,51 @@
 import datetime
 import logging
 import time
-import click
 
+import click
 import requests
 from vkostyanetsky import cliutils
 
 from todozer import state_file, task_lists, utils
 from todozer.todo import list_todo
+
+
+def main(path: str = None) -> None:
+    """
+    Main entry point of this mode.
+    """
+
+    config = utils.get_config(path)
+    utils.set_logging(config)
+
+    logging.debug("Notifier is starting...")
+
+    while True:
+        state = state_file.load(path=path)
+
+        notifications_today = []
+
+        tasks_file_items = task_lists.load_tasks_file_items(config, path)
+        plans_file_items = task_lists.load_plans_file_items(config, path)
+
+        date = state["last_planning_date"]
+
+        future_days_number = config.getint("NOTIFICATIONS", "future_days_number")
+
+        for _ in range(future_days_number):
+            tasks_group = __get_tasks_group(
+                tasks_file_items, plans_file_items, date, state
+            )
+
+            __process_date(notifications_today, date, tasks_group, config, state)
+
+            date += datetime.timedelta(days=1)
+
+        state_file.save(path, state)
+
+        __print_upcoming_notifications_for_today(notifications_today)
+
+        __wait_for_next_minute()
 
 
 def __process_date_task_notifications(
@@ -37,41 +75,6 @@ def __process_date(notifications_today, date, tasks_group, config, state):
             __process_date_task_notifications(
                 task, notifications_today, date, tasks_group, config, state
             )
-
-
-def main(config, path) -> None:
-    """
-    Starts something like everlasting loop of notifying.
-    """
-
-    logging.debug("Notifier is starting...")
-
-    while True:
-        state = state_file.load(path=path)
-
-        notifications_today = []
-
-        tasks_file_items = task_lists.load_tasks_file_items(config)
-        plans_file_items = task_lists.load_plans_file_items(config)
-
-        date = state["last_planning_date"]
-
-        future_days_number = config.getint("NOTIFICATIONS", "future_days_number")
-
-        for _ in range(future_days_number):
-            tasks_group = __get_tasks_group(
-                tasks_file_items, plans_file_items, date, state
-            )
-
-            __process_date(notifications_today, date, tasks_group, config, state)
-
-            date += datetime.timedelta(days=1)
-
-        state_file.save(path, state)
-
-        __print_upcoming_notifications_for_today(notifications_today)
-
-        __wait_for_next_minute()
 
 
 def __get_tasks_group(tasks_file_items, plans_file_items, date, state):
@@ -170,3 +173,7 @@ def __tasks_for_today(
         index -= 1
 
     return result
+
+
+if __name__ == "__main__":
+    main()

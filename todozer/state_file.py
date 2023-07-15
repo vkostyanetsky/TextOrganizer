@@ -3,8 +3,8 @@
 """Methods to read and write the app's state file."""
 
 import os
-import click
 
+import click
 import yaml
 import yaml.parser
 
