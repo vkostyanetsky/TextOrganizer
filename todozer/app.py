@@ -1,26 +1,43 @@
 #!/usr/bin/env python3
 
-import argparse
 import configparser
 import logging
 import os.path
-import sys
 
-from vkostyanetsky import cliutils
+import click
 
-from todozer import app_notifier, app_plans, app_tasks, constants, state_file
+from todozer import constants, state_file
+from todozer.mode import test, plan, ding, view
 
 
-def main():
+@click.command()
+@click.argument(
+    "mode",
+    type=click.Choice(["plan", "test", "view", "ding"], case_sensitive=False),
+)
+@click.option(
+    "-p", "--path", type=click.Path(exists=True), help="Set path to working directory."
+)
+def main(mode: str, path: str):
     """
-    Main entry point of the application.
+    I know the drill!
     """
 
-    arguments = get_arguments()
+    config = __get_config(path)
 
-    config = get_config(arguments.config)
-    state = state_file.load()
+    __set_logging(config)
 
+    if mode == "plan":
+        plan.main(config, path)
+    elif mode == "test":
+        test.main(config, path)
+    elif mode == "view":
+        view.main(config, path)
+    elif mode == "ding":
+        ding.main(config, path)
+
+
+def __set_logging(config) -> None:
     if config.getboolean("LOG", "write_log"):
         logging.basicConfig(
             filename=config.get("LOG", "file_name"),
@@ -31,63 +48,32 @@ def main():
             force=True,
         )
 
-    session = {"config": config, "state": state}
 
-    main_menu(session)
-
-
-def main_menu(session: dict) -> None:
-    """
-    Displays the main menu of the application.
-    """
-
-    menu = cliutils.Menu([constants.TITLE])
-
-    menu.add_item("View Tasks", app_tasks.main_menu, session)
-    menu.add_item("Plan Tasks", app_plans.main_menu, session)
-    menu.add_item("Run Notifier", app_notifier.main, session)
-
-    menu.add_item_separator()
-
-    menu.add_item("Exit", sys.exit)
-
-    menu.choose()
-
-
-def get_arguments() -> argparse.Namespace:
-    args_parser = argparse.ArgumentParser(description="TODOZER KNOWS THE DRILL!")
-
-    args_parser.add_argument(
-        "-c",
-        "--config",
-        type=str,
-        default="todozer.cfg",
-        help="configuration file name (default: todozer.cfg)",
-    )
-
-    return args_parser.parse_args()
-
-
-def get_config(filename: str) -> configparser.ConfigParser:
+def __get_config(path: str) -> configparser.ConfigParser:
     config = configparser.ConfigParser()
 
-    config.read_dict(
-        {
-            "TASKS": {
-                "file_name": "tasks.md",
-                "reverse_days_order": False,
-            },
-            "PLANS": {
-                "file_name": "plans.md",
-            },
-            "LOG": {"write_log": False, "file_name": "todozer.log", "file_mode": "w"},
-            "NOTIFICATIONS": {
-                "future_days_number": 7,
-                "telegram_bot_api_token": "",
-                "telegram_chat_id": "",
-            },
-        }
-    )
+    settings = {
+        "TASKS": {
+            "file_name": "tasks.md",
+            "reverse_days_order": False,
+        },
+        "PLANS": {
+            "file_name": "plans.md",
+        },
+        "LOG": {"write_log": False, "file_name": "todozer.log", "file_mode": "w"},
+        "NOTIFICATIONS": {
+            "future_days_number": 7,
+            "telegram_bot_api_token": "",
+            "telegram_chat_id": "",
+        },
+    }
+
+    config.read_dict(settings)
+
+    filename = "todozer.cfg"
+
+    if path is not None:
+        filename = os.path.join(path, filename)
 
     if os.path.exists(filename):
         config.read(filename, encoding=constants.ENCODING)

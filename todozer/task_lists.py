@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import click
+
 """Methods to work with task lists in tasks file & plans file."""
 
 import configparser
@@ -29,7 +31,6 @@ def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigPar
 
 def load_tasks_file_items(config: configparser.ConfigParser):
     tasks_file_name = config.get("TASKS", "file_name")
-
     tasks_file_items = parser.Parser(tasks_file_name, task_todo.TaskTodo).parse()
 
     return sorted(tasks_file_items, key=lambda item: item.date)

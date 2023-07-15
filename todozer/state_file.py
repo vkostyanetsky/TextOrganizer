@@ -3,6 +3,7 @@
 """Methods to read and write the app's state file."""
 
 import os
+import click
 
 import yaml
 import yaml.parser
@@ -27,7 +28,7 @@ def load_yaml(file_name: str) -> dict:
             result = yaml.safe_load(yaml_file)
 
     except yaml.parser.ParserError:
-        print(f"Unable to parse {file_name}!")
+        click.echo(f"Unable to parse {file_name}!")
 
     if result is None:
         result = {}
@@ -35,10 +36,15 @@ def load_yaml(file_name: str) -> dict:
     return result
 
 
-def get_data_file_name() -> str:
+def get_data_file_path(path: str) -> str:
     """Returns the app's data file name."""
 
-    return "todozer.dat"
+    filename = "todozer.dat"
+
+    if path is not None:
+        filename = os.path.join(path, filename)
+
+    return filename
 
 
 def get_data_by_default() -> dict:
@@ -50,17 +56,17 @@ def get_data_by_default() -> dict:
     }
 
 
-def load() -> dict:
+def load(path: str) -> dict:
     """Returns the app's data."""
 
-    file_name = get_data_file_name()
+    file_name = get_data_file_path(path)
 
     return load_yaml(file_name) if os.path.exists(file_name) else get_data_by_default()
 
 
-def save(data: dict):
+def save(path: str, data: dict):
     """Writes the app's data."""
 
-    file_name = get_data_file_name()
+    file_name = get_data_file_path(path)
 
     save_yaml(file_name, data)
