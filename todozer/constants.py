@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""String literals which are widely used in app's modules."""
+"""String literals that are used in app's components."""
 
 TITLE = "TODOZER"
 VERSION = "0.1.0"

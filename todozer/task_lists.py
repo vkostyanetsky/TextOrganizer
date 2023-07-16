@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import os
+
 """Methods to work with task lists in tasks file & plans file."""
 
 import configparser
@@ -27,16 +29,22 @@ def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigPar
         tasks_file.write("\n\n".join(content))
 
 
-def load_tasks_file_items(config: configparser.ConfigParser):
+def load_tasks_file_items(config: configparser.ConfigParser, path: str):
     tasks_file_name = config.get("TASKS", "file_name")
+
+    if path is not None:
+        tasks_file_name = os.path.join(path, tasks_file_name)
 
     tasks_file_items = parser.Parser(tasks_file_name, task_todo.TaskTodo).parse()
 
     return sorted(tasks_file_items, key=lambda item: item.date)
 
 
-def load_plans_file_items(config: configparser.ConfigParser):
+def load_plans_file_items(config: configparser.ConfigParser, path: str):
     plans_file_name = config.get("PLANS", "file_name")
+
+    if path is not None:
+        plans_file_name = os.path.join(path, plans_file_name)
 
     return parser.Parser(plans_file_name, plan_todo.PlanTodo).parse()
 
