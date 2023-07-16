@@ -11,7 +11,7 @@ from todozer.mode import ding, plan, test, view
     type=click.Choice(["plan", "test", "view", "ding"], case_sensitive=False),
 )
 @click.option(
-    "-p", "--path", type=click.Path(exists=True), help="Set path to working directory."
+    "-p", "--path", type=click.Path(exists=True), help="Path to working directory."
 )
 def main(mode: str, path: str):
     """

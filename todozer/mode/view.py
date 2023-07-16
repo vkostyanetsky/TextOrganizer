@@ -1,7 +1,13 @@
+#!/usr/bin/env python3
+
 from todozer import browser, task_lists, utils
 
 
 def main(path: str = None) -> None:
+    """
+    Opens tasks browser for current date.
+    """
+
     config = utils.get_config(path)
     utils.set_logging(config)
 

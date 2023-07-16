@@ -2,6 +2,7 @@
 
 import datetime
 
+import click
 import keyboard
 from vkostyanetsky import cliutils
 
@@ -52,8 +53,8 @@ class TasksBrowser:
 
         title = utils.get_string_from_date(self.__date)
 
-        print(f"# {title}")
-        print()
+        click.echo(f"# {title}")
+        click.echo()
 
         tasks_list = task_lists.get_tasks_list_by_date(self.__tasks, self.__date)
 
@@ -77,19 +78,19 @@ class TasksBrowser:
                 if timer_string != "":
                     timer_string = f" ({timer_string})"
 
-                print(f"{task.title_line}{timer_string}")
+                click.echo(f"{task.title_line}{timer_string}")
 
         else:
-            print("No tasks found.")
+            click.echo("No tasks found.")
 
-        print()
-        print(
+        click.echo()
+        click.echo(
             f"Press [{self.__previous_day_hotkey}] and "
             f"[{self.__next_day_hotkey}] to switch days "
             f"or press [{self.__toggle_time_mode_hotkey}] to toggle time mode."
         )
 
-        print(f"Press [{self.__exit_hotkey}] to return to the main menu.")
+        click.echo(f"Press [{self.__exit_hotkey}] to return to the main menu.")
 
     def show_previous_fast(self):
         self.__date -= datetime.timedelta(days=1)

@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+
+"""
+
+"""
+
 import datetime
 import logging
 import time
@@ -104,7 +110,7 @@ def __print_upcoming_notifications_for_today(notifications_today) -> None:
         )
 
         for task in notifications_today:
-            print(f"🔔 {task['time']:%H:%M} | {task['title']}")
+            click.echo(f"🔔 {task['time']:%H:%M} | {task['title']}")
     else:
         click.echo(
             "No notifications found.",

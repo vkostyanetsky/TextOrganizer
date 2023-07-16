@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import logging
 
 import click
@@ -63,7 +65,7 @@ def check_for_tasks_in_progress(tasks_file_items: list) -> bool:
             click.echo(date_in_progress)
             click.echo()
 
-        print("You have to rearrange tasks in progress or mark them as completed.")
+        click.echo("You have to rearrange tasks in progress or mark them as completed.")
 
     return passed
 
