@@ -1,7 +1,8 @@
 import logging
 
-from vkostyanetsky import cliutils
 import click
+from vkostyanetsky import cliutils
+
 from todozer import state_file, task_lists, utils
 
 
