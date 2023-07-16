@@ -1,7 +1,7 @@
 import logging
 
 from vkostyanetsky import cliutils
-
+import click
 from todozer import state_file, task_lists, utils
 
 
@@ -41,14 +41,10 @@ def main(path: str = None) -> None:
 
             scheduled_tasks = ", ".join(filled_list_titles)
 
-            print(f"Tasks for {scheduled_tasks} have been successfully scheduled.")
+            click.echo(f"Tasks for {scheduled_tasks} have been successfully scheduled.")
 
         else:
-            print("Unable to perform, since there are no days to plan tasks.")
-
-        print()
-
-    cliutils.ask_for_enter()
+            click.echo("Unable to perform, since there are no days to plan tasks.")
 
 
 def check_for_tasks_in_progress(tasks_file_items: list) -> bool:
@@ -59,15 +55,14 @@ def check_for_tasks_in_progress(tasks_file_items: list) -> bool:
     if dates_in_progress:
         passed = False
 
-        print("Unable to perform, since there is at least one task in progress:")
-        print()
+        click.echo("Unable to perform, since there is at least one task in progress:")
+        click.echo()
 
         for date_in_progress in dates_in_progress:
-            print(date_in_progress)
-            print()
+            click.echo(date_in_progress)
+            click.echo()
 
         print("You have to rearrange tasks in progress or mark them as completed.")
-        print()
 
     return passed
 

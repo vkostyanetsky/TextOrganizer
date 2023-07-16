@@ -100,9 +100,9 @@ def get_config(path: str) -> configparser.ConfigParser:
 
     if os.path.exists(filename):
         config.read(filename, encoding=constants.ENCODING)
-    else:
-        with open(filename, "w", encoding=constants.ENCODING) as file:
-            config.write(file)
+    # else:
+    #     with open(filename, "w", encoding=constants.ENCODING) as file:
+    #         config.write(file)
 
     return config
 
