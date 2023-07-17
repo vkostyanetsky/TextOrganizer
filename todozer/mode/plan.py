@@ -49,6 +49,9 @@ def main(path: str = None) -> None:
         else:
             click.echo("Unable to perform, since there are no days to plan tasks.")
 
+        click.echo()
+        cliutils.ask_for_enter()
+
 
 def check_for_tasks_in_progress(tasks_file_items: list) -> bool:
     passed = True
