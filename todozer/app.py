@@ -2,13 +2,15 @@
 
 import click
 
-from todozer.mode import ding, plan, test, view
+from todozer.mode import alarm, browse, check, create, output
 
 
 @click.command()
 @click.argument(
     "mode",
-    type=click.Choice(["plan", "test", "view", "ding"], case_sensitive=False),
+    type=click.Choice(
+        ["create", "browse", "output", "check", "alarm"], case_sensitive=False
+    ),
 )
 @click.option(
     "-p", "--path", type=click.Path(exists=True), help="Path to working directory."
@@ -18,11 +20,13 @@ def main(mode: str, path: str):
     I know the drill!
     """
 
-    if mode == "plan":
-        plan.main(path)
-    elif mode == "test":
-        test.main(path)
-    elif mode == "view":
-        view.main(path)
-    elif mode == "ding":
-        ding.main(path)
+    if mode == "create":
+        create.main(path)
+    elif mode == "browse":
+        browse.main(path)
+    elif mode == "output":
+        output.main(path)
+    elif mode == "check":
+        check.main(path)
+    elif mode == "alarm":
+        alarm.main(path)

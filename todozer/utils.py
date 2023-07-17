@@ -93,7 +93,7 @@ def get_config(path: str) -> configparser.ConfigParser:
 
     config.read_dict(settings)
 
-    filename = "todozer.cfg"
+    filename = "todozer.ini"
 
     if path is not None:
         filename = os.path.join(path, filename)

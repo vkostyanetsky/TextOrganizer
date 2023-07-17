@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Allows a user to see tasks for a date with option to easily switch a date by pressing a button."""
+
 from todozer import browser, task_lists, utils
 
 

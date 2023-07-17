@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
+"""Checks data directory for different issues."""
+
 import logging
 
 import click
+from vkostyanetsky import cliutils
 
 from todozer import scheduler, task_lists, utils
 from todozer.todo import list_todo, plan_todo
-from vkostyanetsky import cliutils
 
 
 def main(path: str = None) -> None:

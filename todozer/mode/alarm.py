@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-"""
-
-"""
+"""Sends notifications that a user has set."""
 
 import datetime
 import logging

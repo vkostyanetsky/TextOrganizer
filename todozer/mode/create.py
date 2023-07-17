@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Creates planned tasks for today (and days before, if it is required)."""
+
 import logging
 
 import click
