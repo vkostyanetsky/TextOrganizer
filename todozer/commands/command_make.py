@@ -36,7 +36,7 @@ def main(path: str = None) -> None:
         )
 
         if filled_list_titles:
-            task_lists.save_tasks_file_items(tasks_file_items, config)
+            task_lists.save_tasks_file_items(tasks_file_items, config, path)
 
             state["last_planning_date"] = utils.get_date_of_today()
 
@@ -46,10 +46,10 @@ def main(path: str = None) -> None:
 
             scheduled_tasks = ", ".join(filled_list_titles)
 
-            click.echo(f"Tasks for {scheduled_tasks} have been successfully scheduled.")
+            click.echo(f"Tasks for {scheduled_tasks} have been successfully created.")
 
         else:
-            click.echo("Unable to perform, since there are no days to plan tasks.")
+            click.echo("Unable to perform, since there are no days to create tasks for.")
 
         click.echo()
         cliutils.ask_for_enter()

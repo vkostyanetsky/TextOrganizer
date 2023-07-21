@@ -11,7 +11,7 @@ from todozer import constants, parser, scheduler, utils
 from todozer.todo import list_todo, plan_todo, task_todo
 
 
-def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigParser):
+def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigParser, path: str | None):
     content = []
 
     tasks_file_items = sorted(
@@ -24,6 +24,9 @@ def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigPar
         content.append(str(tasks_file_item))
 
     tasks_file_name = config.get("TASKS", "file_name")
+
+    if path is not None:
+        tasks_file_name = os.path.join(path, tasks_file_name)
 
     with open(tasks_file_name, "w", encoding=constants.ENCODING) as tasks_file:
         tasks_file.write("\n\n".join(content))

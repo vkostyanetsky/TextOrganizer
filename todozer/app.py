@@ -1,32 +1,72 @@
 #!/usr/bin/env python3
 
 import click
+from todozer.commands import command_show, command_beep, command_make, command_test
 
-from todozer.mode import alarm, browse, check, create, output
+
+def path_help() -> str:
+    return "Path to working directory."
 
 
-@click.command()
+def path_type() -> click.Path:
+    return click.Path(exists=True)
+
+
+@click.group()
+@click.option(
+    "-p", "--path", type=path_type(), help=path_help()
+)
+def main(path: str):
+    pass
+
+
+@main.command()
+@click.option(
+    "-p", "--path", type=path_type(), help=path_help()
+)
+def make(path: str) -> None:
+    """
+    Make planned tasks for a brand-new day.
+    """
+
+    command_make.main(path)
+
+
+@main.command()
+@click.option(
+    "-p", "--path", type=path_type(), help=path_help()
+)
+def test(path: str) -> None:
+    """
+    Check that working directory has no mistakes.
+    """
+    command_test.main(path)
+
+
+@main.command()
+@click.option(
+    "-p", "--path", type=path_type(), help=path_help()
+)
+def beep(path: str):
+    """
+    Set alarm according to notification settings.
+    """
+    command_beep.main(path)
+
+
+@main.command()
 @click.argument(
-    "mode",
-    type=click.Choice(
-        ["create", "browse", "output", "check", "alarm"], case_sensitive=False
-    ),
+    "days"
 )
 @click.option(
-    "-p", "--path", type=click.Path(exists=True), help="Path to working directory."
+    "-p", "--path", type=path_type(), help=path_help()
 )
-def main(mode: str, path: str):
+def show(path: str, days: str):
     """
-    I know the drill!
+    Display tasks for a given day (or days).
     """
+    command_show.main(days, path)
 
-    if mode == "create":
-        create.main(path)
-    elif mode == "browse":
-        browse.main(path)
-    elif mode == "output":
-        output.main(path)
-    elif mode == "check":
-        check.main(path)
-    elif mode == "alarm":
-        alarm.main(path)
+
+if __name__ == '__main__':
+    main()

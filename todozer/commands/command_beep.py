@@ -16,7 +16,7 @@ from todozer.todo import list_todo
 
 def main(path: str = None) -> None:
     """
-    Main entry point of this mode.
+    Main entry point of this command.
     """
 
     config = utils.get_config(path)
