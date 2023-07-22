@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
 import click
+
+from sys import stdout
+
+from todozer import constants
 from todozer.commands import command_show, command_beep, command_make, command_test
 
 
@@ -17,7 +21,7 @@ def path_type() -> click.Path:
     "-p", "--path", type=path_type(), help=path_help()
 )
 def main(path: str):
-    pass
+    stdout.reconfigure(encoding=constants.ENCODING)
 
 
 @main.command()
@@ -56,16 +60,19 @@ def beep(path: str):
 
 @main.command()
 @click.argument(
-    "days"
+    "what", default="today", type=click.Choice(['today', 'last', 'next', 'date'])
+)
+@click.argument(
+    "detail", default=""
 )
 @click.option(
     "-p", "--path", type=path_type(), help=path_help()
 )
-def show(path: str, days: str):
+def show(path: str, what: str, detail: str):
     """
     Display tasks for a given day (or days).
     """
-    command_show.main(days, path)
+    command_show.main(what, detail, path)
 
 
 if __name__ == '__main__':

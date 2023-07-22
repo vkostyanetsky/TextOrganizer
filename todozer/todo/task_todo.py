@@ -124,39 +124,57 @@ class TaskTodo(item_todo.ItemTodo):
 
         return datetime.datetime.now().strftime("%H:%M")
 
+
+    @staticmethod
+    def __seconds_logged_in_line(line: str) -> int:
+
+        result = 0
+        regexp = r"([01]?[0-9]|2[0-3]):[0-5][0-9]"
+
+        time_format = "%H:%M"
+
+        if line.find("-") != -1:
+            line_parts = line.split("-")
+            if len(line_parts) == 2:
+                date1 = line_parts[0].strip()
+                date2 = line_parts[1].strip()
+
+                if re.match(regexp, date1) is not None and re.match(regexp, date2):
+                    date1 = datetime.datetime.strptime(date1, time_format)
+                    date2 = datetime.datetime.strptime(date2, time_format)
+
+                    result = (date2 - date1).total_seconds()
+
+        return result
+
     @property
-    def timer(self) -> datetime.time:
+    def timer(self) -> dict:
         seconds = 0
-        regexp = r".*(\d{1,2}:\d{1,2}) - (\d{1,2}:\d{1,2})"
 
         for line in self.lines:
-            groups = re.match(regexp, line, flags=re.IGNORECASE)
-
-            if groups is not None:
-                date_from = datetime.datetime.strptime(groups[1], "%H:%M")
-                date_to = datetime.datetime.strptime(groups[2], "%H:%M")
-
-                seconds += (date_to - date_from).total_seconds()
+            seconds += self.__seconds_logged_in_line(line)
 
         hour = round(seconds // 60 // 60)
         seconds -= hour * 60 * 60
 
         minutes = round(seconds // 60)
+        seconds -= minutes * 60
 
-        return datetime.time(
-            hour=hour if hour >= 0 else 0, minute=minutes if minutes >= 0 else 0
-        )
+        return {
+            "hour": hour,
+            "minute": minutes
+        }
 
     @property
     def timer_string(self):
         timer = self.timer
         values = []
 
-        if timer.hour > 0:
-            values.append(f"{timer.hour}h")
+        if timer["hour"] > 0:
+            values.append(f'{timer["hour"]}h')
 
-        if timer.minute > 0:
-            values.append(f"{timer.minute}m")
+        if timer["minute"] > 0:
+            values.append(f'{timer["minute"]}m')
 
         return " ".join(values)
 
