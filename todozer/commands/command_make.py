@@ -49,7 +49,9 @@ def main(path: str = None) -> None:
             click.echo(f"Tasks for {scheduled_tasks} have been successfully created.")
 
         else:
-            click.echo("Unable to perform, since there are no days to create tasks for.")
+            click.echo(
+                "Unable to perform, since there are no days to create tasks for."
+            )
 
         click.echo()
         cliutils.ask_for_enter()

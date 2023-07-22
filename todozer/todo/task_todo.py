@@ -124,10 +124,8 @@ class TaskTodo(item_todo.ItemTodo):
 
         return datetime.datetime.now().strftime("%H:%M")
 
-
     @staticmethod
     def __seconds_logged_in_line(line: str) -> int:
-
         result = 0
         regexp = r"([01]?[0-9]|2[0-3]):[0-5][0-9]"
 
@@ -160,10 +158,7 @@ class TaskTodo(item_todo.ItemTodo):
         minutes = round(seconds // 60)
         seconds -= minutes * 60
 
-        return {
-            "hour": hour,
-            "minute": minutes
-        }
+        return {"hour": hour, "minute": minutes}
 
     @property
     def timer_string(self):

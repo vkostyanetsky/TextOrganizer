@@ -11,7 +11,9 @@ from todozer import constants, parser, scheduler, utils
 from todozer.todo import list_todo, plan_todo, task_todo
 
 
-def save_tasks_file_items(tasks_file_items: list, config: configparser.ConfigParser, path: str | None):
+def save_tasks_file_items(
+    tasks_file_items: list, config: configparser.ConfigParser, path: str | None
+):
     content = []
 
     tasks_file_items = sorted(

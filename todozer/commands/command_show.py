@@ -3,10 +3,11 @@
 """Simply outputs tasks for a given date and quits."""
 
 import datetime
+
 import click
 from vkostyanetsky import cliutils
 
-from todozer import task_lists, utils, state_file
+from todozer import state_file, task_lists, utils
 from todozer.todo import list_todo
 
 
@@ -23,13 +24,13 @@ def main(what: str, detail: str, path: str | None) -> None:
     tasks = task_lists.load_tasks_file_items(config, path)
     plans = task_lists.load_plans_file_items(config, path)
 
-    if what == 'today':
+    if what == "today":
         __show_today(tasks, plans, state)
-    elif what == 'last':
+    elif what == "last":
         __show_last_n_days(tasks, plans, state, days_number=int(detail))
-    elif what == 'next':
+    elif what == "next":
         __show_next_n_days(tasks, plans, state, days_number=int(detail))
-    elif what == 'date':
+    elif what == "date":
         __show_date(tasks, plans, state, date=detail)
 
 
@@ -62,7 +63,6 @@ def __show_date(tasks, plans, state, date: str) -> None:
 
 
 def print_tasks_by_date(date, tasks, plans, state, time_mode) -> None:
-
     title = utils.get_string_from_date(date)
 
     click.echo(f"# {title}")
