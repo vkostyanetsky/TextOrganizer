@@ -4,11 +4,12 @@
 
 import datetime
 import logging
+import platform
+import subprocess
 import time
 
 import click
 import requests
-from vkostyanetsky import cliutils
 
 from todozer import state_file, task_lists, utils
 from todozer.todo import list_todo
@@ -93,8 +94,19 @@ def __get_tasks_group(tasks_file_items, plans_file_items, date, state):
     return tasks_group
 
 
+def __clear_terminal():
+    """
+    Clear the terminal.
+    """
+
+    if platform.system().lower() == "windows":
+        subprocess.check_call("cls", shell=True)
+    else:
+        print(subprocess.check_output("clear").decode())
+
+
 def __print_upcoming_notifications_for_today(notifications_today) -> None:
-    cliutils.clear_terminal()
+    __clear_terminal()
 
     click.echo(
         f"TODAY'S NOTIFICATIONS AS OF {datetime.datetime.now().strftime('%H:%M')}"

@@ -5,7 +5,6 @@
 import logging
 
 import click
-from vkostyanetsky import cliutils
 
 from todozer import state_file, task_lists, utils
 
@@ -54,7 +53,6 @@ def main(path: str = None) -> None:
             )
 
         click.echo()
-        cliutils.ask_for_enter()
 
 
 def check_for_tasks_in_progress(tasks_file_items: list) -> bool:

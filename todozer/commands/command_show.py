@@ -5,7 +5,6 @@
 import datetime
 
 import click
-from vkostyanetsky import cliutils
 
 from todozer import state_file, task_lists, utils
 from todozer.todo import list_todo

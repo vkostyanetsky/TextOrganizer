@@ -17,8 +17,7 @@ setup(
     install_requires=[
         "requests==2.31.0",
         "click~=8.1.4",
-        "keyboard~=0.13.5",
-        "vkostyanetsky.cliutils==0.2.0",
+        "pyyaml==6.0",
     ],
     entry_points={"console_scripts": ["todozer=todozer.app:main"]},
     author="Vlad Kostyanetsky",
