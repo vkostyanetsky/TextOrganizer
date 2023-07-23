@@ -5,7 +5,6 @@
 import logging
 
 import click
-from vkostyanetsky import cliutils
 
 from todozer import scheduler, task_lists, utils
 from todozer.todo import list_todo, plan_todo
@@ -40,7 +39,6 @@ def __print_report(plans_file_issues) -> None:
         click.echo("Everything seems nice and clear!")
 
     click.echo()
-    cliutils.ask_for_enter()
 
 
 def __check_plans_file_items(plans_file_items: list, plans_file_issues: list):
