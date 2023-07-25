@@ -9,7 +9,7 @@ from todozer.commands import command_beep, command_make, command_show, command_t
 
 
 def path_help() -> str:
-    return "Path to working directory."
+    return "Set path to working directory."
 
 
 def path_type() -> click.Path:
@@ -22,45 +22,33 @@ def main(path: str):
     stdout.reconfigure(encoding=constants.ENCODING)
 
 
-@main.command()
+@main.command(help="Make planned tasks for a brand-new day.")
 @click.option("-p", "--path", type=path_type(), help=path_help())
 def make(path: str) -> None:
-    """
-    Make planned tasks for a brand-new day.
-    """
-
     command_make.main(path)
 
 
-@main.command()
+@main.command(help="Check that working directory has no mistakes.")
 @click.option("-p", "--path", type=path_type(), help=path_help())
 def test(path: str) -> None:
-    """
-    Check that working directory has no mistakes.
-    """
     command_test.main(path)
 
 
-@main.command()
+@main.command(help="Set alarm according to notification settings.")
 @click.option("-p", "--path", type=path_type(), help=path_help())
 def beep(path: str):
-    """
-    Set alarm according to notification settings.
-    """
     command_beep.main(path)
 
 
-@main.command()
+@main.command(help="Display tasks for a given day (or days).")
 @click.argument(
-    "what", default="today", type=click.Choice(["today", "last", "next", "date"])
+    "period", default="today", type=click.Choice(["today", "last", "next", "date"])
 )
-@click.argument("detail", default="")
+@click.argument("value", default="")
 @click.option("-p", "--path", type=path_type(), help=path_help())
-def show(path: str, what: str, detail: str):
-    """
-    Display tasks for a given day (or days).
-    """
-    command_show.main(what, detail, path)
+@click.option("-t", "--timesheet", is_flag=True, help="Show only tasks with time logged.")
+def show(path: str, timesheet: bool, period: str, value: str):
+    command_show.main(period, value, path, timesheet)
 
 
 if __name__ == "__main__":
