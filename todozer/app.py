@@ -31,32 +31,32 @@ def __path_type() -> click.Path:
 
 
 @click.group(help="CLI tool to manage tasks & duties.")
-def main():
+def cli():
     stdout.reconfigure(encoding=constants.ENCODING)
 
 
-@main.command(help="Make planned tasks for a brand-new day.")
+@cli.command(help="Make planned tasks for a brand-new day.")
 @click.option("-p", "--path", type=__path_type(), help=__path_help())
 def make(path: str | None) -> None:
     path = __get_path(path)
     command_make.main(path)
 
 
-@main.command(help="Check that working directory has no mistakes.")
+@cli.command(help="Check that working directory has no mistakes.")
 @click.option("-p", "--path", type=__path_type(), help=__path_help())
 def test(path: str | None) -> None:
     path = __get_path(path)
     command_test.main(path)
 
 
-@main.command(help="Set alarm according to notification settings.")
+@cli.command(help="Set alarm according to notification settings.")
 @click.option("-p", "--path", type=__path_type(), help=__path_help())
 def beep(path: str | None):
     path = __get_path(path)
     command_beep.main(path)
 
 
-@main.command(help="Display tasks for a given day (or days).")
+@cli.command(help="Display tasks for a given day (or days).")
 @click.argument(
     "period", default="today", type=click.Choice(["today", "last", "next", "date"])
 )
@@ -71,4 +71,4 @@ def show(path: str | None, timesheet: bool, period: str, value: str):
 
 
 if __name__ == "__main__":
-    main()
+    cli()
