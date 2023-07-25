@@ -15,7 +15,7 @@ from todozer import state_file, task_lists, utils
 from todozer.todo import list_todo
 
 
-def main(path: str = None) -> None:
+def main(path: str) -> None:
     """
     Main entry point of this command.
     """
@@ -192,4 +192,4 @@ def __tasks_for_today(
 
 
 if __name__ == "__main__":
-    main()
+    main(path="")

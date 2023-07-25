@@ -9,7 +9,7 @@ import click
 from todozer import state_file, task_lists, utils
 
 
-def main(path: str = None) -> None:
+def main(path: str) -> None:
     """
     Creates tasks for the today (and days before, in case it was not done yet).
 
@@ -84,4 +84,4 @@ def __clean_triggered_notifications(state) -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(path="")

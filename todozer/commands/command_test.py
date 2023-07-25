@@ -10,10 +10,12 @@ from todozer import scheduler, task_lists, utils
 from todozer.todo import list_todo, plan_todo
 
 
-def main(path: str = None) -> None:
+def main(path: str) -> None:
     """
     Checks plans file for errors.
     """
+
+    click.echo(f'Working directory: {path}')
 
     config = utils.get_config(path)
     utils.set_logging(config)
@@ -61,4 +63,4 @@ def __check_plans_file_items(plans_file_items: list, plans_file_issues: list):
 
 
 if __name__ == "__main__":
-    main()
+    main(path="")

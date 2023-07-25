@@ -10,7 +10,7 @@ from todozer import state_file, task_lists, utils
 from todozer.todo import list_todo
 
 
-def main(period: str, value: str, path: str | None, timesheet: bool) -> None:
+def main(period: str, value: str, path: str, timesheet: bool) -> None:
     """
     Checks plans file for errors.
     """
@@ -93,4 +93,4 @@ def __print_tasks_by_date(date, tasks, plans, state, timesheet) -> None:
 
 
 if __name__ == "__main__":
-    main(what="today", detail="", path=None, time=False)
+    main(period="today", value="", path="", timesheet=False)
