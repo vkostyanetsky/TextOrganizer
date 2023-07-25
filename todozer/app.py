@@ -16,7 +16,7 @@ def path_type() -> click.Path:
     return click.Path(exists=True)
 
 
-@click.group()
+@click.group(help="CLI tool to manage tasks & duties.")
 @click.option("-p", "--path", type=path_type(), help=path_help())
 def main(path: str):
     stdout.reconfigure(encoding=constants.ENCODING)
