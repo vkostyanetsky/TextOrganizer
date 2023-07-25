@@ -15,7 +15,7 @@ def main(path: str) -> None:
     Checks plans file for errors.
     """
 
-    click.echo(f'Working directory: {path}')
+    click.echo(f"Working directory: {path}")
 
     config = utils.get_config(path)
     utils.set_logging(config)

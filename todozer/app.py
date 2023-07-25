@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from sys import stdout
 import os
+from sys import stdout
+
 import click
 
 from todozer import constants
@@ -15,7 +16,7 @@ def __get_path(path: str | None) -> str:
     """
 
     if path is None:
-        path = os.path.expanduser('~')
+        path = os.path.expanduser("~")
         path = os.path.join(path, "Todozer")
 
     return path
@@ -61,7 +62,9 @@ def beep(path: str | None):
 )
 @click.argument("value", default="")
 @click.option("-p", "--path", type=__path_type(), help=__path_help())
-@click.option("-t", "--timesheet", is_flag=True, help="Show only tasks with time logged.")
+@click.option(
+    "-t", "--timesheet", is_flag=True, help="Show only tasks with time logged."
+)
 def show(path: str | None, timesheet: bool, period: str, value: str):
     path = __get_path(path)
     command_show.main(period, value, path, timesheet)
