@@ -42,7 +42,7 @@ def make(path: str | None) -> None:
     command_make.main(path)
 
 
-@cli.command(help="Check that working directory has no mistakes.")
+@cli.command(help="Check that data files have no mistakes.")
 @click.option("-p", "--path", type=__path_type(), help=__path_help())
 def test(path: str | None) -> None:
     path = __get_path(path)

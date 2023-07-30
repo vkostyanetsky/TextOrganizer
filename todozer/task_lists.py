@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import shutil
 
 """Methods to work with task lists in tasks file & plans file."""
 
@@ -29,6 +30,10 @@ def save_tasks_file_items(
 
     if path is not None:
         tasks_file_name = os.path.join(path, tasks_file_name)
+
+    backup_tasks_file_name = f"{tasks_file_name}.bak"
+
+    shutil.copyfile(tasks_file_name, backup_tasks_file_name, follow_symlinks=True)
 
     with open(tasks_file_name, "w", encoding=constants.ENCODING) as tasks_file:
         tasks_file.write("\n\n".join(content))
