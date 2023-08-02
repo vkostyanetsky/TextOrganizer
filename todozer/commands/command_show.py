@@ -6,7 +6,7 @@ import datetime
 
 import click
 
-from todozer import state_file, task_lists, utils
+from todozer import echo, state_file, task_lists, utils
 from todozer.todo import list_todo
 
 
@@ -36,7 +36,7 @@ def main(period: str, value: str, path: str, timesheet: bool) -> None:
 def __show_today(tasks, plans, state, timesheet) -> None:
     date = utils.get_date_of_today()
     __print_tasks_by_date(date, tasks, plans, state, timesheet)
-    click.echo()
+    echo.line()
 
 
 def __show_last_n_days(tasks, plans, state, days_number: int, timesheet) -> None:
@@ -44,7 +44,7 @@ def __show_last_n_days(tasks, plans, state, days_number: int, timesheet) -> None
     for _ in range(days_number):
         __print_tasks_by_date(date, tasks, plans, state, timesheet)
         date += datetime.timedelta(days=1)
-        click.echo()
+        echo.line()
 
 
 def __show_next_n_days(tasks, plans, state, days_number: int, timesheet) -> None:
@@ -52,20 +52,20 @@ def __show_next_n_days(tasks, plans, state, days_number: int, timesheet) -> None
     for _ in range(days_number):
         date += datetime.timedelta(days=1)
         __print_tasks_by_date(date, tasks, plans, state, timesheet)
-        click.echo()
+        echo.line()
 
 
 def __show_date(tasks, plans, state, date: str, timesheet) -> None:
     date = utils.get_date_from_string(date)
     __print_tasks_by_date(date, tasks, plans, state, timesheet)
-    click.echo()
+    echo.line()
 
 
 def __print_tasks_by_date(date, tasks, plans, state, timesheet) -> None:
     title = utils.get_string_from_date(date)
 
-    click.echo(f"# {title}")
-    click.echo()
+    echo.title(f"# {title}")
+    echo.title()
 
     tasks_list = task_lists.get_tasks_list_by_date(tasks, date)
 
@@ -86,10 +86,10 @@ def __print_tasks_by_date(date, tasks, plans, state, timesheet) -> None:
             if timer_string != "":
                 timer_string = f" ({timer_string})"
 
-            click.echo(f"{task.title_line}{timer_string}")
+            echo.line(f"{task.title_line}{timer_string}")
 
     else:
-        click.echo("No tasks found.")
+        echo.line("No tasks found.")
 
 
 if __name__ == "__main__":

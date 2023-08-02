@@ -6,7 +6,7 @@ import logging
 
 import click
 
-from todozer import scheduler, task_lists, utils
+from todozer import echo, scheduler, task_lists, utils
 from todozer.todo import list_todo, plan_todo
 
 
@@ -15,7 +15,7 @@ def main(path: str) -> None:
     Checks plans file for errors.
     """
 
-    click.echo(f"Working directory: {path}")
+    echo.line(f"Working directory: {path}")
 
     config = utils.get_config(path)
     utils.set_logging(config)
@@ -33,16 +33,16 @@ def __print_report(plans_file_issues, config) -> None:
     plans_file_name = config.get("PLANS", "file_name")
 
     if plans_file_issues:
-        utils.print_warning(f"Issues found in {plans_file_name}:")
-        click.echo()
+        echo.warning(f"Issues found in {plans_file_name}:")
+        echo.warning()
 
         for issue in plans_file_issues:
-            utils.print_warning(f"- {issue}")
+            echo.warning(f"- {issue}")
 
     else:
-        utils.print_success("Everything seems nice and clear!")
+        echo.success("Everything seems nice and clear!")
 
-    click.echo()
+    echo.line()
 
 
 def __check_plans_file_items(plans_file_items: list, plans_file_issues: list):

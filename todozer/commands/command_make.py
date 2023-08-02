@@ -6,7 +6,7 @@ import logging
 
 import click
 
-from todozer import state_file, task_lists, utils
+from todozer import echo, state_file, task_lists, utils
 
 
 def main(path: str) -> None:
@@ -45,16 +45,14 @@ def main(path: str) -> None:
 
             scheduled_tasks = ", ".join(filled_list_titles)
 
-            utils.print_success(
-                f"Tasks for {scheduled_tasks} have been successfully created."
-            )
+            echo.success(f"Tasks for {scheduled_tasks} have been successfully created.")
 
         else:
-            utils.print_warning(
+            echo.warning(
                 "Unable to perform, since there are no days to create tasks for."
             )
 
-        click.echo()
+        echo.line()
 
 
 def check_for_tasks_in_progress(tasks_file_items: list) -> bool:
@@ -65,14 +63,16 @@ def check_for_tasks_in_progress(tasks_file_items: list) -> bool:
     if dates_in_progress:
         passed = False
 
-        click.echo("Unable to perform, since there is at least one task in progress:")
-        click.echo()
+        echo.warning("Unable to perform, since there is at least one task in progress:")
+        echo.line()
 
         for date_in_progress in dates_in_progress:
-            click.echo(date_in_progress)
-            click.echo()
+            echo.warning(date_in_progress)
+            echo.warning()
 
-        click.echo("You have to rearrange tasks in progress or mark them as completed.")
+        echo.warning(
+            "You have to rearrange tasks in progress or mark them as completed."
+        )
 
     return passed
 

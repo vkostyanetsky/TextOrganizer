@@ -11,7 +11,7 @@ import time
 import click
 import requests
 
-from todozer import state_file, task_lists, utils
+from todozer import echo, state_file, task_lists, utils
 from todozer.todo import list_todo
 
 
@@ -108,10 +108,10 @@ def __clear_terminal():
 def __print_upcoming_notifications_for_today(notifications_today) -> None:
     __clear_terminal()
 
-    click.echo(
+    echo.title(
         f"TODAY'S NOTIFICATIONS AS OF {datetime.datetime.now().strftime('%H:%M')}"
     )
-    click.echo("")
+    echo.title()
 
     if notifications_today:
         notifications_today = sorted(
@@ -120,11 +120,10 @@ def __print_upcoming_notifications_for_today(notifications_today) -> None:
         )
 
         for task in notifications_today:
-            click.echo(f"🔔 {task['time']:%H:%M} | {task['title']}")
+            echo.line(f"🔔 {task['time']:%H:%M} | {task['title']}")
+
     else:
-        click.echo(
-            "No notifications found.",
-        )
+        echo.line("No notifications found.")
 
 
 def __notify(date, task, notification_time, config, state) -> None:

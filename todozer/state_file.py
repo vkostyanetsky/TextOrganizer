@@ -4,11 +4,10 @@
 
 import os
 
-import click
 import yaml
 import yaml.parser
 
-from todozer import constants, utils
+from todozer import constants, echo, utils
 
 
 def save_yaml(file_name: str, file_data: dict) -> None:
@@ -28,7 +27,7 @@ def load_yaml(file_name: str) -> dict:
             result = yaml.safe_load(yaml_file)
 
     except yaml.parser.ParserError:
-        click.echo(f"Unable to parse {file_name}!")
+        echo.error(f"Unable to parse {file_name}!")
 
     if result is None:
         result = {}

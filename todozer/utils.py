@@ -120,21 +120,3 @@ def set_logging(config: configparser.ConfigParser) -> None:
             level=logging.DEBUG,
             force=True,
         )
-
-
-def print_warning(text: str) -> None:
-    click.echo(
-        click.style(
-            text=text,
-            fg="yellow",
-        )
-    )
-
-
-def print_success(text: str) -> None:
-    click.echo(
-        click.style(
-            text=text,
-            fg="green",
-        )
-    )
