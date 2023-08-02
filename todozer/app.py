@@ -65,9 +65,7 @@ def beep(path: str | None):
 @click.option(
     "-t", "--timesheet", is_flag=True, help="Show only tasks with time logged."
 )
-@click.option(
-    "-l", "--logs", is_flag=True, help="Show time logged for each task."
-)
+@click.option("-l", "--logs", is_flag=True, help="Show time logged for each task.")
 def show(path: str | None, timesheet: bool, logs: bool, period: str, value: str):
     path = __get_path(path)
     command_show.main(period, value, path, timesheet, logs)

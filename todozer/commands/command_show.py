@@ -24,9 +24,13 @@ def main(period: str, value: str, path: str, timesheet: bool, logs: bool) -> Non
     if period == "today":
         __show_today(tasks, plans, state, timesheet, logs)
     elif period == "last":
-        __show_last_n_days(tasks, plans, state, int(value) if value else 1, timesheet, logs)
+        __show_last_n_days(
+            tasks, plans, state, int(value) if value else 1, timesheet, logs
+        )
     elif period == "next":
-        __show_next_n_days(tasks, plans, state, int(value) if value else 1, timesheet, logs)
+        __show_next_n_days(
+            tasks, plans, state, int(value) if value else 1, timesheet, logs
+        )
     elif period == "date":
         __show_date(tasks, plans, state, value, timesheet, logs)
 
