@@ -26,19 +26,21 @@ def main(path: str) -> None:
     plans_file_issues = []
 
     __check_plans_file_items(plans_file_items, plans_file_issues)
-    __print_report(plans_file_issues)
+    __print_report(plans_file_issues, config)
 
 
-def __print_report(plans_file_issues) -> None:
+def __print_report(plans_file_issues, config) -> None:
+    plans_file_name = config.get("PLANS", "file_name")
+
     if plans_file_issues:
-        click.echo("Issues found in the plans file:")
+        utils.print_warning(f"Issues found in {plans_file_name}:")
         click.echo()
 
         for issue in plans_file_issues:
-            click.echo(f"- {issue}")
+            utils.print_warning(f"- {issue}")
 
     else:
-        click.echo("Everything seems nice and clear!")
+        utils.print_success("Everything seems nice and clear!")
 
     click.echo()
 
@@ -55,8 +57,7 @@ def __check_plans_file_items(plans_file_items: list, plans_file_issues: list):
 
             if matched_pattern == scheduler.Pattern.NONE:
                 issue_text = (
-                    f'Unable to match pattern for a "{item.title}" plan'
-                    f' (pattern text: "{item.pattern}")'
+                    f'Unable to plan task "{item.title}" using pattern "{item.pattern}"'
                 )
 
                 plans_file_issues.append(issue_text)
