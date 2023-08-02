@@ -45,11 +45,14 @@ def main(path: str) -> None:
 
             scheduled_tasks = ", ".join(filled_list_titles)
 
-            utils.print_success(f"Tasks for {scheduled_tasks} have been successfully created.")
+            utils.print_success(
+                f"Tasks for {scheduled_tasks} have been successfully created."
+            )
 
         else:
-
-            utils.print_warning("Unable to perform, since there are no days to create tasks for.")
+            utils.print_warning(
+                "Unable to perform, since there are no days to create tasks for."
+            )
 
         click.echo()
 

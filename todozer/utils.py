@@ -4,6 +4,7 @@ import configparser
 import datetime
 import logging
 import os
+
 import click
 
 from todozer import constants
