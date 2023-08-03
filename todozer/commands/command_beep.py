@@ -125,6 +125,9 @@ def __print_upcoming_notifications_for_today(notifications_today) -> None:
     else:
         echo.line("No notifications found.")
 
+    echo.line()
+    echo.line("Don't stop this app to get beeps on time!")
+
 
 def __notify(date, task, notification_time, config, state) -> None:
     date_string = utils.get_string_from_date(date)
