@@ -19,3 +19,7 @@ def warning(text: str = "") -> None:
 
 def success(text: str = "") -> None:
     click.echo(click.style(text=text, fg="green"))
+
+
+def comment(text: str = "") -> None:
+    click.echo(click.style(text=text, fg="bright_black"))
