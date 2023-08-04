@@ -8,7 +8,6 @@ import platform
 import subprocess
 import time
 
-import click
 import requests
 
 from todozer import echo, state_file, task_lists, utils

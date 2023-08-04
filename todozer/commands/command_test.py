@@ -4,8 +4,6 @@
 
 import logging
 
-import click
-
 from todozer import echo, scheduler, task_lists, utils
 from todozer.todo import list_todo, plan_todo
 
