@@ -16,8 +16,8 @@ setup(
     packages=["todozer"],
     install_requires=[
         "requests==2.31.0",
-        "click~=8.1.4",
-        "pyyaml==6.0",
+        "click==8.1.6",
+        "pyyaml==6.0.1",
     ],
     entry_points={"console_scripts": ["todozer=todozer.app:main"]},
     author="Vlad Kostyanetsky",
