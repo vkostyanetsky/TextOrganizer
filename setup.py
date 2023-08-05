@@ -19,7 +19,7 @@ setup(
         "click==8.1.6",
         "pyyaml==6.0.1",
     ],
-    entry_points={"console_scripts": ["todozer=todozer.app:main"]},
+    entry_points={"console_scripts": ["todozer=todozer.app:cli"]},
     author="Vlad Kostyanetsky",
     author_email="vlad@kostyanetsky.me",
     classifiers=[

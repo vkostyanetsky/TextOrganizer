@@ -4,16 +4,16 @@
 
 import logging
 
-import click
-
-from todozer import scheduler, task_lists, utils
+from todozer import echo, scheduler, task_lists, utils
 from todozer.todo import list_todo, plan_todo
 
 
-def main(path: str = None) -> None:
+def main(path: str) -> None:
     """
     Checks plans file for errors.
     """
+
+    echo.line(f"Working directory: {path}")
 
     config = utils.get_config(path)
     utils.set_logging(config)
@@ -24,21 +24,23 @@ def main(path: str = None) -> None:
     plans_file_issues = []
 
     __check_plans_file_items(plans_file_items, plans_file_issues)
-    __print_report(plans_file_issues)
+    __print_report(plans_file_issues, config)
 
 
-def __print_report(plans_file_issues) -> None:
+def __print_report(plans_file_issues, config) -> None:
+    plans_file_name = config.get("PLANS", "file_name")
+
     if plans_file_issues:
-        click.echo("Issues found in the plans file:")
-        click.echo()
+        echo.warning(f"Issues found in {plans_file_name}:")
+        echo.warning()
 
         for issue in plans_file_issues:
-            click.echo(f"- {issue}")
+            echo.warning(f"- {issue}")
 
     else:
-        click.echo("Everything seems nice and clear!")
+        echo.success("Everything seems nice and clear!")
 
-    click.echo()
+    echo.line()
 
 
 def __check_plans_file_items(plans_file_items: list, plans_file_issues: list):
@@ -53,12 +55,11 @@ def __check_plans_file_items(plans_file_items: list, plans_file_issues: list):
 
             if matched_pattern == scheduler.Pattern.NONE:
                 issue_text = (
-                    f'Unable to match pattern for a "{item.title}" plan'
-                    f' (pattern text: "{item.pattern}")'
+                    f'Unable to plan task "{item.title}" using pattern "{item.pattern}"'
                 )
 
                 plans_file_issues.append(issue_text)
 
 
 if __name__ == "__main__":
-    main()
+    main(path="")

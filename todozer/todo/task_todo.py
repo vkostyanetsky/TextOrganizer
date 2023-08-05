@@ -173,15 +173,15 @@ class TaskTodo(item_todo.ItemTodo):
 
         return " ".join(values)
 
+    @staticmethod
+    def match(line: str):
+        return TaskTodo.is_scheduled_task(line) or TaskTodo.is_completed_task(line)
+
     @property
     def is_scheduled(self) -> bool:
         return (
             TaskTodo.is_scheduled_task(self.lines[0]) if len(self.lines) > 0 else False
         )
-
-    @staticmethod
-    def is_scheduled_task(line):
-        return line.startswith("- [ ] ")
 
     @property
     def is_completed(self) -> bool:
@@ -190,9 +190,39 @@ class TaskTodo(item_todo.ItemTodo):
         )
 
     @staticmethod
-    def is_completed_task(line):
-        return line.startswith("- [x] ")
+    def is_scheduled_task(line) -> bool:
+        """Checks whether a task is scheduled or not.
+
+        Regular expression explanation:
+        ^       beginning of the string
+        -       "-"
+        \s*     any number of space characters (or no characters at all)
+        \[\s\]  "[", any space character, "]"
+        .*      any other sequence, which can be empty
+
+        Examples to match:
+        - [ ] title
+        - [] title
+        -[    ] title
+        - [ ]title
+        """
+        return re.match(pattern=r"^-\s*\[\s\].*", string=line) is not None
 
     @staticmethod
-    def match(line: str):
-        return TaskTodo.is_scheduled_task(line) or TaskTodo.is_completed_task(line)
+    def is_completed_task(line) -> bool:
+        """Checks whether a task is completed or not.
+
+        Regular expression explanation:
+        ^       beginning of the string
+        -       "-"
+        \s*     any number of space characters (or no characters at all)
+        \[\S\]  "[", any symbol except space character, "]"
+        .*      any other sequence, which can be empty
+
+        Examples to match:
+        - [x] title
+        - [x]title
+        -[x] title
+        """
+
+        return re.match(pattern=r"^-\s*\[\S\].*", string=line) is not None
