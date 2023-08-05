@@ -191,7 +191,7 @@ class TaskTodo(item_todo.ItemTodo):
 
     @staticmethod
     def is_completed_task(line):
-        return line.startswith("- [x] ")
+        return re.match(pattern="^- [.]", string=line) is not None
 
     @staticmethod
     def match(line: str):
