@@ -78,8 +78,8 @@ def get_config(path: str) -> configparser.ConfigParser:
     settings = {
         "TASKS": {
             "file_name": "tasks.md",
+            "make_backup": True,
             "reverse_days_order": False,
-            "create_backup": True,
         },
         "PLANS": {
             "file_name": "plans.md",
