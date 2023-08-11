@@ -31,7 +31,7 @@ def save_tasks_file_items(
     if path is not None:
         tasks_file_name = os.path.join(path, tasks_file_name)
 
-    if bool(config.getboolean("TASKS", "reverse_days_order")):
+    if bool(config.getboolean("TASKS", "make_backup")):
         backup_tasks_file_name = f"{tasks_file_name}.bak"
         shutil.copyfile(tasks_file_name, backup_tasks_file_name, follow_symlinks=True)
 
