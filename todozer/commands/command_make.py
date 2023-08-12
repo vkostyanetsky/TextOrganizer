@@ -47,7 +47,7 @@ def main(path: str) -> None:
 
         else:
             echo.warning(
-                "Unable to perform, since there are no days to create tasks for."
+                "At this point, everything is planned, so there is nothing to make."
             )
 
         echo.line()
