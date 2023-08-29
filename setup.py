@@ -16,7 +16,7 @@ setup(
     packages=["todozer"],
     install_requires=[
         "requests==2.31.0",
-        "click==8.1.6",
+        "click==8.1.7",
         "pyyaml==6.0.1",
     ],
     entry_points={"console_scripts": ["todozer=todozer.app:cli"]},
