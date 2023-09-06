@@ -86,8 +86,12 @@ def __print_tasks_by_date(date, tasks, plans, state, timesheet, logs) -> None:
                     continue
 
             timer_string = f" ({timer_string})" if timer_string != "" and logs else ""
+            task_caption = f"{task.title_line}{timer_string}"
 
-            echo.line(f"{task.title_line}{timer_string}")
+            if task.is_completed:
+                echo.comment(task_caption)
+            else:
+                echo.line(task_caption)
 
     else:
         echo.line("No tasks found.")
