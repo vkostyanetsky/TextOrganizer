@@ -40,9 +40,9 @@ class TaskTodo(item_todo.ItemTodo):
         return len(self.get_time_string()) > 0
 
     def get_time_string(self) -> str:
-        match_object = re.match(r"^([0-9]{1,2}:[0-9]{1,2}).*", self.title)
+        matches = re.findall(r"\b(?:[01][0-9]|2[0-3]|[0-9]):[0-5][0-9]\b", self.title)
 
-        return "" if match_object is None else match_object.group(1)
+        return matches[0] if matches else ""
 
     @staticmethod
     def get_notification_1(line: str) -> dict | None:
