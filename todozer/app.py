@@ -6,8 +6,7 @@ from sys import stdout
 import click
 
 from todozer import constants
-from todozer.commands import (command_beep, command_make, command_show,
-                              command_test)
+from todozer.commands import command_beep, command_make, command_show, command_test
 
 
 def __get_path(path: str | None) -> str:
